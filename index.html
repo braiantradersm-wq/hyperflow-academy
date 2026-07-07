@@ -1272,11 +1272,23 @@ let currentModule=1;
 
 /* ===== CONTROL DE ACCESO / MODOS ===== */
 const _P=new URLSearchParams(location.search);
-const ADMIN=_P.has('admin')||_P.has('full');           // ?admin=1 -> todo desbloqueado (vista dueño)
-if(_P.has('preview')||_P.has('user')) progress.enrolled=false; // ?preview=1 -> fuerza vista de alumno sin comprar (no persiste)
-const FREE_EPS=[1];                                    // EP01 = muestra gratis
-function hasAccess(n){return ADMIN||progress.enrolled||FREE_EPS.includes(n);}
-function unlockedCount(){return ADMIN||progress.enrolled?COURSE.length:FREE_EPS.length;}
+const ADMIN=_P.has('admin')||_P.has('full');                       // ?admin=1 -> todo desbloqueado (vista dueño)
+const SIM_STUDENT=_P.has('alumno')||_P.has('student')||_P.has('curso'); // ?alumno=1 -> simula curso YA comprado
+if(SIM_STUDENT) progress.enrolled=true;                            // ya pagó
+if(_P.has('preview')||_P.has('user')) progress.enrolled=false;     // ?preview=1 -> vista de venta (sin comprar)
+if(_P.has('reset')){progress.done=[];progress.name='';saveProgress(progress);} // ?reset=1 -> reiniciar progreso
+const FREE_EPS=[1];                                                // EP01 = muestra gratis (para quien NO compró)
+/* Desbloqueo:
+   - No comprado -> solo episodios de muestra (EP01).
+   - Comprado    -> progresivo: EP01 abierto; cada siguiente se abre al aprobar el reto del anterior. */
+function hasAccess(n){
+  if(ADMIN) return true;
+  if(!progress.enrolled) return FREE_EPS.includes(n);
+  if(n===1) return true;
+  return progress.done.includes(n-1);
+}
+function frontierEp(){let f=1;for(let k=1;k<=COURSE.length;k++){if(progress.done.includes(k))f=k+1;else break;}return Math.min(f,COURSE.length);}
+function resetProgress(){progress.done=[];progress.name='';saveProgress(progress);currentModule=1;renderSide();loadModule(1);}
 
 /* =================================================================
    CAMPUS
@@ -1365,10 +1377,32 @@ function loadModule(n){
 function renderLocked(n){
   const m=COURSE.find(x=>x.n===n);const s=seasonOf(n);
   const main=document.getElementById('lessonMain');
-  main.innerHTML=`
+  const head=`
     <div class="ep-eyebrow">Temporada ${s.n} · Episodio ${pad2(epInSeason(n))} · ${s.title}</div>
     <div class="ep-code">“${CODE[n]}”</div>
-    <h1>${m.title}</h1>
+    <h1>${m.title}</h1>`;
+  let body;
+  if(progress.enrolled){
+    /* Ya comprado -> bloqueo por progresión (falta aprobar el episodio anterior) */
+    const prev=COURSE.find(x=>x.n===n-1);
+    const go=frontierEp();const gm=COURSE.find(x=>x.n===go);
+    body=`
+    <div class="locked-hero">
+      <div class="locked-seal"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></div>
+      <h2>Aún no has llegado aquí</h2>
+      <p>Los episodios se abren <b>en orden</b>: estudia la clase, supera el reto (≥70%) y se desbloquea el siguiente. Para abrir <b>“${CODE[n]}”</b> primero debes superar <b>“${CODE[n-1]}”</b>${prev?` (EP ${pad2(epInSeason(n-1))})`:''}.</p>
+      <div class="locked-teaser">
+        <span class="lt-k">Tu progreso</span>
+        <ul class="obj"><li>${tickSvg}Episodios superados: <b style="color:var(--text)">${progress.done.length}/${COURSE.length}</b></li><li>${tickSvg}Continúa por: <b style="color:var(--text)">“${CODE[go]}” · ${gm.title}</b></li></ul>
+      </div>
+      <div class="locked-cta">
+        <button class="btn btn-primary" onclick="loadModule(${go})">▶ Continuar por donde voy →</button>
+      </div>
+      <p class="locked-foot">Aprende · Aprueba el examen · Desbloquea · Repite hasta el certificado 🎓</p>
+    </div>`;
+  }else{
+    /* No comprado -> bloqueo de venta */
+    body=`
     <div class="locked-hero">
       <div class="locked-seal"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></div>
       <h2>Episodio bloqueado</h2>
@@ -1383,6 +1417,8 @@ function renderLocked(n){
       </div>
       <p class="locked-foot">Garantía de 14 días · Acceso de por vida · Pago único</p>
     </div>`;
+  }
+  main.innerHTML=head+body;
   vpStop();
   if(window.innerWidth<=960){const el=document.getElementById('lessonMain');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}
   else window.scrollTo(0,0);
@@ -2119,14 +2155,16 @@ function downloadTemario(){
 renderCurriculum();renderFaq();renderTesti();renderOutcomes();initNet();
 tickCountdown();setInterval(tickCountdown,1000);
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCheckout();});
-/* ribbon de modo (solo visible en admin o preview) */
+/* ribbon de modo (visible en admin / alumno / preview) */
 (function(){
-  let label='',color='';
+  let label='',color='',reset=false;
   if(ADMIN){label='VISTA DUEÑO · todo desbloqueado';color='var(--indigo-2)';}
-  else if(_P.has('preview')||_P.has('user')){label='VISTA ALUMNO · así lo ve quien aún no compró';color='var(--amber)';}
+  else if(SIM_STUDENT){label='MODO ALUMNO · ya comprado · desbloqueas aprobando los retos';color='var(--green)';reset=true;}
+  else if(_P.has('preview')||_P.has('user')){label='VISTA VENTA · así lo ve quien aún no compró';color='var(--amber)';}
   if(!label)return;
   const r=document.createElement('div');r.id='modeRibbon';r.className='show';
-  r.innerHTML=`<span class="dot" style="background:${color}"></span>${label}`;
+  r.innerHTML=`<span class="dot" style="background:${color}"></span>${label}`+
+    (reset?` <button onclick="if(confirm('¿Reiniciar tu progreso y volver al EP01?'))resetProgress()" style="margin-left:8px;background:var(--ink-4);border:1px solid var(--line-2);color:var(--text);border-radius:7px;padding:3px 9px;font-size:11px;font-family:var(--font-mono);cursor:pointer">↻ reiniciar</button>`:'');
   document.body.appendChild(r);
 })();
 </script>
