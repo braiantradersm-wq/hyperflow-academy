@@ -1,0 +1,2054 @@
+<title>Academia de Hiperautomatización · Agentes IA + RPA</title>
+<style>
+  :root{
+    --ink:#0E1020; --ink-2:#16182E; --ink-3:#1E2140; --ink-4:#262A52;
+    --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.14);
+    --text:#E9EAF6; --muted:#9BA0C4; --muted-2:#6E739A;
+    --indigo:#6674FF; --indigo-2:#8B7BFF; --indigo-dim:rgba(102,116,255,.15);
+    --amber:#FFB454; --amber-dim:rgba(255,180,84,.14);
+    --green:#3FD07F; --green-dim:rgba(63,208,127,.14);
+    --red:#FF6B7A;
+    --font-display:"Segoe UI Variable Display","Segoe UI",system-ui,-apple-system,sans-serif;
+    --font-body:"Segoe UI",system-ui,-apple-system,sans-serif;
+    --font-mono:ui-monospace,"Cascadia Code","Cascadia Mono","Consolas",monospace;
+    --font-serif:"Georgia","Times New Roman",serif;
+    --maxw:1200px;
+    --shadow:0 24px 60px -20px rgba(0,0,0,.6);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--ink);color:var(--text);font-family:var(--font-body);
+    font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;line-height:1.1;text-wrap:balance;margin:0}
+  p{margin:0}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
+  ::selection{background:var(--indigo);color:#fff}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .mono{font-family:var(--font-mono)}
+  .eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--indigo-2)}
+  .muted{color:var(--muted)}
+  :focus-visible{outline:2px solid var(--indigo);outline-offset:3px;border-radius:6px}
+
+  /* ---------- NAV ---------- */
+  header.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);
+    background:rgba(14,16,32,.72);border-bottom:1px solid var(--line)}
+  .nav-in{display:flex;align-items:center;gap:24px;height:64px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-family:var(--font-display);font-size:16px}
+  .brand .logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--indigo),var(--indigo-2));
+    display:grid;place-items:center;box-shadow:0 6px 18px -6px var(--indigo)}
+  .brand .logo svg{width:18px;height:18px}
+  .nav-links{display:flex;gap:6px;margin-left:auto}
+  .nav-links a,.nav-links button{padding:8px 14px;border-radius:9px;font-size:14px;color:var(--muted);transition:.18s}
+  .nav-links a:hover,.nav-links button:hover{color:var(--text);background:var(--ink-3)}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:11px;font-weight:600;font-size:14px;transition:.18s;white-space:nowrap}
+  .btn-primary{background:linear-gradient(135deg,var(--indigo),var(--indigo-2));color:#fff;box-shadow:0 10px 26px -10px var(--indigo)}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 16px 34px -12px var(--indigo)}
+  .btn-amber{background:linear-gradient(135deg,var(--amber),#FF9A3D);color:#25160A;box-shadow:0 10px 26px -10px var(--amber)}
+  .btn-amber:hover{transform:translateY(-1px)}
+  .btn-ghost{background:var(--ink-3);border:1px solid var(--line-2);color:var(--text)}
+  .btn-ghost:hover{background:var(--ink-4)}
+  .nav-cta{margin-left:8px}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;overflow:hidden;padding:96px 0 72px}
+  #net{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+  .hero-glow{position:absolute;top:-30%;left:50%;transform:translateX(-50%);width:900px;height:700px;
+    background:radial-gradient(closest-side,rgba(102,116,255,.22),transparent 70%);z-index:0;pointer-events:none}
+  .hero-in{position:relative;z-index:2;max-width:820px}
+  .badge{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;
+    background:var(--ink-3);border:1px solid var(--line-2);font-size:13px;color:var(--muted);margin-bottom:24px}
+  .badge .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px var(--green-dim)}
+  .hero h1{font-size:clamp(30px,6vw,66px);letter-spacing:-.02em;margin-bottom:22px;overflow-wrap:break-word}
+  .hero h1 .g{background:linear-gradient(120deg,var(--indigo-2),var(--amber));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero .lead{font-size:clamp(17px,2vw,21px);color:var(--muted);max-width:660px;margin-bottom:34px}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+  .hero-cta .btn{padding:15px 26px;font-size:15px}
+  .hero-note{font-size:13px;color:var(--muted-2);margin-top:16px;display:flex;gap:18px;flex-wrap:wrap}
+  .hero-note span{display:inline-flex;align-items:center;gap:7px}
+  .tick{color:var(--green)}
+
+  /* ---------- STATS ---------- */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);
+    border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-top:72px}
+  .stat{background:var(--ink-2);padding:26px 24px}
+  .stat b{font-family:var(--font-display);font-size:34px;display:block;letter-spacing:-.02em}
+  .stat span{font-size:13px;color:var(--muted)}
+
+  /* ---------- SECTION ---------- */
+  section.blk{padding:88px 0;position:relative}
+  .sec-head{max-width:680px;margin-bottom:52px}
+  .sec-head h2{font-size:clamp(28px,4vw,42px);letter-spacing:-.02em;margin:14px 0 16px}
+  .sec-head p{color:var(--muted);font-size:17px}
+
+  /* ---------- VALUE CARDS ---------- */
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .card{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:28px;transition:.2s}
+  .card:hover{border-color:var(--line-2);transform:translateY(-3px)}
+  .card .ic{width:44px;height:44px;border-radius:11px;background:var(--indigo-dim);display:grid;place-items:center;margin-bottom:18px}
+  .card .ic svg{width:22px;height:22px;stroke:var(--indigo-2)}
+  .card h3{font-size:19px;margin-bottom:9px}
+  .card p{color:var(--muted);font-size:15px}
+
+  /* ---------- CURRICULUM ---------- */
+  .curr-top{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:28px}
+  .curr-meta{display:flex;gap:10px;flex-wrap:wrap}
+  .chip{font-family:var(--font-mono);font-size:12px;padding:6px 12px;border-radius:8px;background:var(--ink-3);border:1px solid var(--line);color:var(--muted)}
+  .mod-list{display:flex;flex-direction:column;gap:10px}
+  .mod{background:var(--ink-2);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:.18s}
+  .mod:hover{border-color:var(--line-2)}
+  .mod-head{display:flex;align-items:center;gap:18px;padding:18px 22px;cursor:pointer;width:100%;text-align:left}
+  .mod-num{font-family:var(--font-mono);font-size:13px;color:var(--indigo-2);width:34px;flex:none}
+  .mod-title{font-weight:600;font-size:16px;flex:1}
+  .mod-tag{font-size:12px;color:var(--muted-2);font-family:var(--font-mono)}
+  .mod-plus{width:26px;height:26px;flex:none;position:relative;transition:.25s}
+  .mod-plus::before,.mod-plus::after{content:"";position:absolute;background:var(--indigo-2);border-radius:2px}
+  .mod-plus::before{top:12px;left:5px;width:16px;height:2px}
+  .mod-plus::after{left:12px;top:5px;width:2px;height:16px;transition:.25s}
+  .mod.open .mod-plus{transform:rotate(180deg)}
+  .mod.open .mod-plus::after{opacity:0}
+  .mod-body{max-height:0;overflow:hidden;transition:max-height .3s ease}
+  .mod-body-in{padding:2px 22px 22px 74px}
+  .mod-body-in p.desc{color:var(--muted);font-size:14px;margin-bottom:14px}
+  .obj{display:flex;flex-direction:column;gap:8px}
+  .obj li{list-style:none;display:flex;gap:10px;font-size:14px;color:var(--muted)}
+  .obj li .tick{flex:none;margin-top:5px}
+  ul.obj{padding:0;margin:0}
+
+  /* ---------- PRICING ---------- */
+  .pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:stretch}
+  .price{background:var(--ink-2);border:1px solid var(--line);border-radius:18px;padding:30px;display:flex;flex-direction:column;position:relative}
+  .price.feat{border-color:var(--indigo);background:linear-gradient(180deg,rgba(102,116,255,.08),var(--ink-2));box-shadow:var(--shadow)}
+  .price .flag{position:absolute;top:-12px;right:24px;background:linear-gradient(135deg,var(--amber),#FF9A3D);color:#25160A;
+    font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 12px;border-radius:8px;font-family:var(--font-mono)}
+  .price h3{font-size:20px;margin-bottom:6px}
+  .price .sub{font-size:13px;color:var(--muted);margin-bottom:20px}
+  .price .amt{display:flex;align-items:baseline;gap:8px;margin-bottom:4px}
+  .price .amt b{font-family:var(--font-display);font-size:42px;letter-spacing:-.02em}
+  .price .amt s{color:var(--muted-2);font-size:18px}
+  .price .amt .per{font-size:13px;color:var(--muted)}
+  .price .pay{font-size:12px;color:var(--muted-2);margin-bottom:22px;font-family:var(--font-mono)}
+  .price ul{list-style:none;padding:0;margin:0 0 24px;display:flex;flex-direction:column;gap:11px;flex:1}
+  .price ul li{display:flex;gap:10px;font-size:14px;color:var(--muted)}
+  .price ul li .tick{flex:none;margin-top:4px}
+  .price .btn{width:100%;justify-content:center;padding:14px}
+
+  /* ---------- FAQ ---------- */
+  .faq{display:flex;flex-direction:column;gap:10px;max-width:820px}
+  .qa{background:var(--ink-2);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .qa button{width:100%;text-align:left;padding:18px 22px;font-weight:600;font-size:15px;display:flex;justify-content:space-between;gap:16px}
+  .qa button .mod-plus{transform:scale(.8)}
+  .qa.open button .mod-plus{transform:rotate(180deg) scale(.8)}
+  .qa-body{max-height:0;overflow:hidden;transition:max-height .3s}
+  .qa-body p{padding:0 22px 20px;color:var(--muted);font-size:14px}
+
+  /* ---------- GUARANTEE ---------- */
+  .guarantee{background:linear-gradient(135deg,var(--ink-3),var(--ink-2));border:1px solid var(--line-2);
+    border-radius:20px;padding:44px;display:flex;gap:28px;align-items:center;flex-wrap:wrap}
+  .guarantee .seal{width:88px;height:88px;flex:none;border-radius:50%;background:var(--amber-dim);
+    border:2px solid var(--amber);display:grid;place-items:center}
+  .guarantee .seal svg{width:44px;height:44px;stroke:var(--amber)}
+  .guarantee h3{font-size:24px;margin-bottom:8px}
+  .guarantee p{color:var(--muted);max-width:620px}
+
+  /* ---------- ANNOUNCEMENT BAR + COUNTDOWN ---------- */
+  .annbar{background:linear-gradient(90deg,var(--amber),#FF9A3D);color:#25160A;text-align:center;
+    font-size:13.5px;font-weight:600;padding:9px 16px;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+  .annbar b{font-family:var(--font-mono);letter-spacing:.02em}
+  .annbar .cd{display:inline-flex;gap:4px;font-family:var(--font-mono);font-weight:700}
+  .annbar .cd span{background:rgba(0,0,0,.18);border-radius:6px;padding:2px 7px;min-width:34px;text-align:center;font-variant-numeric:tabular-nums}
+  .annbar a{text-decoration:underline;font-weight:700}
+  /* ---------- OUTCOMES ---------- */
+  .outcomes{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .oc{display:flex;gap:14px;padding:20px;background:var(--ink-2);border:1px solid var(--line);border-radius:14px}
+  .oc .ocn{width:38px;height:38px;flex:none;border-radius:10px;background:var(--green-dim);display:grid;place-items:center}
+  .oc .ocn svg{width:20px;height:20px;stroke:var(--green)}
+  .oc b{font-size:15px;display:block;margin-bottom:4px}
+  .oc p{font-size:13.5px;color:var(--muted)}
+  /* ---------- ¿PARA QUIÉN? ---------- */
+  .fit{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .fitcol{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:26px}
+  .fitcol.yes{border-color:rgba(63,208,127,.4)}
+  .fitcol.no{border-color:rgba(255,107,122,.3)}
+  .fitcol h4{font-size:17px;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+  .fitcol ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px}
+  .fitcol li{display:flex;gap:11px;font-size:14px;color:var(--muted)}
+  .fitcol li .mk{flex:none;font-weight:700}
+  .fitcol.yes .mk{color:var(--green)} .fitcol.no .mk{color:var(--red)}
+  /* ---------- LEAD CAPTURE ---------- */
+  .lead{background:linear-gradient(135deg,var(--ink-3),var(--ink-2));border:1px solid var(--line-2);border-radius:20px;padding:40px;text-align:center}
+  .lead h2{font-size:clamp(24px,3vw,32px);margin-bottom:10px}
+  .lead p{color:var(--muted);max-width:560px;margin:0 auto 22px}
+  .lead-form{display:flex;gap:10px;max-width:460px;margin:0 auto;flex-wrap:wrap}
+  .lead-form input{flex:1;min-width:200px;padding:14px 16px;background:var(--ink);border:1px solid var(--line-2);border-radius:12px;color:var(--text);font-size:14px}
+  .lead-form input:focus{outline:none;border-color:var(--indigo)}
+  .lead-ok{color:var(--green);font-size:14px;margin-top:14px;font-family:var(--font-mono);display:none}
+  /* ---------- BONUS STACK (pricing) ---------- */
+  .bonus{margin:0 0 20px;padding:16px;background:var(--ink-3);border:1px dashed var(--line-2);border-radius:12px}
+  .bonus .bh{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:10px}
+  .bonus ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+  .bonus li{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--muted)}
+  .bonus li s{color:var(--muted-2)}
+  .valuerow{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:6px}
+  .valuerow b{color:var(--text)}
+  .cd-mini{font-family:var(--font-mono);font-size:12px;color:var(--amber);text-align:center;margin-bottom:14px}
+  /* order bump */
+  .bump{display:flex;gap:11px;align-items:flex-start;padding:14px;border:1px dashed var(--amber);border-radius:12px;background:var(--amber-dim);margin:6px 0 16px;cursor:pointer}
+  .bump input{margin-top:3px;accent-color:var(--amber);flex:none}
+  .bump b{font-size:13.5px;color:var(--text)} .bump span{font-size:12.5px;color:var(--muted);display:block}
+
+  /* ---------- HOST / INSTRUCTOR ---------- */
+  .host{display:grid;grid-template-columns:340px 1fr;gap:44px;align-items:center}
+  .host-frame{aspect-ratio:4/5;border-radius:18px;border:1px solid var(--line-2);position:relative;overflow:hidden;
+    background:radial-gradient(circle at 50% 30%,rgba(102,116,255,.18),transparent 60%),linear-gradient(160deg,#12142A,#070810)}
+  .host-rec{position:absolute;top:14px;left:14px;font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;color:var(--red);display:flex;align-items:center;gap:6px;z-index:2}
+  .host-dot{width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 0 4px rgba(255,107,122,.18)}
+  .host-silh{position:absolute;inset:0;display:grid;place-items:end center}
+  .host-silh svg{width:82%;height:82%}
+  .host-txt h2{font-size:clamp(24px,3.4vw,36px);letter-spacing:-.02em}
+  /* ---------- TESTIMONIOS ---------- */
+  .testi{background:var(--ink);border:1px solid var(--line);border-radius:16px;padding:26px;display:flex;flex-direction:column;gap:16px}
+  .testi .stars{color:var(--amber);font-size:15px;letter-spacing:2px}
+  .testi p{color:var(--text);font-size:15px;line-height:1.55;flex:1}
+  .testi .who{display:flex;align-items:center;gap:12px}
+  .testi .who .av{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-family:var(--font-display);font-weight:700;color:#0E1020;flex:none}
+  .testi .who b{font-size:14px;display:block}
+  .testi .who span{font-size:12px;color:var(--muted)}
+
+  /* ---------- FOOTER ---------- */
+  footer{border-top:1px solid var(--line);padding:48px 0;margin-top:40px}
+  .foot-in{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+  footer .muted{font-size:13px}
+  .foot-links{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
+  .foot-links button{font-size:13px;color:var(--muted);padding:8px 14px;border-radius:9px;transition:.15s}
+  .foot-links button:hover{color:var(--text);background:var(--ink-3)}
+  .legal-body{font-size:14px;color:var(--muted);line-height:1.6}
+  .legal-body h4{color:var(--text);font-size:15px;margin:18px 0 6px}
+  .legal-body p{margin-bottom:10px}
+
+  /* ================= CAMPUS ================= */
+  #campus{display:none}
+  #campus.active{display:block}
+  #landing.hidden{display:none}
+  .campus-shell{display:grid;grid-template-columns:340px minmax(0,1fr);min-height:calc(100vh - 64px)}
+  .side,.main{min-width:0}
+  .side{border-right:1px solid var(--line);background:var(--ink-2);padding:24px 0;overflow-y:auto;max-height:calc(100vh - 64px);position:sticky;top:64px}
+  .side-head{padding:0 22px 20px;border-bottom:1px solid var(--line);margin-bottom:14px}
+  .side-head h3{font-size:15px;margin-bottom:14px}
+  .prog-bar{height:8px;background:var(--ink-4);border-radius:99px;overflow:hidden}
+  .prog-fill{height:100%;background:linear-gradient(90deg,var(--indigo),var(--green));width:0;transition:width .4s}
+  .prog-label{font-size:12px;color:var(--muted);margin-top:8px;font-family:var(--font-mono);display:flex;justify-content:space-between}
+  .side-mod{width:100%;text-align:left;display:flex;gap:12px;align-items:center;padding:11px 22px;font-size:13.5px;color:var(--muted);transition:.15s;border-left:2px solid transparent}
+  .side-mod:hover{background:var(--ink-3);color:var(--text)}
+  .side-mod.current{background:var(--ink-3);color:var(--text);border-left-color:var(--indigo)}
+  .side-mod .sn{font-family:var(--font-mono);font-size:11px;color:var(--muted-2);width:22px;flex:none}
+  .side-mod .st{flex:1;line-height:1.3}
+  .side-mod .sc{width:20px;height:20px;flex:none;border-radius:50%;border:1.5px solid var(--line-2);display:grid;place-items:center}
+  .side-mod.done .sc{background:var(--green);border-color:var(--green)}
+  .side-mod.done .sc svg{width:12px;height:12px;stroke:#0E1020;display:block}
+  .side-mod .sc svg{display:none}
+  .main{padding:34px 44px 80px;max-width:900px}
+  .crumb{font-family:var(--font-mono);font-size:12px;color:var(--muted-2);margin-bottom:14px}
+  .main h1{font-size:clamp(26px,4vw,36px);letter-spacing:-.02em;margin-bottom:12px}
+  .lesson-meta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:26px;font-size:13px;color:var(--muted);font-family:var(--font-mono)}
+  .lesson-meta span{display:inline-flex;gap:6px;align-items:center}
+  .player{aspect-ratio:16/9;border-radius:16px;background:
+    radial-gradient(circle at 50% 40%,rgba(102,116,255,.18),transparent 60%),var(--ink-2);
+    border:1px solid var(--line-2);display:grid;place-items:center;margin-bottom:8px;position:relative;overflow:hidden}
+  .player .play{width:78px;height:78px;border-radius:50%;background:rgba(255,255,255,.1);backdrop-filter:blur(6px);
+    border:1px solid var(--line-2);display:grid;place-items:center;transition:.2s;cursor:pointer}
+  .player .play:hover{background:var(--indigo);transform:scale(1.06)}
+  .player .play svg{width:30px;height:30px;fill:#fff;margin-left:4px}
+  .player .plabel{position:absolute;bottom:16px;left:18px;font-family:var(--font-mono);font-size:12px;color:var(--muted);
+    background:rgba(14,16,32,.7);padding:6px 12px;border-radius:8px}
+  .player-note{font-size:12px;color:var(--muted-2);margin-bottom:26px;font-family:var(--font-mono)}
+  .tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:26px}
+  .tab{padding:12px 18px;font-size:14px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;transition:.15s}
+  .tab:hover{color:var(--text)}
+  .tab.active{color:var(--text);border-bottom-color:var(--indigo)}
+  .tab-panel{display:none;animation:fade .3s}
+  .tab-panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .content-blk h3{font-size:18px;margin:28px 0 12px}
+  .content-blk p{color:var(--muted);margin-bottom:14px;font-size:15px}
+  .lesson-row{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .lesson-row .ln{font-family:var(--font-mono);font-size:12px;color:var(--indigo-2);flex:none;width:32px;padding-top:2px}
+  .lesson-row .lt{flex:1}
+  .lesson-row .lt b{font-size:15px;display:block;margin-bottom:3px;color:var(--text);font-weight:600}
+  .lesson-row .lt span{font-size:13.5px;color:var(--muted)}
+  .lesson-row .ld{font-family:var(--font-mono);font-size:12px;color:var(--muted-2);flex:none}
+  .res{display:flex;flex-direction:column;gap:10px}
+  .res a{display:flex;align-items:center;gap:14px;padding:15px 18px;background:var(--ink-2);border:1px solid var(--line);border-radius:12px;transition:.15s}
+  .res a:hover{border-color:var(--indigo);background:var(--ink-3)}
+  .res a .ri{width:38px;height:38px;border-radius:9px;background:var(--indigo-dim);display:grid;place-items:center;flex:none}
+  .res a .ri svg{width:18px;height:18px;stroke:var(--indigo-2)}
+  .res a .rt{flex:1}
+  .res a .rt b{font-size:14px;display:block}
+  .res a .rt span{font-size:12px;color:var(--muted)}
+  .res a .rd{font-family:var(--font-mono);font-size:11px;color:var(--muted-2)}
+
+  /* QUIZ */
+  .quiz-intro{background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:24px;display:flex;gap:18px;align-items:center}
+  .quiz-intro .qic{width:46px;height:46px;border-radius:11px;background:var(--amber-dim);display:grid;place-items:center;flex:none}
+  .quiz-intro .qic svg{width:24px;height:24px;stroke:var(--amber)}
+  .quiz-intro b{font-size:15px}
+  .quiz-intro p{font-size:13px;color:var(--muted)}
+  .q{background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:16px}
+  .q .qq{font-weight:600;font-size:15px;margin-bottom:16px;display:flex;gap:10px}
+  .q .qq .qn{font-family:var(--font-mono);color:var(--indigo-2);flex:none}
+  .opt{display:flex;gap:12px;align-items:flex-start;padding:13px 16px;border:1px solid var(--line);border-radius:11px;margin-bottom:9px;cursor:pointer;transition:.15s;font-size:14.5px}
+  .opt:hover{border-color:var(--line-2);background:var(--ink-3)}
+  .opt input{margin-top:3px;accent-color:var(--indigo);flex:none}
+  .opt.correct{border-color:var(--green);background:var(--green-dim)}
+  .opt.wrong{border-color:var(--red);background:rgba(255,107,122,.12)}
+  .opt .exp{display:none;font-size:12.5px;color:var(--muted);margin-top:7px;width:100%}
+  .opt.reveal .exp{display:block}
+  .quiz-actions{display:flex;gap:14px;align-items:center;margin-top:8px;flex-wrap:wrap}
+  .quiz-result{font-family:var(--font-mono);font-size:14px;padding:10px 16px;border-radius:10px;display:none}
+  .quiz-result.show{display:inline-flex;gap:8px;align-items:center}
+  .quiz-result.pass{background:var(--green-dim);color:var(--green)}
+  .quiz-result.fail{background:rgba(255,107,122,.12);color:var(--red)}
+  .lesson-nav{display:flex;justify-content:space-between;margin-top:44px;padding-top:26px;border-top:1px solid var(--line);gap:14px}
+
+  /* MODAL */
+  .modal-bg{position:fixed;inset:0;background:rgba(6,7,16,.72);backdrop-filter:blur(6px);z-index:100;display:none;place-items:center;padding:24px}
+  .modal-bg.show{display:grid}
+  .modal{background:var(--ink-2);border:1px solid var(--line-2);border-radius:20px;max-width:460px;width:100%;padding:34px;box-shadow:var(--shadow);animation:pop .3s}
+  @keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+  .modal h3{font-size:22px;margin-bottom:8px}
+  .modal p{color:var(--muted);font-size:14px;margin-bottom:22px}
+  .modal .plan-row{display:flex;justify-content:space-between;align-items:center;padding:16px;background:var(--ink-3);border:1px solid var(--line);border-radius:12px;margin-bottom:20px}
+  .modal .plan-row b{font-size:24px;font-family:var(--font-display)}
+  .modal .field{margin-bottom:14px}
+  .modal label{font-size:12px;color:var(--muted);font-family:var(--font-mono);display:block;margin-bottom:6px}
+  .modal input{width:100%;padding:13px 15px;background:var(--ink);border:1px solid var(--line-2);border-radius:11px;color:var(--text);font-size:14px}
+  .modal input:focus{outline:none;border-color:var(--indigo)}
+  .modal .btn{width:100%;justify-content:center;padding:15px;margin-top:6px}
+  .modal .secure{font-size:11px;color:var(--muted-2);text-align:center;margin-top:14px;font-family:var(--font-mono);display:flex;gap:6px;justify-content:center;align-items:center}
+  .modal .close{position:absolute;top:20px;right:24px;font-size:22px;color:var(--muted)}
+
+  /* CERTIFICATE */
+  #certView{display:none;padding:40px 44px 80px;max-width:900px;margin:0 auto}
+  #certView.active{display:block}
+  .cert{background:linear-gradient(135deg,#12142A,#1E2140);border:2px solid var(--amber);border-radius:20px;padding:52px 48px;text-align:center;position:relative;overflow:hidden}
+  .cert::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(255,180,84,.12),transparent 60%)}
+  .cert>*{position:relative}
+  .cert .ceb{font-family:var(--font-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber)}
+  .cert h2{font-size:34px;margin:18px 0 10px;letter-spacing:-.02em}
+  .cert .name{font-family:var(--font-display);font-size:40px;color:var(--amber);margin:26px 0;border-bottom:1px solid var(--line-2);padding-bottom:20px;display:inline-block;min-width:60%}
+  .cert p{color:var(--muted);max-width:560px;margin:0 auto 8px}
+  .cert .sig{display:flex;justify-content:space-around;margin-top:40px;gap:20px}
+  .cert .sig div{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+  .cert .sig b{display:block;color:var(--text);font-family:var(--font-display);font-size:15px;margin-bottom:4px}
+
+  .locked-note{text-align:center;padding:80px 20px;color:var(--muted)}
+  .locked-note svg{width:48px;height:48px;stroke:var(--muted-2);margin-bottom:16px}
+
+  /* ---------- SERIE / TEMPORADAS ---------- */
+  .season-head{display:flex;align-items:baseline;gap:14px;margin:34px 0 14px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+  .season-head:first-child{margin-top:0}
+  .season-head .sn{font-family:var(--font-mono);font-size:12px;letter-spacing:.14em;color:var(--amber);white-space:nowrap}
+  .season-head h4{font-family:var(--font-serif);font-size:22px;font-weight:600;letter-spacing:.01em}
+  .season-head .ssub{color:var(--muted-2);font-size:13px;margin-left:auto;font-family:var(--font-mono)}
+  .ep-eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);margin-bottom:6px}
+  .ep-code{font-family:var(--font-serif);font-style:italic;font-size:clamp(20px,3vw,28px);color:var(--indigo-2);font-weight:400;margin-bottom:4px;letter-spacing:.01em}
+  /* side season divider */
+  .side-season{padding:16px 22px 7px;font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);display:flex;justify-content:space-between;align-items:center}
+  .side-season .sst{color:var(--muted-2)}
+  /* XP / LEVEL panel */
+  .xp-panel{margin-top:16px;padding:14px;background:var(--ink-3);border:1px solid var(--line);border-radius:12px}
+  .xp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .xp-lvl{font-family:var(--font-serif);font-size:15px;font-weight:600}
+  .xp-lvl b{color:var(--amber)}
+  .xp-badge{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--amber),#FF9A3D);display:grid;place-items:center;font-size:18px;box-shadow:0 6px 16px -6px var(--amber)}
+  .xp-bar{height:7px;background:var(--ink);border-radius:99px;overflow:hidden}
+  .xp-fill{height:100%;background:linear-gradient(90deg,var(--amber),#FF9A3D);width:0;transition:width .5s}
+  .xp-num{font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-top:7px;display:flex;justify-content:space-between}
+  /* CLIFFHANGER next episode */
+  .cliff{margin-top:36px;background:linear-gradient(120deg,var(--ink-3),var(--ink-2));border:1px solid var(--line-2);border-radius:16px;padding:24px 26px;display:flex;align-items:center;gap:20px;position:relative;overflow:hidden}
+  .cliff::after{content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;background:radial-gradient(closest-side,var(--indigo-dim),transparent);pointer-events:none}
+  .cliff .cn{font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin-bottom:8px}
+  .cliff .cc{font-family:var(--font-serif);font-style:italic;font-size:22px;color:var(--indigo-2);margin-bottom:3px}
+  .cliff .ct{font-size:15px;color:var(--muted);font-weight:600}
+  .cliff .cbtn{margin-left:auto;flex:none}
+  /* COMMENTS */
+  .comments{margin-top:40px;padding-top:26px;border-top:1px solid var(--line)}
+  .comments h3{font-family:var(--font-serif);font-size:20px;margin-bottom:4px}
+  .comments .csub{font-size:13px;color:var(--muted);margin-bottom:20px;font-family:var(--font-mono)}
+  .cadd{display:flex;gap:12px;margin-bottom:24px}
+  .cadd input{flex:1;padding:13px 15px;background:var(--ink-2);border:1px solid var(--line-2);border-radius:11px;color:var(--text);font-size:14px}
+  .cadd input:focus{outline:none;border-color:var(--indigo)}
+  .cItem{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .cAv{width:40px;height:40px;flex:none;border-radius:50%;display:grid;place-items:center;font-family:var(--font-display);font-weight:700;font-size:15px;color:#0E1020}
+  .cBody b{font-size:14px;display:block;margin-bottom:2px}
+  .cBody .cmeta{font-family:var(--font-mono);font-size:11px;color:var(--muted-2);margin-bottom:6px}
+  .cBody p{font-size:14px;color:var(--muted)}
+  /* ---------- AI VIDEO PLAYER ---------- */
+  .vplayer{border-radius:16px;overflow:hidden;border:1px solid var(--line-2);background:#070810;margin-bottom:8px}
+  .vtabs{display:flex;align-items:center;gap:4px;padding:8px 10px;background:var(--ink-2);border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .vtab{padding:8px 14px;border-radius:9px;font-size:13px;font-weight:600;color:var(--muted);transition:.15s}
+  .vtab:hover{color:var(--text);background:var(--ink-3)}
+  .vtab.active{color:#fff;background:linear-gradient(135deg,var(--indigo),var(--indigo-2))}
+  .vtab.vlink{margin-left:auto;background:none;color:var(--muted-2);font-weight:500}
+  .vtab.vlink:hover{color:#FF4E45}
+  .ytfacade{aspect-ratio:16/9;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;cursor:pointer;position:relative;text-align:center;padding:24px;
+    background:radial-gradient(circle at 50% 35%,rgba(255,78,69,.14),transparent 60%),linear-gradient(160deg,#0B0D1C,#070810);transition:.2s}
+  .ytfacade:hover{background:radial-gradient(circle at 50% 35%,rgba(255,78,69,.22),transparent 60%),linear-gradient(160deg,#0B0D1C,#070810)}
+  .ytfacade .vplay{width:74px;height:74px;border-radius:50%;background:#FF4E45;display:grid;place-items:center;border:0;box-shadow:0 10px 30px -8px rgba(255,78,69,.6)}
+  .ytfacade .vplay svg{width:30px;height:30px;fill:#fff;margin-left:4px}
+  .ytfacade .ytfTitle{font-family:var(--font-display);font-size:clamp(16px,2.4vw,22px);font-weight:700;max-width:80%}
+  .ytfacade .ytfNote{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+  .ytframe{aspect-ratio:16/9;background:#000}
+  .ytframe iframe{width:100%;height:100%;border:0;display:block}
+  .vstage{aspect-ratio:16/9;position:relative;display:grid;place-items:center;padding:38px;text-align:center;overflow:hidden;
+    background:radial-gradient(circle at 50% 30%,rgba(102,116,255,.16),transparent 60%),linear-gradient(160deg,#0B0D1C,#070810)}
+  .vstage .vslide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;padding:8% 9%;opacity:0;transform:translateY(14px) scale(.99);transition:opacity .5s,transform .5s}
+  .vstage .vslide.on{opacity:1;transform:none}
+  .vstage .vkick{font-family:var(--font-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber)}
+  .vstage .vbig{font-family:var(--font-serif);font-style:italic;font-size:clamp(26px,5vw,46px);color:var(--indigo-2);line-height:1.05}
+  .vstage h3{font-family:var(--font-display);font-size:clamp(20px,3.4vw,32px);letter-spacing:-.01em;max-width:90%}
+  .vstage .vsub{font-family:var(--font-mono);font-size:13px;color:var(--muted)}
+  .vstage .vtext{font-size:clamp(14px,2vw,17px);color:var(--muted);max-width:82%;line-height:1.55}
+  .vstage .vbul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;text-align:left;max-width:88%}
+  .vstage .vbul li{display:flex;gap:11px;font-size:clamp(13px,1.9vw,16px);color:var(--text);opacity:.92}
+  .vstage .vbul li .tick{flex:none;margin-top:4px}
+  .vstage .vwm{position:absolute;top:16px;right:18px;font-family:var(--font-serif);font-size:13px;color:rgba(255,255,255,.28);letter-spacing:.05em}
+  .vstage .vposter{display:flex;flex-direction:column;align-items:center;gap:18px;opacity:1}
+  .vstage .vplay{width:74px;height:74px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid var(--line-2);display:grid;place-items:center;cursor:pointer;transition:.2s}
+  .vstage .vplay:hover{background:var(--indigo);transform:scale(1.06)}
+  .vstage .vplay svg{width:28px;height:28px;fill:#fff;margin-left:4px}
+  .vcap{min-height:44px;padding:11px 18px;font-size:13.5px;color:var(--muted);background:#05060D;font-family:var(--font-mono);border-top:1px solid var(--line);display:flex;align-items:center;gap:10px}
+  .vcap .rec{width:8px;height:8px;border-radius:50%;background:var(--red);flex:none;box-shadow:0 0 0 4px rgba(255,107,122,.18)}
+  .vprog{height:4px;background:#12142A}
+  .vprog-fill{height:100%;width:0;background:linear-gradient(90deg,var(--indigo),var(--amber));transition:width .3s}
+  .vctl{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--ink-2);border-top:1px solid var(--line);flex-wrap:wrap}
+  .vctl button{width:38px;height:38px;border-radius:9px;background:var(--ink-3);border:1px solid var(--line);color:var(--text);display:grid;place-items:center;font-size:15px;transition:.15s}
+  .vctl button:hover{background:var(--ink-4);border-color:var(--line-2)}
+  .vctl .vmain{width:auto;padding:0 18px;gap:8px;display:inline-flex;align-items:center;font-weight:600;font-size:14px;background:linear-gradient(135deg,var(--indigo),var(--indigo-2));border:0;color:#fff}
+  .vctl .vcount{font-family:var(--font-mono);font-size:12px;color:var(--muted);margin-left:2px}
+  .vctl .vspacer{margin-left:auto}
+  .vctl select{background:var(--ink-3);border:1px solid var(--line);color:var(--text);border-radius:9px;padding:8px 10px;font-size:12px;font-family:var(--font-mono)}
+  .vctl .vyt{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:9px;background:var(--ink-3);border:1px solid var(--line);font-size:13px;color:var(--muted)}
+  .vctl .vyt:hover{border-color:#FF4E45;color:#fff}
+  .vctl .vyt svg{width:16px;height:16px}
+  .vhint{padding:11px 16px;background:var(--amber-dim);border-top:1px solid rgba(255,180,84,.3);font-size:12.5px;color:#F0D9B5;line-height:1.5}
+  .vhint b{color:var(--amber)}
+
+  /* immersive toast */
+  .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--ink-3);border:1px solid var(--amber);
+    border-radius:14px;padding:14px 22px;display:flex;gap:12px;align-items:center;z-index:120;box-shadow:var(--shadow);opacity:0;transition:.4s;max-width:90vw}
+  .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+  .toast .ti{font-size:22px}
+  .toast b{font-family:var(--font-serif);font-size:15px}
+  .toast span{font-size:12px;color:var(--muted);display:block}
+
+  @media print{
+    body{background:#fff}
+    header.nav,.side,.lesson-nav,#landing,#certView input,#certView button,#certView .muted{display:none!important}
+    #campus,#campus.active{display:block!important}
+    .campus-shell{display:block!important}
+    .main{display:none!important}
+    #certView{display:block!important}
+    .cert{border-color:#B8860B;background:#fff;color:#111;box-shadow:none}
+    .cert h2,.cert .name{color:#111}
+    .cert .name{color:#B8860B}
+    .cert p,.cert .sig div{color:#333}
+    .cert .sig b{color:#111}
+  }
+  @media(max-width:960px){
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .host{grid-template-columns:1fr;gap:24px}
+    .grid-3,.pricing{grid-template-columns:1fr}
+    .campus-shell{grid-template-columns:minmax(0,1fr)}
+    .side{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--line)}
+    .main{padding:26px 20px 60px}
+    .nav-links{display:none}
+    .vctl{gap:8px;justify-content:center}
+    .vctl select{max-width:42vw}
+    .vctl .vmain{width:auto}
+    .vspacer{display:none}
+    .grid-3{grid-template-columns:1fr}
+    .side{max-height:52vh;overflow-y:auto}
+    .outcomes{grid-template-columns:1fr}
+    .fit{grid-template-columns:1fr}
+    .lead{padding:28px 20px}
+    .annbar{font-size:12px}
+  }
+</style>
+
+<!-- ============ ANNOUNCEMENT BAR ============ -->
+<div class="annbar" id="annbar">
+  🔥 <b>Oferta de lanzamiento −50%</b> · termina en
+  <span class="cd" id="cdTop"><span>00</span>:<span>00</span>:<span>00</span></span>
+  · <a href="#precios" onclick="showLanding()">Asegurar mi plaza →</a>
+</div>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#" onclick="showLanding();return false">
+      <span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"/><circle cx="12" cy="12" r="3.2" fill="#fff" stroke="none"/></svg></span>
+      Hyperflow<span style="color:var(--indigo-2)">·</span>Academy
+    </a>
+    <nav class="nav-links">
+      <a href="#curriculo" onclick="showLanding()">Currículo</a>
+      <a href="#precios" onclick="showLanding()">Precios</a>
+      <a href="#faq" onclick="showLanding()">FAQ</a>
+      <button onclick="openCampus()">Acceder al campus</button>
+    </nav>
+    <button class="btn btn-amber nav-cta" onclick="openCheckout()">Inscribirme</button>
+  </div>
+</header>
+
+<!-- ============ LANDING ============ -->
+<main id="landing">
+  <section class="hero">
+    <canvas id="net"></canvas>
+    <div class="hero-glow"></div>
+    <div class="wrap hero-in">
+      <div class="badge"><span class="dot"></span> Una serie en 6 temporadas · 22 episodios · No es un curso, es una jornada</div>
+      <h1>No vas a <span style="text-decoration:line-through;opacity:.5">ver un curso</span>. Vas a <span class="g">vivir la serie</span> que te convierte en Arquitecto de Hiperautomatización</h1>
+      <p class="lead">Olvida los módulos que se ven en piloto automático. Aquí eres el protagonista de una historia en 6 temporadas: cada episodio es una misión con narrativa, decisiones y gamificación. Aprendes IA generativa, agentes, RPA y automatización empresarial mientras avanzas en la trama. El final: tú, dominando el arsenal completo.</p>
+      <div class="hero-cta">
+        <button class="btn btn-amber" onclick="openCheckout()">Empezar la Temporada 1 →</button>
+        <button class="btn btn-ghost" onclick="openCampus()">▶ Ver el tráiler ▸</button>
+      </div>
+      <div class="hero-note">
+        <span><span class="tick">✓</span> Acceso de por vida</span>
+        <span><span class="tick">✓</span> Gamificación + XP</span>
+        <span><span class="tick">✓</span> Garantía 14 días</span>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>6</b><span>Temporadas con trama</span></div>
+        <div class="stat"><b>22</b><span>Episodios con misión</span></div>
+        <div class="stat"><b>66</b><span>Retos de evaluación</span></div>
+        <div class="stat"><b>∞</b><span>XP, niveles y logros</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUE -->
+  <section class="blk">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">Por qué este programa</div>
+        <h2>De la teoría a automatizaciones que generan ROI</h2>
+        <p>No es un curso de "toca botones". Aprendes el criterio para detectar oportunidades, diseñar la solución y ponerla en producción con control de excepciones.</p>
+      </div>
+      <div class="grid-3">
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2l3 7 7 .5-5.5 4.5 2 7-6.5-4-6.5 4 2-7L2 9.5 9 9z"/></svg></div>
+          <h3>Stack profesional real</h3>
+          <p>n8n, Make, UiPath, Power Platform, Claude, visión artificial e IDP. Las herramientas que las empresas pagan por dominar.</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M17.5 14v7M14 17.5h7"/></svg></div>
+          <h3>Metodología end-to-end</h3>
+          <p>Levantamiento de procesos, BPMN, diseño funcional, robustez y orquestación. El ciclo de vida completo de un proyecto de automatización.</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <h3>Evaluación y certificado</h3>
+          <p>Cuestionario autocorregido en cada módulo, seguimiento de progreso y certificado de finalización verificable al completar el programa.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OUTCOMES / TRANSFORMACIÓN -->
+  <section class="blk" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">La transformación</div>
+        <h2>Al terminar la serie, serás capaz de…</h2>
+        <p>No sales con apuntes: sales con habilidades que el mercado paga. Esto es lo que podrás hacer.</p>
+      </div>
+      <div class="outcomes" id="outcomesList"></div>
+    </div>
+  </section>
+
+  <!-- CURRICULUM -->
+  <section class="blk" id="curriculo" style="background:var(--ink-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">La serie completa</div>
+        <h2>6 temporadas. 22 episodios. Una sola misión: tu maestría.</h2>
+        <p>Cada episodio es una misión con narrativa, video, material y un reto de evaluación que suma XP. No avanzas por módulos: avanzas por la trama, de los fundamentos al dominio empresarial.</p>
+      </div>
+      <div class="curr-top">
+        <div class="curr-meta">
+          <span class="chip">≈ 40 h de contenido</span>
+          <span class="chip">6 temporadas · 22 episodios</span>
+          <span class="chip">Trama básico → dominio</span>
+          <span class="chip">Estreno 2026</span>
+        </div>
+        <button class="btn btn-ghost" onclick="openCampus()">▶ Entrar a la serie →</button>
+      </div>
+      <div class="mod-list" id="currList"></div>
+    </div>
+  </section>
+
+  <!-- ¿PARA QUIÉN? -->
+  <section class="blk">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">Antes de entrar</div>
+        <h2>¿Es esta serie para ti?</h2>
+        <p>Preferimos que entres con claridad. Mira si encajas.</p>
+      </div>
+      <div class="fit">
+        <div class="fitcol yes">
+          <h4>✅ Es para ti si…</h4>
+          <ul>
+            <li><span class="mk">✓</span> Quieres una habilidad rentable y con demanda real (IA + automatización)</li>
+            <li><span class="mk">✓</span> Eres emprendedor, freelance o profesional que quiere ahorrar horas o facturar más</li>
+            <li><span class="mk">✓</span> Prefieres aprender construyendo, no memorizando teoría</li>
+            <li><span class="mk">✓</span> Quieres ofrecer automatización como servicio o aplicarla en tu empresa</li>
+            <li><span class="mk">✓</span> No sabes programar y quieres empezar por no-code con IA de copiloto</li>
+          </ul>
+        </div>
+        <div class="fitcol no">
+          <h4>✕ No es para ti si…</h4>
+          <ul>
+            <li><span class="mk">✕</span> Buscas una fórmula mágica sin poner en práctica nada</li>
+            <li><span class="mk">✕</span> No estás dispuesto a dedicar unas horas por semana</li>
+            <li><span class="mk">✕</span> Ya eres experto senior en RPA e IA y no buscas metodología ni criterio</li>
+            <li><span class="mk">✕</span> Quieres solo teoría académica sin foco en resultados de negocio</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSTRUCTOR / HOST -->
+  <section class="blk">
+    <div class="wrap">
+      <div class="host">
+        <div class="host-media">
+          <div class="host-frame">
+            <span class="host-rec"><span class="host-dot"></span>REC</span>
+            <div class="host-silh"><svg viewBox="0 0 120 120" fill="none"><circle cx="60" cy="44" r="24" fill="rgba(139,123,255,.25)"/><path d="M18 116c0-26 19-42 42-42s42 16 42 42" fill="rgba(139,123,255,.18)"/></svg></div>
+          </div>
+        </div>
+        <div class="host-txt">
+          <div class="eyebrow">Tu guía en la serie</div>
+          <h2>Aprende de alguien que <span style="color:var(--indigo-2)">automatiza para vivir</span>, no que solo lo enseña</h2>
+          <p class="muted" style="margin:16px 0">No vas a recibir teoría recalentada. Cada episodio está construido por operadores que implementan agentes, RPA y automatizaciones en empresas reales, y que convierten esos proyectos en ingresos. Vas a copiar el criterio, no solo los pasos.</p>
+          <ul class="obj" style="gap:12px">
+            <li><span class="tick">✓</span> Método probado en proyectos reales de automatización</li>
+            <li><span class="tick">✓</span> Enfoque en ROI: cada episodio apunta a que ganes o ahorres dinero</li>
+            <li><span class="tick">✓</span> Cero relleno: al grano, como se trabaja en el mundo real</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIOS -->
+  <section class="blk" style="background:var(--ink-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">Lo que dicen los alumnos</div>
+        <h2>Resultados, no promesas</h2>
+        <p>Historias de personas que dejaron de consumir cursos y empezaron a construir automatizaciones que generan valor.</p>
+      </div>
+      <div class="grid-3" id="testiList"></div>
+      <p class="player-note" style="margin-top:20px;text-align:center">// Testimonios de muestra para tu lanzamiento. Reemplázalos por reseñas reales de tus alumnos.</p>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="blk" id="precios">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">Inversión</div>
+        <h2>Elige cómo quieres avanzar</h2>
+        <p>Pago único con acceso de por vida, o plan pro con mentoría y comunidad. Sin permanencia. Garantía de 14 días.</p>
+      </div>
+      <div class="pricing">
+        <div class="price">
+          <h3>Self-paced</h3>
+          <p class="sub">Aprende a tu ritmo, para siempre.</p>
+          <div class="amt"><b>$197</b><s>$397</s></div>
+          <div class="pay">pago único · acceso de por vida</div>
+          <ul>
+            <li><span class="tick">✓</span> Las 6 temporadas · 22 episodios</li>
+            <li><span class="tick">✓</span> Gamificación: XP, niveles y logros</li>
+            <li><span class="tick">✓</span> Retos, comentarios y material descargable</li>
+            <li><span class="tick">✓</span> Certificado de finalización</li>
+            <li><span class="tick">✓</span> Actualizaciones incluidas</li>
+          </ul>
+          <button class="btn btn-ghost" onclick="openCheckout('self')">Empezar ahora</button>
+        </div>
+        <div class="price feat">
+          <span class="flag">Más popular</span>
+          <h3>Pro + Mentoría</h3>
+          <p class="sub">Acompañamiento para implementar de verdad.</p>
+          <div class="amt"><b>$497</b><s>$897</s></div>
+          <div class="pay">pago único · o 3× $179</div>
+          <div class="cd-mini" id="cdPrice">⏳ Precio de lanzamiento termina en <span id="cdInline">—</span></div>
+          <ul>
+            <li><span class="tick">✓</span> Todo lo de Self-paced</li>
+            <li><span class="tick">✓</span> 4 sesiones grupales de mentoría en vivo</li>
+            <li><span class="tick">✓</span> Comunidad privada de alumnos</li>
+            <li><span class="tick">✓</span> Revisión de tu proyecto final</li>
+          </ul>
+          <div class="bonus">
+            <div class="bh">🎁 Bonos incluidos hoy</div>
+            <ul>
+              <li><span>+ Pack de 30 plantillas y flujos (n8n/Make)</span><s>$97</s></li>
+              <li><span>+ Biblioteca de 50 prompts para agentes</span><s>$47</s></li>
+              <li><span>+ Plantilla de propuesta para vender automatización</span><s>$37</s></li>
+              <li><span>+ Acceso a actualizaciones de por vida</span><s>$120</s></li>
+            </ul>
+          </div>
+          <div class="valuerow"><span>Valor total</span><b><s style="color:var(--muted-2)">$798</s></b></div>
+          <div class="valuerow"><span>Hoy pagas</span><b style="color:var(--amber)">$497</b></div>
+          <button class="btn btn-primary" onclick="openCheckout('pro')">Inscribirme en Pro</button>
+        </div>
+        <div class="price">
+          <h3>Empresas</h3>
+          <p class="sub">Forma a tu equipo de automatización.</p>
+          <div class="amt"><b>A medida</b></div>
+          <div class="pay">licencias por volumen · facturación</div>
+          <ul>
+            <li><span class="tick">✓</span> Licencias multiusuario</li>
+            <li><span class="tick">✓</span> Panel de progreso del equipo</li>
+            <li><span class="tick">✓</span> Casos adaptados a tu sector</li>
+            <li><span class="tick">✓</span> Onboarding y soporte dedicado</li>
+            <li><span class="tick">✓</span> Factura y contrato</li>
+          </ul>
+          <button class="btn btn-ghost" onclick="openCheckout('empresa')">Hablar con ventas</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GUARANTEE -->
+  <section class="blk" style="padding-top:0">
+    <div class="wrap">
+      <div class="guarantee">
+        <div class="seal"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V5z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <div>
+          <h3>Garantía de satisfacción de 14 días</h3>
+          <p>Entra, revisa los primeros módulos y aplica lo que aprendas. Si en 14 días sientes que no es para ti, te devolvemos el 100% sin preguntas. El riesgo es nuestro, no tuyo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEAD CAPTURE -->
+  <section class="blk" style="padding-top:0">
+    <div class="wrap">
+      <div class="lead">
+        <div class="eyebrow" style="justify-content:center">¿Aún lo piensas?</div>
+        <h2>Llévate el temario completo + la 1ª clase, gratis</h2>
+        <p>Déjanos tu email y descarga ahora mismo el temario de las 6 temporadas y los apuntes del Episodio 1. Sin compromiso.</p>
+        <form class="lead-form" onsubmit="return captureLead(event)">
+          <input id="leadEmail" type="email" required placeholder="tu@email.com" autocomplete="email">
+          <button class="btn btn-amber" type="submit">Descargar gratis →</button>
+        </form>
+        <div class="lead-ok" id="leadOk">✓ ¡Listo! Descargamos tu material. Revisa tu carpeta de descargas.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="blk" id="faq" style="background:var(--ink-2);border-top:1px solid var(--line)">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">Preguntas frecuentes</div>
+        <h2>Todo lo que necesitas saber</h2>
+      </div>
+      <div class="faq" id="faqList"></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap foot-in">
+      <div class="brand">
+        <span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="3.2" fill="#fff" stroke="none"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></span>
+        Hyperflow Academy
+      </div>
+      <div class="foot-links">
+        <button onclick="openLegal('terminos')">Términos</button>
+        <button onclick="openLegal('privacidad')">Privacidad</button>
+        <button onclick="openLegal('reembolso')">Reembolso</button>
+        <button onclick="openCheckout()">Inscribirme</button>
+      </div>
+    </div>
+    <div class="wrap" style="margin-top:22px"><p class="muted" style="font-size:12px">© 2026 Hyperflow Academy · Programa de Hiperautomatización con IA + RPA · Todos los derechos reservados. Las marcas mencionadas (n8n, Make, UiPath, Microsoft, Anthropic, YouTube) pertenecen a sus respectivos dueños.</p></div>
+  </footer>
+</main>
+
+<!-- ============ CAMPUS ============ -->
+<div id="campus">
+  <div class="campus-shell">
+    <aside class="side">
+      <div class="side-head">
+        <h3>Tu jornada</h3>
+        <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+        <div class="prog-label"><span id="progTxt">0 / 22 episodios</span><span id="progPct">0%</span></div>
+        <div class="xp-panel">
+          <div class="xp-top">
+            <div class="xp-lvl">Nivel <b id="xpLevel">1</b> · <span id="xpTitle">Recluta</span></div>
+            <div class="xp-badge" id="xpBadge">🎖️</div>
+          </div>
+          <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
+          <div class="xp-num"><span id="xpNow">0 XP</span><span id="xpNext">→ 400 XP</span></div>
+        </div>
+        <button class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:16px;font-size:13px;padding:10px" onclick="showCertificate()" id="certBtn">🎓 Ver certificado</button>
+      </div>
+      <div id="sideList"></div>
+    </aside>
+    <div class="main" id="lessonMain"></div>
+  </div>
+  <div id="certView"></div>
+</div>
+
+<!-- ============ CHECKOUT MODAL ============ -->
+<div class="modal-bg" id="checkoutModal">
+  <div class="modal" style="position:relative">
+    <button class="close" onclick="closeCheckout()">×</button>
+    <h3 id="coTitle">Inscripción · Pro + Mentoría</h3>
+    <p>Acceso inmediato al campus tras el pago. Procesado de forma segura con Stripe.</p>
+    <div class="plan-row">
+      <div><b id="coPrice">$497</b><div class="muted" style="font-size:12px" id="coPlan">Pro + Mentoría · pago único</div></div>
+      <span class="chip" id="coBadge">Más popular</span>
+    </div>
+    <div class="field"><label>Nombre completo</label><input id="coName" placeholder="Tu nombre" autocomplete="name"></div>
+    <div class="field"><label>Email</label><input id="coEmail" type="email" placeholder="tu@email.com" autocomplete="email"></div>
+    <label class="bump"><input type="checkbox" id="coBump"><span><b>Sí, añade el Pack Acelerador (+$27)</b><span>20 automatizaciones ya montadas para copiar y pegar. Ahorra semanas de trabajo.</span></span></label>
+    <button class="btn btn-amber" onclick="fakeCheckout()">Pagar y acceder al campus →</button>
+    <div class="secure">🔒 Pago cifrado con Stripe · 💳 Visa · Mastercard · 🛡️ Garantía 14 días</div>
+  </div>
+</div>
+
+<!-- ============ LEGAL MODAL ============ -->
+<div class="modal-bg" id="legalModal">
+  <div class="modal" style="position:relative;max-width:640px;max-height:82vh;overflow-y:auto">
+    <button class="close" onclick="closeLegal()">×</button>
+    <h3 id="legalTitle">Términos</h3>
+    <div id="legalBody" class="legal-body"></div>
+    <button class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:20px" onclick="closeLegal()">Cerrar</button>
+  </div>
+</div>
+
+<script>
+/* =================================================================
+   DATOS DEL CURSO — 22 módulos
+   ================================================================= */
+const COURSE = [
+ {n:1,title:"Fundamentos de la hiperautomatización",tag:"Fundamentos",dur:"1h 40m",level:"Básico",
+  desc:"Qué es la hiperautomatización, en qué se diferencia del RPA clásico y cómo construir un caso de negocio que la dirección apruebe.",
+  obj:["Distinguir automatización, RPA e hiperautomatización","Identificar el ROI y los KPIs de un proyecto","Mapear el ecosistema de tecnologías (RPA+IA+BPM+iPaaS)","Construir una hoja de ruta de adopción"],
+  lessons:[
+   {t:"El paisaje de la automatización empresarial",d:"14m",desc:"De la macro de Excel al agente autónomo: la evolución y por qué 2026 es el punto de inflexión."},
+   {t:"Hiperautomatización vs RPA vs iPaaS",d:"18m",desc:"Cuándo usar cada enfoque y cómo se complementan en una arquitectura real."},
+   {t:"Construyendo el caso de negocio",d:"22m",desc:"Cálculo de ROI, horas ahorradas, reducción de errores y payback. Plantilla incluida."},
+   {t:"Roadmap de adopción por madurez",d:"20m",desc:"Del piloto al Centro de Excelencia (CoE). Roles, gobernanza y escalado."}],
+  quiz:[
+   {q:"¿Qué caracteriza principalmente a la hiperautomatización frente al RPA tradicional?",o:["Solo usa bots de escritorio","Combina RPA con IA, BPM y analítica para automatizar procesos de extremo a extremo","Elimina la necesidad de personas","Se limita a tareas de un solo sistema"],a:1,e:"La hiperautomatización orquesta múltiples tecnologías (RPA, IA/ML, BPM, process mining) para cubrir procesos completos, no solo tareas aisladas."},
+   {q:"¿Cuál es el mejor primer indicador para priorizar un proceso a automatizar?",o:["Que sea el más complejo","Alto volumen, repetitivo, basado en reglas y con datos estructurados","Que lo pida el CEO","Que use la tecnología más nueva"],a:1,e:"Los procesos de alto volumen, repetitivos y basados en reglas ofrecen el ROI más rápido y seguro para empezar."},
+   {q:"¿Qué es un Centro de Excelencia (CoE) de automatización?",o:["Un servidor donde corren los bots","Una unidad que define estándares, gobernanza y escala la automatización en la organización","Un tipo de licencia de UiPath","Una certificación individual"],a:1,e:"El CoE centraliza buenas prácticas, gobernanza, reutilización y soporte para escalar la automatización de forma sostenible."}]},
+
+ {n:2,title:"Introducción a los agentes inteligentes y la IA generativa",tag:"IA Generativa",dur:"2h 05m",level:"Básico",
+  desc:"Cómo funcionan los LLM, qué es un agente y por qué la IA generativa cambia las reglas de la automatización.",
+  obj:["Entender qué es un LLM y cómo genera respuestas","Diferenciar un chatbot, un asistente y un agente autónomo","Conocer los componentes de un agente (memoria, herramientas, planificación)","Identificar casos de uso empresariales viables"],
+  lessons:[
+   {t:"Cómo funciona un LLM por dentro",d:"20m",desc:"Tokens, contexto, temperatura y alucinaciones explicados sin matemáticas."},
+   {t:"Del chatbot al agente autónomo",d:"18m",desc:"La escalera de autonomía: reactivo → asistente → agente → multiagente."},
+   {t:"Anatomía de un agente",d:"24m",desc:"Modelo, herramientas (tools), memoria, planificación y bucle de razonamiento (ReAct)."},
+   {t:"Casos de uso que sí generan valor",d:"22m",desc:"Atención, back-office, ventas, análisis. Dónde brilla y dónde falla la IA generativa."}],
+  quiz:[
+   {q:"¿Qué es un 'token' en el contexto de un LLM?",o:["Una contraseña de acceso","La unidad mínima de texto (palabra o fragmento) que el modelo procesa","Un tipo de criptomoneda","Un permiso de API"],a:1,e:"Los modelos procesan texto en tokens (fragmentos de palabras). El coste y el límite de contexto se miden en tokens."},
+   {q:"¿Qué distingue a un 'agente' de un simple chatbot?",o:["El agente responde más rápido","El agente puede planificar, usar herramientas y ejecutar acciones para lograr un objetivo","El chatbot es más caro","No hay diferencia real"],a:1,e:"Un agente no solo conversa: razona, decide qué herramientas usar y ejecuta acciones de forma autónoma hacia un objetivo."},
+   {q:"¿Qué es una 'alucinación' en IA generativa?",o:["Un error de conexión","Cuando el modelo genera información falsa presentada como verdadera","Una función avanzada","Un tipo de prompt"],a:1,e:"La alucinación ocurre cuando el modelo produce contenido plausible pero incorrecto. Se mitiga con RAG, verificación y buen prompting."}]},
+
+ {n:3,title:"Prompt engineering para agentes",tag:"Prompting",dur:"2h 15m",level:"Básico",
+  desc:"El arte y la ciencia de instruir agentes: system prompts, few-shot, chain-of-thought y patrones de fiabilidad.",
+  obj:["Escribir system prompts robustos y reutilizables","Aplicar técnicas few-shot y chain-of-thought","Controlar el formato de salida (JSON, estructuras)","Prevenir prompt injection y comportamientos no deseados"],
+  lessons:[
+   {t:"Anatomía de un prompt profesional",d:"18m",desc:"Rol, contexto, tarea, restricciones, formato y ejemplos. La estructura RCTFE."},
+   {t:"Few-shot, chain-of-thought y self-consistency",d:"24m",desc:"Técnicas para subir la precisión sin cambiar de modelo."},
+   {t:"Salidas estructuradas y function calling",d:"22m",desc:"Forzar JSON válido y conectar el modelo con herramientas externas."},
+   {t:"Seguridad del prompt: injection y jailbreaks",d:"20m",desc:"Cómo blindar tu agente contra manipulación de usuarios malintencionados."}],
+  quiz:[
+   {q:"¿Para qué sirve la técnica 'chain-of-thought'?",o:["Encadenar varios modelos","Pedir al modelo que razone paso a paso antes de responder, mejorando la precisión","Reducir el coste","Traducir prompts"],a:1,e:"Chain-of-thought guía al modelo a mostrar su razonamiento intermedio, lo que mejora notablemente tareas de lógica y cálculo."},
+   {q:"¿Qué es un 'system prompt'?",o:["El mensaje del usuario","La instrucción base que define el rol, las reglas y el comportamiento del agente","Un error del sistema","El historial de conversación"],a:1,e:"El system prompt establece la identidad y las reglas persistentes del agente, por encima de cada mensaje del usuario."},
+   {q:"¿Cuál es una defensa efectiva contra prompt injection?",o:["Usar prompts más largos","Separar instrucciones de datos, validar entradas y limitar los permisos del agente","Subir la temperatura","Ignorar el problema"],a:1,e:"Aislar los datos del usuario de las instrucciones del sistema y aplicar el mínimo privilegio reduce el riesgo de injection."}]},
+
+ {n:4,title:"Herramientas de inteligencia artificial generativa",tag:"IA Generativa",dur:"1h 55m",level:"Básico",
+  desc:"Panorama práctico de las herramientas: modelos de texto, imagen, voz y video, y cómo elegir la adecuada.",
+  obj:["Comparar los principales modelos y proveedores","Elegir la herramienta según coste, calidad y privacidad","Generar texto, imágenes, voz y video con IA","Integrar APIs de IA en tus flujos"],
+  lessons:[
+   {t:"Mapa de modelos: texto, imagen, voz, video",d:"20m",desc:"Claude, GPT, Gemini, y modelos de imagen/voz. Fortalezas de cada uno."},
+   {t:"Criterios de selección: coste, calidad, privacidad",d:"18m",desc:"Cloud vs local, ventana de contexto y cumplimiento de datos."},
+   {t:"Generación multimodal en la práctica",d:"22m",desc:"De un brief a imagen, locución y video con herramientas actuales."},
+   {t:"Conectar APIs de IA a tus automatizaciones",d:"20m",desc:"Claves, autenticación y llamadas desde n8n/Make/código."}],
+  quiz:[
+   {q:"¿Qué factor es clave al elegir un modelo para datos sensibles de empresa?",o:["Que sea el más popular","La privacidad y el cumplimiento (dónde se procesan y almacenan los datos)","El color del logo","La velocidad únicamente"],a:1,e:"Con datos sensibles, la privacidad, la residencia de datos y el cumplimiento normativo (p. ej. GDPR) son decisivos."},
+   {q:"¿Qué es la 'ventana de contexto' de un modelo?",o:["El tiempo de respuesta","La cantidad máxima de texto (tokens) que puede considerar a la vez","El precio por mes","La interfaz de usuario"],a:1,e:"La ventana de contexto define cuánta información puede manejar el modelo simultáneamente; a mayor ventana, más documentos caben."},
+   {q:"¿Qué ventaja principal ofrece un modelo ejecutado localmente (on-premise)?",o:["Siempre es más inteligente","Control total de los datos y funcionamiento sin enviar información a terceros","Es gratis siempre","No necesita hardware"],a:1,e:"Los modelos locales mantienen los datos dentro de la organización, ideal para información confidencial, a cambio de más infraestructura."}]},
+
+ {n:5,title:"Creación de agentes con n8n",tag:"No-code",dur:"2h 40m",level:"Intermedio",
+  desc:"Construye agentes y automatizaciones reales en n8n: nodos, triggers, IA integrada y despliegue.",
+  obj:["Dominar la interfaz y los conceptos de n8n","Crear flujos con triggers, nodos y lógica condicional","Integrar nodos de IA y agentes","Desplegar y monitorizar flujos en producción"],
+  lessons:[
+   {t:"n8n desde cero: instalación y conceptos",d:"22m",desc:"Cloud vs self-hosted, workspace, ejecuciones y credenciales."},
+   {t:"Tu primer flujo: trigger → lógica → acción",d:"26m",desc:"Webhooks, HTTP Request, IF/Switch y manejo de datos JSON."},
+   {t:"El nodo AI Agent y las tools",d:"28m",desc:"Construir un agente con memoria y herramientas dentro de n8n."},
+   {t:"Despliegue, errores y monitorización",d:"24m",desc:"Reintentos, workflows de error y buenas prácticas de producción."}],
+  quiz:[
+   {q:"En n8n, ¿qué es un 'trigger'?",o:["Un error del flujo","El nodo que inicia la ejecución del workflow (webhook, cron, evento)","Un tipo de credencial","El botón de guardar"],a:1,e:"El trigger es el punto de entrada: define qué evento (webhook, horario, mensaje) dispara el flujo."},
+   {q:"¿Qué ventaja da el self-hosting de n8n frente al cloud?",o:["Es más lento","Control de datos y ejecuciones ilimitadas sin coste por ejecución","No permite IA","No se puede automatizar"],a:1,e:"Auto-alojar n8n da control total de los datos y evita límites/costes por ejecución del plan cloud, a cambio de mantener la infraestructura."},
+   {q:"¿Para qué sirve un 'error workflow' en n8n?",o:["Para provocar errores","Para capturar fallos de otros flujos y reaccionar (notificar, reintentar, registrar)","Para borrar datos","Para acelerar el flujo"],a:1,e:"Un error workflow centraliza la gestión de fallos: notifica, registra y permite reintentos, clave para robustez en producción."}]},
+
+ {n:6,title:"Creación de agentes con Make",tag:"No-code",dur:"2h 20m",level:"Intermedio",
+  desc:"Automatiza con Make (Integromat): escenarios visuales, módulos, routers y agentes con IA.",
+  obj:["Diseñar escenarios en el editor visual de Make","Usar módulos, routers, filtros e iteradores","Integrar IA y APIs externas","Gestionar operaciones, errores y consumo"],
+  lessons:[
+   {t:"Make vs n8n: cuándo usar cada uno",d:"16m",desc:"Modelo de operaciones, apps disponibles y curva de aprendizaje."},
+   {t:"Escenarios, módulos y el flujo de datos",d:"24m",desc:"Mapear datos entre módulos, bundles y estructuras."},
+   {t:"Routers, filtros e iteradores",d:"24m",desc:"Ramificar lógica y procesar colecciones de datos."},
+   {t:"IA, manejo de errores y control de operaciones",d:"22m",desc:"Integrar modelos, break/retry y optimizar el consumo."}],
+  quiz:[
+   {q:"En Make, ¿qué es una 'operación'?",o:["Un tipo de módulo","Cada acción que ejecuta un módulo y que cuenta para tu plan","Un error","Un escenario completo"],a:1,e:"Cada vez que un módulo procesa un bundle consume una operación; el plan de Make se factura por operaciones."},
+   {q:"¿Para qué sirve un 'router' en Make?",o:["Para conectar a internet","Para dividir el flujo en varias rutas según condiciones","Para guardar datos","Para acelerar la ejecución"],a:1,e:"El router bifurca el escenario en múltiples caminos, cada uno con sus propios filtros y módulos."},
+   {q:"¿Qué hace un 'iterador' en Make?",o:["Repite el escenario completo","Convierte un array en varios bundles para procesarlos uno a uno","Elimina duplicados","Detiene el flujo"],a:1,e:"El iterador descompone una colección en elementos individuales para procesar cada uno por separado."}]},
+
+ {n:7,title:"Automatización y vibe coding con Claude",tag:"IA + Código",dur:"2h 30m",level:"Intermedio",
+  desc:"Usa Claude como copiloto para construir automatizaciones y software sin ser programador experto: vibe coding.",
+  obj:["Aprovechar Claude para generar y depurar código","Aplicar el enfoque 'vibe coding' de forma disciplinada","Conectar Claude a herramientas vía MCP y agentes","Construir un mini-proyecto funcional de principio a fin"],
+  lessons:[
+   {t:"¿Qué es el vibe coding y cuándo funciona?",d:"18m",desc:"Construir por intención en lenguaje natural, con sus límites y riesgos."},
+   {t:"Claude como copiloto de automatización",d:"26m",desc:"Generar scripts, transformar datos y crear integraciones guiadas."},
+   {t:"MCP, herramientas y agentes con Claude",d:"26m",desc:"Conectar Claude a APIs, archivos y servicios mediante el protocolo MCP."},
+   {t:"Proyecto guiado: automatiza una tarea real",d:"20m",desc:"De la idea a un flujo funcional, iterando con Claude paso a paso."}],
+  quiz:[
+   {q:"¿Cuál es el mayor riesgo del 'vibe coding' sin disciplina?",o:["Que sea muy lento","Aceptar código que funciona 'aparentemente' sin entender ni verificar su seguridad y correctitud","Que consuma internet","Que sea aburrido"],a:1,e:"El vibe coding acelera mucho, pero exige verificar y entender el resultado: código no revisado puede tener fallos de seguridad o lógica."},
+   {q:"¿Qué es MCP (Model Context Protocol)?",o:["Un lenguaje de programación","Un estándar para conectar modelos de IA con herramientas, datos y servicios externos","Un modelo de Claude","Un tipo de prompt"],a:1,e:"MCP estandariza cómo un modelo accede a herramientas y fuentes de datos, facilitando agentes conectados a sistemas reales."},
+   {q:"¿Cuál es una buena práctica al usar Claude para automatizar?",o:["Nunca revisar el resultado","Iterar en pasos pequeños y verificar cada salida antes de avanzar","Pedir todo de una vez","Evitar dar contexto"],a:1,e:"Iterar en pasos pequeños con verificación continua produce resultados más fiables y fáciles de depurar."}]},
+
+ {n:8,title:"Levantamiento de procesos y detección de oportunidades",tag:"Análisis",dur:"2h 10m",level:"Intermedio",
+  desc:"Aprende a mapear procesos, medir su impacto y priorizar qué automatizar primero con criterio de consultor.",
+  obj:["Documentar procesos AS-IS con precisión","Aplicar técnicas de entrevista y process mining","Evaluar automatizabilidad y priorizar por impacto","Construir el pipeline de oportunidades"],
+  lessons:[
+   {t:"Técnicas de levantamiento: entrevistas y observación",d:"22m",desc:"Cómo extraer el proceso real (no el documentado) de los usuarios."},
+   {t:"Process mining e identificación de cuellos de botella",d:"24m",desc:"Descubrir procesos a partir de logs y datos de sistemas."},
+   {t:"Matriz de priorización: impacto vs complejidad",d:"20m",desc:"Puntuar cada oportunidad y ordenar el backlog de automatización."},
+   {t:"Del hallazgo al caso de negocio",d:"18m",desc:"Convertir una oportunidad en una propuesta con ROI defendible."}],
+  quiz:[
+   {q:"¿Qué es un proceso 'AS-IS'?",o:["El proceso ideal futuro","El proceso tal como funciona realmente hoy, con todos sus pasos y excepciones","Un proceso automatizado","Un error de proceso"],a:1,e:"El AS-IS documenta la realidad actual del proceso; es la base para diseñar el TO-BE (estado deseado)."},
+   {q:"¿Qué es el 'process mining'?",o:["Minar criptomonedas","Descubrir y analizar procesos reales a partir de los registros (logs) de los sistemas","Diseñar procesos a mano","Entrevistar usuarios"],a:1,e:"El process mining reconstruye el proceso real desde los datos de eventos de los sistemas, revelando desvíos y cuellos de botella."},
+   {q:"En una matriz impacto-complejidad, ¿qué oportunidades se abordan primero?",o:["Alta complejidad, bajo impacto","Alto impacto y baja complejidad (quick wins)","Las que nadie usa","Al azar"],a:1,e:"Los 'quick wins' (alto impacto, baja complejidad) generan valor rápido y construyen momentum para el programa."}]},
+
+ {n:9,title:"Diseño funcional de soluciones y ciclo de vida de proyectos",tag:"Metodología",dur:"2h 25m",level:"Intermedio",
+  desc:"Traduce una oportunidad en una solución bien documentada y gestiona el proyecto de automatización de punta a punta.",
+  obj:["Redactar documentos de definición funcional (PDD/SDD)","Diseñar el estado TO-BE de un proceso","Gestionar el ciclo de vida (análisis→diseño→desarrollo→UAT→producción)","Definir criterios de aceptación y pruebas"],
+  lessons:[
+   {t:"PDD y SDD: los documentos que evitan el caos",d:"24m",desc:"Process Definition Document y Solution Design Document explicados con plantilla."},
+   {t:"Diseñar el TO-BE y las reglas de negocio",d:"22m",desc:"Rediseñar el proceso antes de automatizarlo: no automatices el desorden."},
+   {t:"Ciclo de vida del proyecto de automatización",d:"24m",desc:"Fases, entregables y roles desde el análisis hasta el hypercare."},
+   {t:"UAT, criterios de aceptación y go-live",d:"15m",desc:"Cómo validar con el negocio y salir a producción con seguridad."}],
+  quiz:[
+   {q:"¿Qué documenta un PDD (Process Definition Document)?",o:["El código del bot","El proceso a automatizar en detalle: pasos, reglas, excepciones y datos","El presupuesto","La factura del cliente"],a:1,e:"El PDD captura el proceso AS-IS a nivel de detalle suficiente para diseñar y construir la automatización."},
+   {q:"¿Por qué no se debe 'automatizar el desorden'?",o:["Porque es imposible","Porque automatizar un proceso ineficiente solo acelera el error; primero se optimiza (TO-BE)","Porque es caro","Porque no es legal"],a:1,e:"Automatizar un mal proceso multiplica sus problemas. Rediseñar el TO-BE antes de automatizar maximiza el valor."},
+   {q:"¿Qué es la fase UAT?",o:["Un tipo de bot","User Acceptance Testing: validación de la solución por parte del negocio antes de producción","Una licencia","Un lenguaje"],a:1,e:"En el UAT, los usuarios de negocio verifican que la solución cumple los requisitos antes del go-live."}]},
+
+ {n:10,title:"Diseño de procesos BPMN",tag:"Modelado",dur:"2h 15m",level:"Intermedio",
+  desc:"Modela procesos con el estándar BPMN 2.0: la lengua franca entre negocio y automatización.",
+  obj:["Dominar la notación BPMN 2.0 (eventos, tareas, gateways)","Modelar procesos con pools y lanes","Representar excepciones y flujos alternativos","Convertir un BPMN en especificación automatizable"],
+  lessons:[
+   {t:"BPMN 2.0: eventos, actividades y gateways",d:"26m",desc:"Los elementos esenciales y su semántica exacta."},
+   {t:"Pools, lanes y colaboración entre actores",d:"20m",desc:"Modelar quién hace qué y los intercambios entre sistemas y personas."},
+   {t:"Gateways y manejo de excepciones",d:"24m",desc:"Exclusivos, paralelos, inclusivos y eventos de error/compensación."},
+   {t:"De BPMN a automatización ejecutable",d:"18m",desc:"Cómo un modelo BPMN guía el diseño del flujo automatizado."}],
+  quiz:[
+   {q:"En BPMN, ¿qué representa un 'gateway' con forma de rombo?",o:["El inicio del proceso","Un punto de decisión o bifurcación/unión del flujo","Una base de datos","Un usuario"],a:1,e:"Los gateways (rombos) controlan la divergencia y convergencia del flujo: decisiones (XOR), paralelismo (AND), etc."},
+   {q:"¿Qué es un 'pool' en BPMN?",o:["Un tipo de tarea","Un contenedor que representa un participante (organización o sistema) del proceso","Un evento de error","Una condición"],a:1,e:"Un pool representa un participante; las lanes dentro del pool subdividen por roles o departamentos."},
+   {q:"¿Qué símbolo representa el inicio de un proceso en BPMN?",o:["Un rombo","Un círculo de borde fino (evento de inicio)","Un rectángulo","Una flecha"],a:1,e:"Los eventos se dibujan como círculos; el evento de inicio tiene borde fino y marca dónde arranca el proceso."}]},
+
+ {n:11,title:"Automatización con RPA",tag:"RPA",dur:"2h 50m",level:"Intermedio",
+  desc:"Fundamentos y práctica de la automatización robótica de procesos: selectores, datos, y bots atendidos vs desatendidos.",
+  obj:["Entender la arquitectura y componentes del RPA","Automatizar interacción con UI (selectores, imágenes)","Manejar datos, variables y estructuras","Diferenciar bots atendidos y desatendidos"],
+  lessons:[
+   {t:"Qué es el RPA y su arquitectura",d:"22m",desc:"Studio, robots y orchestrator: cómo encajan las piezas."},
+   {t:"Automatizar la interfaz: selectores robustos",d:"30m",desc:"Selectores dinámicos, anclas y estrategias anti-fragilidad."},
+   {t:"Datos, variables, argumentos y flujo de control",d:"28m",desc:"Manejo de tipos, bucles, condiciones y data tables."},
+   {t:"Atendido vs desatendido: cuándo usar cada uno",d:"20m",desc:"Casos, licencias y patrones de disparo del bot."}],
+  quiz:[
+   {q:"¿Qué es un 'selector' en RPA?",o:["Un tipo de bot","La forma en que el robot identifica un elemento de la interfaz para interactuar con él","Una licencia","Un servidor"],a:1,e:"El selector es la 'dirección' de un elemento de UI; selectores robustos y dinámicos evitan que el bot se rompa ante cambios."},
+   {q:"¿Cuál es la diferencia clave entre bot atendido y desatendido?",o:["El precio del hardware","El atendido colabora con una persona en su equipo; el desatendido corre solo, sin supervisión","El color de la interfaz","La velocidad de internet"],a:1,e:"El bot atendido se dispara junto a un humano (front-office); el desatendido opera de forma autónoma en servidores (back-office)."},
+   {q:"¿Por qué son importantes los selectores dinámicos?",o:["Se ven mejor","Se adaptan a valores cambiantes (IDs, textos), haciendo el bot resistente a cambios de UI","Son más rápidos","Cuestan menos"],a:1,e:"Los selectores dinámicos usan variables/comodines para tolerar cambios en la interfaz, reduciendo el mantenimiento."}]},
+
+ {n:12,title:"Automatización documental, procesamiento de datos y web scraping",tag:"Datos",dur:"2h 45m",level:"Intermedio",
+  desc:"Extrae, transforma y estructura datos: de PDFs y Excel a datos web mediante scraping responsable.",
+  obj:["Automatizar lectura y escritura de Excel/CSV/PDF","Limpiar y transformar datos con lógica","Extraer datos web con scraping y APIs","Respetar límites legales y técnicos del scraping"],
+  lessons:[
+   {t:"Manejo automatizado de Excel, CSV y PDF",d:"26m",desc:"Leer, escribir, combinar y validar documentos a escala."},
+   {t:"Transformación y limpieza de datos (ETL)",d:"24m",desc:"Normalizar, deduplicar y validar antes de cargar."},
+   {t:"Web scraping: técnicas y herramientas",d:"28m",desc:"Selectores, paginación, datos dinámicos y anti-bloqueo básico."},
+   {t:"APIs vs scraping y aspectos legales",d:"18m",desc:"Cuándo usar API, robots.txt, términos de servicio y buenas prácticas."}],
+  quiz:[
+   {q:"¿Qué significa 'ETL' en procesamiento de datos?",o:["Un lenguaje de programación","Extract, Transform, Load: extraer, transformar y cargar datos","Un tipo de archivo","Un error de datos"],a:1,e:"ETL describe el flujo de extraer datos de una fuente, transformarlos (limpiar/normalizar) y cargarlos en el destino."},
+   {q:"Antes de hacer scraping de un sitio, ¿qué debes revisar?",o:["Nada, todo es libre","Los términos de servicio y el archivo robots.txt del sitio","El color de la web","La velocidad de tu internet"],a:1,e:"robots.txt y los términos de servicio indican qué está permitido; ignorarlos puede acarrear problemas legales y bloqueos."},
+   {q:"¿Cuándo es preferible usar una API en lugar de scraping?",o:["Nunca","Siempre que exista: es más estable, legal y estructurada que raspar HTML","Solo los fines de semana","Cuando la web es lenta"],a:1,e:"Una API oficial ofrece datos estructurados, estables y autorizados; el scraping es el último recurso cuando no hay API."}]},
+
+ {n:13,title:"Diseño de automatizaciones empresariales robustas y control de excepciones",tag:"Robustez",dur:"2h 30m",level:"Avanzado",
+  desc:"Construye automatizaciones que no se rompen: manejo de errores, reintentos, logging y recuperación.",
+  obj:["Diseñar con manejo de excepciones (business vs system)","Implementar reintentos, timeouts y transacciones","Registrar logs útiles para diagnóstico","Aplicar patrones de resiliencia y recuperación"],
+  lessons:[
+   {t:"Excepciones de negocio vs de sistema",d:"22m",desc:"Distinguir y tratar cada tipo de fallo correctamente."},
+   {t:"Reintentos, timeouts e idempotencia",d:"26m",desc:"Patrones para que un reintento no cause daños ni duplicados."},
+   {t:"Logging, trazabilidad y alertas",d:"22m",desc:"Qué registrar y cómo para diagnosticar en minutos, no horas."},
+   {t:"Transacciones, rollback y recuperación",d:"20m",desc:"Diseñar para que un fallo a mitad de proceso no deje datos corruptos."}],
+  quiz:[
+   {q:"¿Cuál es la diferencia entre una excepción de negocio y una de sistema?",o:["No hay diferencia","La de negocio es una regla no cumplida (dato inválido); la de sistema es un fallo técnico (app caída)","Una es más rápida","Solo cambian el color"],a:1,e:"Las de negocio se resuelven con reglas (rechazar, derivar); las de sistema con reintentos/recuperación técnica. Se tratan distinto."},
+   {q:"¿Por qué es importante la 'idempotencia' en un reintento?",o:["Para ir más rápido","Para que repetir la operación no genere efectos duplicados o dañinos","Para gastar menos","No es importante"],a:1,e:"Una operación idempotente puede repetirse sin duplicar efectos (p. ej. no crear dos pedidos), clave para reintentos seguros."},
+   {q:"¿Qué debe registrar un buen sistema de logging?",o:["Solo errores fatales","Eventos clave, entradas/salidas y contexto suficiente para reproducir y diagnosticar","Absolutamente todo sin filtro","Nada, ocupa espacio"],a:1,e:"Un buen log equilibra detalle y ruido: registra hitos, decisiones y contexto para diagnosticar sin saturar."}]},
+
+ {n:14,title:"Orquestación y despliegue de robots con UiPath Orchestrator",tag:"RPA",dur:"2h 35m",level:"Avanzado",
+  desc:"Gestiona bots a escala: despliegue, colas, activos, triggers y monitorización con UiPath Orchestrator.",
+  obj:["Publicar y versionar procesos en Orchestrator","Gestionar robots, entornos y asignaciones","Usar colas (queues) para procesamiento distribuido","Programar triggers y monitorizar la operación"],
+  lessons:[
+   {t:"Arquitectura de Orchestrator: tenants y folders",d:"22m",desc:"Organización, entornos, robots y machines."},
+   {t:"Publicar procesos, assets y credenciales",d:"24m",desc:"Versionado, activos y gestión segura de credenciales."},
+   {t:"Colas y transacciones para escalar",d:"28m",desc:"Distribuir trabajo entre varios robots con queues y retries."},
+   {t:"Triggers, monitorización y alertas",d:"21m",desc:"Programar ejecuciones y vigilar la salud de la operación."}],
+  quiz:[
+   {q:"¿Para qué sirve una 'cola' (queue) en Orchestrator?",o:["Para hacer fila en soporte","Para distribuir ítems de trabajo entre varios robots y reintentar fallos","Para guardar contraseñas","Para diseñar la UI"],a:1,e:"Las queues almacenan transacciones que múltiples robots procesan en paralelo, con reintentos y estados, permitiendo escalar."},
+   {q:"¿Qué es un 'asset' en UiPath Orchestrator?",o:["Un robot físico","Un valor configurable y reutilizable (credenciales, textos, números) gestionado centralmente","Un tipo de error","Una licencia"],a:1,e:"Los assets almacenan configuraciones y credenciales de forma centralizada y segura, sin hardcodearlas en el proceso."},
+   {q:"¿Qué permite un 'trigger' en Orchestrator?",o:["Detener todos los bots","Programar la ejecución automática de procesos (por tiempo o por cola)","Borrar logs","Cambiar el idioma"],a:1,e:"Los triggers lanzan procesos automáticamente según un horario (time trigger) o cuando hay ítems en una cola (queue trigger)."}]},
+
+ {n:15,title:"Creación de aplicaciones low-code con PowerApps y Power Automate",tag:"Low-code",dur:"2h 40m",level:"Intermedio",
+  desc:"Construye apps y flujos empresariales en la Power Platform de Microsoft, integrados con datos corporativos.",
+  obj:["Crear apps canvas y basadas en modelo con PowerApps","Automatizar procesos con Power Automate (cloud/desktop)","Conectar a Dataverse, SharePoint y 365","Aplicar gobernanza y buenas prácticas"],
+  lessons:[
+   {t:"Power Platform: visión general y componentes",d:"20m",desc:"PowerApps, Power Automate, Dataverse y conectores."},
+   {t:"Construir una app canvas paso a paso",d:"28m",desc:"Pantallas, controles, fórmulas y conexión a datos."},
+   {t:"Flujos con Power Automate cloud y desktop",d:"26m",desc:"Automatizar aprobaciones, notificaciones y RPA de escritorio."},
+   {t:"Dataverse, gobernanza y DLP",d:"22m",desc:"Modelo de datos, seguridad y políticas de prevención de fugas."}],
+  quiz:[
+   {q:"¿Qué es una 'app canvas' en PowerApps?",o:["Un lienzo de dibujo","Una app diseñada libremente arrastrando controles, ideal para experiencias a medida","Un flujo de datos","Una base de datos"],a:1,e:"La app canvas ofrece control total del diseño arrastrando controles; la basada en modelo se genera desde el modelo de datos."},
+   {q:"¿Qué es Dataverse en la Power Platform?",o:["Un juego","La base de datos empresarial gestionada donde se almacenan y estructuran los datos","Un tipo de flujo","Un conector de email"],a:1,e:"Dataverse es el almacén de datos seguro y escalable de la Power Platform, con tablas, relaciones y seguridad integradas."},
+   {q:"¿Qué diferencia a Power Automate Desktop del cloud?",o:["El precio del wifi","Desktop hace RPA sobre aplicaciones locales; cloud orquesta servicios y APIs en la nube","Ninguna","El idioma"],a:1,e:"Power Automate Desktop automatiza la UI de apps de escritorio (RPA), mientras que los flujos cloud conectan servicios online."}]},
+
+ {n:16,title:"Procesamiento inteligente de documentos y visión artificial",tag:"IA + Datos",dur:"2h 30m",level:"Avanzado",
+  desc:"Extrae datos de documentos no estructurados con OCR, IDP y visión artificial de forma fiable.",
+  obj:["Aplicar OCR e IDP a facturas, contratos y formularios","Entrenar/configurar modelos de extracción","Validar y corregir con human-in-the-loop","Integrar visión artificial en flujos"],
+  lessons:[
+   {t:"OCR vs IDP: de píxeles a datos estructurados",d:"22m",desc:"Diferencias, límites y cuándo usar cada tecnología."},
+   {t:"Extracción de facturas, contratos y formularios",d:"28m",desc:"Plantillas, modelos preentrenados y campos personalizados."},
+   {t:"Human-in-the-loop y validación",d:"22m",desc:"Cerrar el bucle con revisión humana en casos de baja confianza."},
+   {t:"Visión artificial aplicada a procesos",d:"18m",desc:"Clasificación de imágenes, detección y control de calidad automatizado."}],
+  quiz:[
+   {q:"¿Qué diferencia al IDP del OCR simple?",o:["El IDP es más barato","El IDP comprende el documento y extrae datos estructurados con contexto; el OCR solo convierte imagen en texto","Son idénticos","El OCR usa IA y el IDP no"],a:1,e:"El OCR transcribe texto; el IDP añade comprensión (clasificación, extracción de campos, validación) para obtener datos utilizables."},
+   {q:"¿Para qué sirve el enfoque 'human-in-the-loop'?",o:["Para eliminar humanos","Para que una persona valide o corrija los casos donde el modelo tiene baja confianza","Para ir más lento a propósito","Para entrenar internet"],a:1,e:"Human-in-the-loop combina automatización y criterio humano en los casos dudosos, elevando la precisión sin frenar el volumen."},
+   {q:"¿Qué es el nivel de 'confianza' (confidence) en extracción documental?",o:["La velocidad del OCR","Una puntuación de qué tan seguro está el modelo del dato extraído","El precio","El idioma del documento"],a:1,e:"El confidence indica la certeza del modelo; por debajo de un umbral, el ítem se deriva a revisión humana."}]},
+
+ {n:17,title:"Integración de sistemas: APIs, webhooks y conectores empresariales",tag:"Integración",dur:"2h 20m",level:"Avanzado",propuesto:true,
+  desc:"El pegamento de toda automatización: consumir y exponer APIs, autenticación y sincronización entre sistemas. (Módulo propuesto — completa el salto entre visión artificial y agentes conversacionales).",
+  obj:["Consumir APIs REST con autenticación segura","Diseñar y recibir webhooks para eventos en tiempo real","Manejar OAuth2, tokens y claves de API","Sincronizar datos entre sistemas de forma fiable"],
+  lessons:[
+   {t:"APIs REST: métodos, endpoints y payloads",d:"24m",desc:"GET/POST/PUT/DELETE, headers, JSON y códigos de estado."},
+   {t:"Autenticación: API keys, OAuth2 y tokens",d:"26m",desc:"Flujos de autorización seguros y gestión de secretos."},
+   {t:"Webhooks: eventos en tiempo real",d:"22m",desc:"Recibir, verificar y procesar eventos entrantes con seguridad."},
+   {t:"Sincronización e integración entre sistemas",d:"18m",desc:"Patrones de idempotencia, paginación y reconciliación de datos."}],
+  quiz:[
+   {q:"¿Qué es un webhook?",o:["Un tipo de API key","Una llamada HTTP que un sistema envía automáticamente a otro cuando ocurre un evento","Un error de red","Un lenguaje"],a:1,e:"El webhook invierte el modelo: en lugar de consultar (polling), el sistema origen te notifica en tiempo real al ocurrir un evento."},
+   {q:"¿Para qué se usa OAuth2?",o:["Para cifrar discos","Para autorizar el acceso a recursos sin compartir la contraseña, mediante tokens","Para diseñar webs","Para acelerar APIs"],a:1,e:"OAuth2 permite que una app acceda a recursos de un usuario mediante tokens de acceso, sin exponer credenciales."},
+   {q:"¿Qué indica un código de estado HTTP 200?",o:["Un error del servidor","Que la petición se procesó correctamente (éxito)","Que no existe el recurso","Que falta autenticación"],a:1,e:"El 200 OK indica éxito. Los 4xx son errores del cliente (p. ej. 401 no autenticado, 404 no encontrado) y los 5xx del servidor."}]},
+
+ {n:18,title:"Agentes conversacionales: automatización de chats y llamadas telefónicas",tag:"Agentes",dur:"2h 35m",level:"Avanzado",
+  desc:"Diseña asistentes que atienden por chat y voz: NLU, flujos conversacionales, voz y handoff a humanos.",
+  obj:["Diseñar flujos conversacionales naturales","Integrar chat en WhatsApp, web y redes","Construir agentes de voz para llamadas (voicebots)","Gestionar el traspaso a agentes humanos"],
+  lessons:[
+   {t:"Diseño de conversaciones que no frustran",d:"22m",desc:"Intenciones, contexto, memoria y manejo de ambigüedad."},
+   {t:"Chatbots en WhatsApp, web y redes",d:"26m",desc:"Canales, plantillas y automatización con IA generativa."},
+   {t:"Voicebots: IA que habla por teléfono",d:"28m",desc:"Speech-to-text, TTS, latencia y diseño de llamadas naturales."},
+   {t:"Handoff a humano y métricas de calidad",d:"19m",desc:"Cuándo y cómo derivar, y cómo medir la satisfacción."}],
+  quiz:[
+   {q:"En un agente conversacional, ¿qué es una 'intención' (intent)?",o:["Un error del usuario","El objetivo o propósito que el usuario expresa en su mensaje","Un tipo de voz","Un canal de chat"],a:1,e:"La intención representa lo que el usuario quiere lograr (p. ej. 'consultar saldo'); el agente la detecta para responder adecuadamente."},
+   {q:"¿Qué tecnologías necesita un voicebot para funcionar?",o:["Solo un teléfono","Speech-to-text (transcribir), un modelo de lenguaje y text-to-speech (voz)","Solo internet","Un fax"],a:1,e:"El voicebot transcribe la voz (STT), razona con el LLM y responde con voz sintetizada (TTS), cuidando la latencia."},
+   {q:"¿Por qué es clave un buen 'handoff' a humano?",o:["Para ahorrar internet","Para derivar con contexto los casos que el bot no debe o no puede resolver, sin frustrar al usuario","Para eliminar agentes","No es importante"],a:1,e:"Un handoff fluido, con el contexto de la conversación, evita que el usuario repita todo y mantiene la calidad del servicio."}]},
+
+ {n:19,title:"Interacción con avatares inteligentes",tag:"IA + Video",dur:"1h 50m",level:"Avanzado",
+  desc:"Crea presentadores y asistentes con rostro y voz mediante avatares generados por IA.",
+  obj:["Generar avatares realistas con voz sincronizada","Producir video con avatares para formación y soporte","Integrar avatares en tiempo real con agentes","Considerar ética, consentimiento y usos responsables"],
+  lessons:[
+   {t:"Panorama de avatares por IA",d:"18m",desc:"Herramientas, calidad, idiomas y casos de uso reales."},
+   {t:"De guion a video con avatar",d:"24m",desc:"Producir contenido escalable de formación y marketing."},
+   {t:"Avatares en tiempo real con agentes",d:"20m",desc:"Conectar un avatar interactivo a un agente conversacional."},
+   {t:"Ética, consentimiento y deepfakes",d:"14m",desc:"Uso responsable, derechos de imagen y transparencia."}],
+  quiz:[
+   {q:"¿Cuál es un caso de uso empresarial sólido para avatares de IA?",o:["Suplantar a personas sin permiso","Producir videos de formación multilingües a escala sin grabar cada vez","Falsificar noticias","Nada legal"],a:1,e:"Los avatares permiten crear y actualizar formación, soporte y comunicación en varios idiomas de forma rápida y consistente."},
+   {q:"¿Qué consideración ética es imprescindible al usar la imagen o voz de una persona?",o:["Ninguna","Obtener su consentimiento explícito y ser transparente sobre el uso de IA","Solo avisar después","Que quede bonito"],a:1,e:"El consentimiento informado y la transparencia son esenciales para evitar deepfakes no autorizados y problemas legales/éticos."},
+   {q:"¿Qué es la sincronización labial (lip-sync) en un avatar?",o:["Un tipo de micrófono","El ajuste de los movimientos de la boca al audio para que parezca natural","Un idioma","Un error de video"],a:1,e:"El lip-sync alinea el movimiento de los labios con la locución, clave para el realismo y la credibilidad del avatar."}]},
+
+ {n:20,title:"Orquestación avanzada de procesos y agentes",tag:"Arquitectura",dur:"2h 40m",level:"Avanzado",
+  desc:"Coordina múltiples agentes y sistemas: arquitecturas multiagente, colas de eventos y patrones de orquestación.",
+  obj:["Diseñar arquitecturas multiagente coordinadas","Aplicar patrones orquestador-trabajador y event-driven","Gestionar estado, colas y comunicación entre agentes","Monitorizar y depurar sistemas complejos"],
+  lessons:[
+   {t:"Multiagente: cuándo un solo agente no basta",d:"22m",desc:"Descomponer problemas en agentes especializados coordinados."},
+   {t:"Patrones: orquestador-trabajador y jerárquico",d:"26m",desc:"Quién decide, quién ejecuta y cómo se reparten las tareas."},
+   {t:"Arquitecturas event-driven y colas",d:"28m",desc:"Desacoplar sistemas con eventos, colas y mensajería asíncrona."},
+   {t:"Observabilidad de sistemas multiagente",d:"24m",desc:"Trazas, métricas y depuración cuando muchas piezas interactúan."}],
+  quiz:[
+   {q:"¿Qué describe el patrón 'orquestador-trabajador'?",o:["Un único agente lo hace todo","Un agente coordinador delega subtareas a agentes especializados y agrega los resultados","Agentes sin comunicación","Un tipo de base de datos"],a:1,e:"El orquestador planifica y reparte el trabajo entre agentes-trabajadores especializados, luego integra sus salidas."},
+   {q:"¿Qué ventaja aporta una arquitectura 'event-driven'?",o:["Es más barata siempre","Desacopla los sistemas: cada componente reacciona a eventos sin depender directamente de los demás","Elimina los servidores","No necesita código"],a:1,e:"Al comunicarse por eventos/colas, los componentes se desacoplan, escalan de forma independiente y toleran mejor los fallos."},
+   {q:"¿Por qué es más difícil la observabilidad en sistemas multiagente?",o:["No lo es","Porque el comportamiento emerge de muchas interacciones; hace falta trazabilidad de extremo a extremo","Porque usan menos logs","Porque son más lentos"],a:1,e:"Con múltiples agentes interactuando, se necesitan trazas distribuidas y métricas para entender y depurar el comportamiento global."}]},
+
+ {n:21,title:"Marco legal, normativo y de ciberseguridad en la automatización",tag:"Gobernanza",dur:"2h 10m",level:"Avanzado",
+  desc:"Automatiza cumpliendo la ley: protección de datos, el AI Act, seguridad y gestión de accesos.",
+  obj:["Aplicar GDPR y normativa de protección de datos","Entender el AI Act y la clasificación de riesgo","Asegurar credenciales, secretos y accesos","Implementar auditoría y trazabilidad"],
+  lessons:[
+   {t:"Protección de datos: GDPR en la práctica",d:"24m",desc:"Bases legales, minimización, derechos y datos personales en flujos."},
+   {t:"El AI Act y la regulación de la IA",d:"22m",desc:"Niveles de riesgo, obligaciones y qué significa para tus agentes."},
+   {t:"Ciberseguridad de automatizaciones",d:"24m",desc:"Gestión de secretos, mínimo privilegio y superficie de ataque de los bots."},
+   {t:"Auditoría, trazabilidad y cumplimiento",d:"15m",desc:"Registrar quién hizo qué para superar auditorías con tranquilidad."}],
+  quiz:[
+   {q:"Según el principio de 'minimización de datos' del GDPR, se debe:",o:["Recoger todos los datos posibles","Recoger y tratar solo los datos estrictamente necesarios para la finalidad","Guardar datos para siempre","Compartir datos libremente"],a:1,e:"La minimización obliga a tratar únicamente los datos necesarios para el propósito declarado, reduciendo riesgo y responsabilidad."},
+   {q:"El AI Act clasifica los sistemas de IA principalmente por:",o:["Su precio","Su nivel de riesgo (inaceptable, alto, limitado, mínimo)","El país de origen","El idioma"],a:1,e:"El AI Act adopta un enfoque basado en riesgo: a mayor riesgo, más obligaciones de transparencia, control y documentación."},
+   {q:"¿Qué es el principio de 'mínimo privilegio' en seguridad?",o:["Dar acceso total a todos","Conceder a cada bot/usuario solo los permisos imprescindibles para su tarea","No usar contraseñas","Compartir credenciales"],a:1,e:"El mínimo privilegio limita el daño potencial: cada componente accede únicamente a lo que necesita, nada más."}]},
+
+ {n:22,title:"Ética, transparencia y mitigación de riesgos en IA",tag:"Ética",dur:"1h 45m",level:"Avanzado",
+  desc:"Construye IA responsable: sesgos, transparencia, supervisión humana y gestión de riesgos.",
+  obj:["Detectar y mitigar sesgos en sistemas de IA","Aplicar transparencia y explicabilidad","Diseñar supervisión humana significativa","Gestionar riesgos y comunicar límites del sistema"],
+  lessons:[
+   {t:"Sesgos: de dónde vienen y cómo mitigarlos",d:"22m",desc:"Sesgo en datos, modelos y decisiones automatizadas."},
+   {t:"Transparencia y explicabilidad",d:"18m",desc:"Que el usuario sepa que habla con IA y por qué se decidió algo."},
+   {t:"Supervisión humana significativa",d:"18m",desc:"Human oversight real, no un botón decorativo."},
+   {t:"Gestión de riesgos y comunicación de límites",d:"14m",desc:"Anticipar el mal uso y comunicar honestamente las capacidades."}],
+  quiz:[
+   {q:"¿De dónde proviene con más frecuencia el sesgo en un sistema de IA?",o:["Del hardware","De los datos de entrenamiento que reflejan sesgos históricos o desequilibrios","Del color de la interfaz","Del idioma del usuario"],a:1,e:"El sesgo suele originarse en datos no representativos o con prejuicios históricos; detectarlo y corregirlo es responsabilidad del diseñador."},
+   {q:"¿Qué exige el principio de transparencia en IA?",o:["Ocultar que es IA","Informar claramente al usuario cuándo interactúa con IA y, cuando aplica, por qué se tomó una decisión","Usar palabras difíciles","Nada"],a:1,e:"La transparencia implica que las personas sepan que tratan con IA y puedan entender, en lo posible, las decisiones que les afectan."},
+   {q:"¿Qué es una 'supervisión humana significativa'?",o:["Un humano que aprueba todo sin mirar","Un control humano real capaz de entender, cuestionar y revertir decisiones de la IA","Eliminar a los humanos","Un log automático"],a:1,e:"La supervisión significativa da a la persona capacidad e información reales para intervenir, no una aprobación automática de trámite."}]}
+];
+
+/* ---- SERIE: temporadas, nombres de episodio y gamificación ---- */
+const SEASONS=[
+ {n:1,title:"El Despertar",sub:"Fundamentos e IA generativa",eps:[1,2,3,4]},
+ {n:2,title:"El Arsenal",sub:"Construyendo tus primeros agentes",eps:[5,6,7]},
+ {n:3,title:"El Método",sub:"Del proceso caótico a la solución",eps:[8,9,10]},
+ {n:4,title:"La Fuerza",sub:"RPA y automatización empresarial",eps:[11,12,13,14]},
+ {n:5,title:"La Expansión",sub:"Plataformas e inteligencia documental",eps:[15,16,17]},
+ {n:6,title:"El Dominio",sub:"Agentes avanzados y gobernanza",eps:[18,19,20,21,22]}
+];
+const CODE={1:"El Origen",2:"La Mente",3:"El Lenguaje Secreto",4:"El Arsenal Creativo",5:"El Constructor",
+ 6:"El Conector",7:"El Copiloto",8:"El Cazador de Procesos",9:"El Arquitecto",10:"El Cartógrafo",
+ 11:"La Máquina",12:"El Extractor",13:"El Guardián",14:"El Orquestador",15:"El Alquimista",
+ 16:"Los Ojos de la Máquina",17:"El Puente",18:"La Voz",19:"El Rostro Sintético",20:"El Director",
+ 21:"El Centinela",22:"La Conciencia"};
+const LEVELS=[
+ {min:0,t:"Recluta"},{min:400,t:"Operador"},{min:800,t:"Constructor"},{min:1200,t:"Estratega"},
+ {min:1600,t:"Arquitecto"},{min:2000,t:"Maestro de la Automatización"}];
+const XP_PER=100;
+// comentarios demo por episodio (prueba social)
+const CNAMES=["Lucía M.","Diego R.","Sofía P.","Martín G.","Valentina C.","Andrés T.","Camila V.","Joaquín S."];
+const CTEXTS=[
+ "Este episodio me voló la cabeza. Lo apliqué el mismo día en un flujo real.",
+ "El formato de serie engancha muchísimo, terminé la temporada sin darme cuenta.",
+ "La misión final me costó pero valió cada minuto. Ya quiero el próximo episodio.",
+ "Nunca un curso me había mantenido tan enganchado. Se siente como Netflix pero aprendes.",
+ "El reto me hizo repasar y de verdad se fija el concepto. Genial la gamificación.",
+ "Me encantó la parte práctica, la narrativa hace que todo tenga sentido."];
+function seasonOf(n){return SEASONS.find(s=>s.eps.includes(n));}
+function epInSeason(n){const s=seasonOf(n);return s?s.eps.indexOf(n)+1:n;}
+function pad2(x){return String(x).padStart(2,'0');}
+function levelInfo(){
+  const xp=progress.done.length*XP_PER;
+  let cur=LEVELS[0],idx=0;
+  LEVELS.forEach((l,i)=>{if(xp>=l.min){cur=l;idx=i;}});
+  const next=LEVELS[idx+1];
+  const floor=cur.min,ceil=next?next.min:cur.min+400;
+  const pct=next?Math.round((xp-floor)/(ceil-floor)*100):100;
+  return{xp,level:idx+1,title:cur.t,next,pct,ceil};
+}
+function avatarColor(name){const c=['#FFB454','#6674FF','#3FD07F','#8B7BFF','#FF9A3D','#5AC8FA'];
+  let h=0;for(const ch of name)h=(h*31+ch.charCodeAt(0))%c.length;return c[h];}
+
+const FAQ=[
+ {q:"¿Necesito saber programar para hacer este curso?",a:"No. Empezamos desde los fundamentos y gran parte del programa es no-code/low-code (n8n, Make, Power Platform). En los módulos con código, usamos IA (Claude) como copiloto, así que avanzas aunque no seas desarrollador."},
+ {q:"¿Cuánto tiempo tengo para completarlo?",a:"El acceso es de por vida en los planes Self-paced y Pro. Avanzas a tu ritmo y conservas todas las actualizaciones futuras del programa sin coste adicional."},
+ {q:"¿El certificado tiene validez?",a:"Emitimos un certificado de finalización verificable al completar los 22 módulos y sus evaluaciones. Acredita las competencias trabajadas; no es un título oficial universitario, sino una certificación de programa profesional."},
+ {q:"¿Qué herramientas necesito y tienen coste?",a:"La mayoría ofrece planes gratuitos suficientes para aprender (n8n, Make, Power Platform, UiPath Community). Te indicamos en cada módulo qué usar y cómo empezar sin gastar."},
+ {q:"¿Y si no me convence?",a:"Tienes 14 días de garantía. Si sientes que no es para ti, escríbenos y te devolvemos el 100%, sin preguntas."},
+ {q:"¿Incluye soporte o es solo grabado?",a:"Self-paced es autoguiado con evaluaciones. El plan Pro añade mentorías grupales en vivo, comunidad privada y revisión de tu proyecto final."},
+ {q:"No tengo mucho tiempo, ¿podré con esto?",a:"Sí. Está en formato serie por episodios cortos: avanzas 15-25 minutos cuando puedas, con XP y progreso que te mantienen enganchado. Muchos alumnos completan una temporada por semana."},
+ {q:"¿Esto no lo hace gratis la IA por sí sola?",a:"La IA es la herramienta; el valor está en el criterio para detectar oportunidades, diseñar la solución y ponerla en producción sin que se rompa. Eso es lo que se paga y lo que enseña esta serie."},
+ {q:"¿Me servirá para conseguir clientes o un mejor puesto?",a:"El programa está orientado a resultados: aprendes a vender e implementar automatización. Incluimos plantilla de propuesta comercial y un proyecto final para tu portafolio. No garantizamos ingresos, pero te damos las habilidades y las herramientas."},
+ {q:"¿Puedo pagar en cuotas?",a:"Sí, el plan Pro puede pagarse en 3 cuotas. Al integrar tu pasarela (Stripe) defines las opciones de pago único o en cuotas."}
+];
+
+/* =================================================================
+   RENDER LANDING
+   ================================================================= */
+const tickSvg='<span class="tick">✓</span>';
+function renderCurriculum(){
+  const el=document.getElementById('currList');
+  el.innerHTML=SEASONS.map(s=>`
+    <div class="season-head">
+      <span class="sn">TEMPORADA ${s.n}</span>
+      <h4>${s.title}</h4>
+      <span class="ssub">${s.sub} · ${s.eps.length} ep.</span>
+    </div>
+    ${s.eps.map(n=>{const m=COURSE.find(x=>x.n===n);return `
+    <div class="mod" id="cmod${m.n}">
+      <button class="mod-head" onclick="toggleMod(${m.n})">
+        <span class="mod-num">EP&nbsp;${pad2(epInSeason(m.n))}</span>
+        <span class="mod-title"><i style="font-family:var(--font-serif);color:var(--indigo-2);font-size:14px">“${CODE[m.n]}”</i> · ${m.title}${m.propuesto?' <span style="color:var(--amber);font-size:11px;font-family:var(--font-mono)">(propuesto)</span>':''}</span>
+        <span class="mod-tag">${m.tag} · ${m.dur}</span>
+        <span class="mod-plus"></span>
+      </button>
+      <div class="mod-body" id="cbody${m.n}">
+        <div class="mod-body-in">
+          <p class="desc">${m.desc}</p>
+          <ul class="obj">${m.obj.map(o=>`<li>${tickSvg}${o}</li>`).join('')}</ul>
+        </div>
+      </div>
+    </div>`;}).join('')}`).join('');
+}
+function toggleMod(n){
+  const m=document.getElementById('cmod'+n),b=document.getElementById('cbody'+n);
+  const open=m.classList.toggle('open');
+  b.style.maxHeight=open?b.scrollHeight+'px':'0';
+}
+function renderFaq(){
+  document.getElementById('faqList').innerHTML=FAQ.map((f,i)=>`
+    <div class="qa" id="qa${i}">
+      <button onclick="toggleFaq(${i})">${f.q}<span class="mod-plus"></span></button>
+      <div class="qa-body" id="qab${i}"><p>${f.a}</p></div>
+    </div>`).join('');
+}
+function toggleFaq(i){
+  const q=document.getElementById('qa'+i),b=document.getElementById('qab'+i);
+  const open=q.classList.toggle('open');
+  b.style.maxHeight=open?b.scrollHeight+'px':'0';
+}
+
+/* =================================================================
+   PROGRESS (localStorage)
+   ================================================================= */
+const LS_KEY='hyperflow_progress_v1';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(LS_KEY))||{done:[],enrolled:false,name:''}}catch(e){return{done:[],enrolled:false,name:''}}}
+function saveProgress(p){try{localStorage.setItem(LS_KEY,JSON.stringify(p))}catch(e){}}
+let progress=loadProgress();
+let currentModule=1;
+
+/* =================================================================
+   CAMPUS
+   ================================================================= */
+function openCampus(){
+  document.getElementById('landing').classList.add('hidden');
+  document.getElementById('campus').classList.add('active');
+  document.getElementById('certView').classList.remove('active');
+  document.querySelector('.main').style.display='';
+  window.scrollTo(0,0);
+  renderSide();
+  loadModule(currentModule);
+}
+function showLanding(){
+  vpStop();
+  document.getElementById('landing').classList.remove('hidden');
+  document.getElementById('campus').classList.remove('active');
+  window.scrollTo(0,0);
+}
+function renderSide(){
+  const el=document.getElementById('sideList');
+  el.innerHTML=SEASONS.map(s=>{
+    const sdone=s.eps.filter(n=>progress.done.includes(n)).length;
+    return `<div class="side-season"><span>T${s.n} · ${s.title}</span><span class="sst">${sdone}/${s.eps.length}</span></div>
+    ${s.eps.map(n=>{const m=COURSE.find(x=>x.n===n);const done=progress.done.includes(n);
+      return `<button class="side-mod ${done?'done':''} ${n===currentModule?'current':''}" id="side${n}" onclick="loadModule(${n})">
+        <span class="sn">EP${pad2(epInSeason(n))}</span>
+        <span class="st">${m.title}</span>
+        <span class="sc"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>
+      </button>`;}).join('')}`;
+  }).join('');
+  updateProgressBar();
+}
+function updateProgressBar(){
+  const pct=Math.round(progress.done.length/COURSE.length*100);
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('progTxt').textContent=`${progress.done.length} / ${COURSE.length} episodios`;
+  document.getElementById('progPct').textContent=pct+'%';
+  const li=levelInfo();
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  set('xpLevel',li.level);set('xpTitle',li.title);set('xpNow',li.xp+' XP');
+  set('xpNext',li.next?('→ '+li.ceil+' XP'):'MAX');
+  const xf=document.getElementById('xpFill');if(xf)xf.style.width=li.pct+'%';
+  const badge=document.getElementById('xpBadge');if(badge)badge.textContent=['🎖️','🥉','🥈','🥇','💎','👑'][li.level-1]||'👑';
+}
+let currentTab='contenido';
+function loadModule(n){
+  vpStop();
+  currentModule=n;currentTab='contenido';
+  document.getElementById('certView').classList.remove('active');
+  document.querySelector('.main').style.display='';
+  const m=COURSE.find(x=>x.n===n);
+  document.querySelectorAll('.side-mod').forEach(s=>s.classList.remove('current'));
+  const sd=document.getElementById('side'+n);if(sd)sd.classList.add('current');
+  const done=progress.done.includes(n);
+  const s=seasonOf(n);
+  const main=document.getElementById('lessonMain');
+  main.innerHTML=`
+    <div class="ep-eyebrow">Temporada ${s.n} · Episodio ${pad2(epInSeason(n))} · ${s.title} ${done?'· ✅ SUPERADO':''}</div>
+    <div class="ep-code">“${CODE[n]}”</div>
+    <h1>${m.title}${m.propuesto?' <span style="color:var(--amber);font-size:14px;font-family:var(--font-mono);vertical-align:middle">(propuesto)</span>':''}</h1>
+    <div class="lesson-meta">
+      <span>🎬 ${m.lessons.length} escenas</span><span>⏱ ${m.dur}</span><span>📊 ${m.level}</span><span>⚡ +${XP_PER} XP al superar el reto</span>
+    </div>
+    ${renderPlayer(m)}
+    <p class="player-note">// 🎬 Video: clase real curada de YouTube (verificada). 🎙️ Clase IA: narración con voz de IA + subtítulos, 100% gratis y sin depender de internet. Elige el modo arriba.</p>
+    <div class="tabs">
+      <button class="tab active" data-t="contenido" onclick="switchTab('contenido')">Contenido</button>
+      <button class="tab" data-t="recursos" onclick="switchTab('recursos')">Recursos</button>
+      <button class="tab" data-t="quiz" onclick="switchTab('quiz')">Cuestionario</button>
+    </div>
+    <div class="tab-panel active" id="panel-contenido">${renderContent(m)}</div>
+    <div class="tab-panel" id="panel-recursos">${renderResources(m)}</div>
+    <div class="tab-panel" id="panel-quiz">${renderQuiz(m)}</div>
+    ${renderCliff(n)}
+    ${renderComments(n)}
+    <div class="lesson-nav">
+      <button class="btn btn-ghost" onclick="loadModule(${Math.max(1,n-1)})" ${n===1?'style="visibility:hidden"':''}>← Episodio anterior</button>
+      <button class="btn btn-primary" onclick="loadModule(${Math.min(22,n+1)})" ${n===22?'style="visibility:hidden"':''}>Siguiente episodio →</button>
+    </div>`;
+  vpInit(m);
+  if(window.innerWidth<=960){const el=document.getElementById('lessonMain');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}
+  else window.scrollTo(0,0);
+}
+function renderContent(m){
+  return `<div class="content-blk">
+    <p><b style="color:var(--text)">Sobre este módulo.</b> ${m.desc}</p>
+    <h3>Lo que vas a aprender</h3>
+    <ul class="obj" style="margin-bottom:8px">${m.obj.map(o=>`<li>${tickSvg}${o}</li>`).join('')}</ul>
+    <h3>Lecciones</h3>
+    ${m.lessons.map((l,i)=>`
+      <div class="lesson-row">
+        <span class="ln">${String(i+1).padStart(2,'0')}</span>
+        <div class="lt"><b>${l.t}</b><span>${l.desc}</span></div>
+        <span class="ld">${l.d}</span>
+      </div>`).join('')}
+  </div>`;
+}
+function renderResources(m){
+  const ic={md:'<path d="M6 2h9l5 5v13a1 1 0 01-1 1H6a1 1 0 01-1-1V3a1 1 0 011-1z"/><path d="M14 2v6h6"/><path d="M9 13l2 2 4-4"/>',
+    yt:'<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>',
+    tpl:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'};
+  return `<div class="res">
+    <a href="#" onclick="downloadNotes(${m.n});return false">
+      <span class="ri"><svg viewBox="0 0 24 24" fill="none" stroke-width="2">${ic.md}</svg></span>
+      <span class="rt"><b>Apuntes del episodio (descargar)</b><span>Guía completa: guion, objetivos y respuestas del reto</span></span>
+      <span class="rd">.MD</span>
+    </a>
+    <a href="https://youtu.be/${YTMAP[m.n]}" target="_blank" rel="noopener">
+      <span class="ri"><svg viewBox="0 0 24 24" fill="none" stroke-width="2">${ic.yt}</svg></span>
+      <span class="rt"><b>Video de la clase en YouTube</b><span>Ábrelo a pantalla completa o guárdalo para ver luego</span></span>
+      <span class="rd">↗</span>
+    </a>
+    <a href="#" onclick="downloadNotes(${m.n});return false">
+      <span class="ri"><svg viewBox="0 0 24 24" fill="none" stroke-width="2">${ic.tpl}</svg></span>
+      <span class="rt"><b>Checklist práctico</b><span>Incluido dentro de los apuntes descargables</span></span>
+      <span class="rd">.MD</span>
+    </a>
+  </div>
+  <p class="player-note" style="margin-top:16px">// Los apuntes se generan en tu dispositivo al instante. Para vender, puedes reemplazarlos por tus PDFs y plantillas en la nube.</p>`;
+}
+function downloadNotes(n){
+  const m=COURSE.find(x=>x.n===n),s=seasonOf(n);
+  let md='# '+m.title+'\n\n';
+  md+='> Temporada '+s.n+' ('+s.title+') · Episodio '+pad2(epInSeason(n))+' · "'+CODE[n]+'"\n\n';
+  md+=m.desc+'\n\n## Objetivos de aprendizaje\n';
+  m.obj.forEach(o=>md+='- '+o+'\n');
+  md+='\n## Guion de la clase\n';
+  (SCRIPTS[n]||[]).forEach((b,i)=>{md+='\n### '+(i+1)+'. '+b.t+'\n'+b.s+'\n';});
+  md+='\n## Escenas / lecciones\n';
+  m.lessons.forEach((l,i)=>md+='- **'+l.t+'** ('+l.d+'): '+l.desc+'\n');
+  md+='\n## Checklist práctico\n';
+  m.obj.forEach(o=>md+='- [ ] '+o+'\n');
+  md+='\n## Reto del episodio (con respuestas)\n';
+  m.quiz.forEach((q,i)=>{md+='\n**'+(i+1)+'. '+q.q+'**\n';
+    q.o.forEach((op,oi)=>md+='- '+(oi===q.a?'✅ ':'')+op+'\n');
+    md+='> '+q.e+'\n';});
+  md+='\n---\nHyperflow Academy · Programa de Hiperautomatización con IA + RPA\n';
+  const blob=new Blob([md],{type:'text/markdown;charset=utf-8'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='EP'+pad2(n)+'-'+CODE[n].replace(/\s+/g,'-')+'.md';
+  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+  showToast('📥','Apuntes descargados','EP '+pad2(n)+' · '+m.title);
+}
+function renderQuiz(m){
+  return `
+  <div class="quiz-intro">
+    <span class="qic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></span>
+    <div><b>Reto del episodio</b><p>Supera las ${m.quiz.length} preguntas con 70% o más para completar el episodio y ganar +${XP_PER} XP.</p></div>
+  </div>
+  <form id="quizForm" onsubmit="return false">
+    ${m.quiz.map((q,qi)=>`
+      <div class="q" id="q${qi}">
+        <div class="qq"><span class="qn">${qi+1}.</span><span>${q.q}</span></div>
+        ${q.o.map((opt,oi)=>`
+          <label class="opt" id="q${qi}o${oi}">
+            <input type="radio" name="q${qi}" value="${oi}">
+            <span>${opt}<span class="exp">${q.e}</span></span>
+          </label>`).join('')}
+      </div>`).join('')}
+    <div class="quiz-actions">
+      <button type="button" class="btn btn-primary" onclick="gradeQuiz(${m.n})">Corregir cuestionario</button>
+      <button type="button" class="btn btn-ghost" onclick="loadModule(${m.n})">Reiniciar</button>
+      <span class="quiz-result" id="quizResult"></span>
+    </div>
+  </form>`;
+}
+function renderCliff(n){
+  if(n>=22) return `<div class="cliff"><div><div class="cn">🏆 Gran final de la serie</div><div class="cc">“${CODE[22]}”</div><div class="ct">Has llegado al último episodio. Supera el reto y reclama tu certificado de Arquitecto.</div></div><button class="btn btn-amber cbtn" onclick="showCertificate()">🎓 Certificado</button></div>`;
+  const nx=n+1,ns=seasonOf(nx),m2=COURSE.find(x=>x.n===nx),cross=seasonOf(n).n!==ns.n;
+  return `<div class="cliff">
+    <div>
+      <div class="cn">${cross?('★ Fin de la Temporada '+seasonOf(n).n+' · Estreno: Temporada '+ns.n+' “'+ns.title+'”'):'Próximo episodio'}</div>
+      <div class="cc">“${CODE[nx]}”</div>
+      <div class="ct">EP ${pad2(epInSeason(nx))} · ${m2.title}</div>
+    </div>
+    <button class="btn btn-primary cbtn" onclick="loadModule(${nx})">Ver ahora →</button>
+  </div>`;
+}
+function commentHTML(name,meta,text){
+  const initials=name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  return `<div class="cItem"><div class="cAv" style="background:${avatarColor(name)}">${initials}</div>
+    <div class="cBody"><b>${name}</b><div class="cmeta">${meta}</div><p>${text}</p></div></div>`;
+}
+function renderComments(n){
+  const count=12+(n*7)%40,items=[];
+  for(let i=0;i<3;i++){items.push({name:CNAMES[(n*3+i)%CNAMES.length],text:CTEXTS[(n*2+i)%CTEXTS.length],days:((n+i)%9)+1});}
+  return `<div class="comments">
+    <h3>Comentarios <span style="color:var(--amber)">${count}</span></h3>
+    <div class="csub">// La comunidad de esta temporada. Comparte tu avance y aprende de otros.</div>
+    <div class="cadd">
+      <input id="cInput" placeholder="Escribe un comentario en este episodio..." onkeydown="if(event.key==='Enter')addComment()">
+      <button class="btn btn-primary" onclick="addComment()">Publicar</button>
+    </div>
+    <div id="cList">${items.map(c=>commentHTML(c.name,'hace '+c.days+' día'+(c.days>1?'s':''),c.text)).join('')}</div>
+  </div>`;
+}
+function addComment(){
+  const inp=document.getElementById('cInput');if(!inp)return;const v=inp.value.trim();if(!v)return;
+  document.getElementById('cList').insertAdjacentHTML('afterbegin',commentHTML(progress.name||'Tú','ahora',v));
+  inp.value='';
+}
+function showToast(icon,title,sub){
+  let t=document.getElementById('toast');
+  if(!t){t=document.createElement('div');t.id='toast';t.className='toast';document.body.appendChild(t);}
+  t.innerHTML=`<span class="ti">${icon}</span><div><b>${title}</b><span>${sub}</span></div>`;
+  t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),4000);
+}
+function switchTab(t){
+  currentTab=t;
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.t===t));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+t).classList.add('active');
+}
+function gradeQuiz(n){
+  const m=COURSE.find(x=>x.n===n);
+  let correct=0,answered=0;
+  m.quiz.forEach((q,qi)=>{
+    const sel=document.querySelector(`input[name="q${qi}"]:checked`);
+    // reveal correct answer
+    q.o.forEach((_,oi)=>{
+      const lab=document.getElementById(`q${qi}o${oi}`);
+      lab.classList.remove('correct','wrong','reveal');
+      if(oi===q.a){lab.classList.add('correct','reveal');}
+    });
+    if(sel){
+      answered++;
+      const val=parseInt(sel.value);
+      if(val===q.a)correct++;
+      else document.getElementById(`q${qi}o${val}`).classList.add('wrong','reveal');
+    }
+  });
+  const pct=Math.round(correct/m.quiz.length*100);
+  const res=document.getElementById('quizResult');
+  const pass=pct>=70;
+  res.className='quiz-result show '+(pass?'pass':'fail');
+  res.textContent=`${pass?'✓ Aprobado':'✕ No superado'} · ${correct}/${m.quiz.length} correctas (${pct}%)`;
+  if(pass&&!progress.done.includes(n)){
+    const before=levelInfo().level;
+    progress.done.push(n);saveProgress(progress);
+    const after=levelInfo();
+    renderSide();
+    const sd=document.getElementById('side'+n);if(sd)sd.classList.add('done');
+    if(after.level>before){
+      showToast('👑','¡Subiste a Nivel '+after.level+'!','Ahora eres “'+after.title+'” · '+after.xp+' XP');
+    }else if(n<22){
+      showToast('🔓','+'+XP_PER+' XP · Episodio superado','Desbloqueado: “'+CODE[n+1]+'” (EP '+pad2(epInSeason(n+1))+')');
+    }else{
+      showToast('🏆','¡Serie completada!','Reclama tu certificado de Arquitecto');
+    }
+  }else if(pass){
+    showToast('✓','Reto superado','Ya tenías este episodio completado');
+  }
+  updateProgressBar();
+}
+/* ---- Videos reales por episodio (IDs verificados vía oEmbed de YouTube) ---- */
+const YTMAP={1:"UjBJJuxo5C4",2:"-VBmFYQR6ss",3:"wM1NrkwJrvU",4:"4j5Za97fSqI",5:"3o5aljS0ohk",
+ 6:"nqBTZvAwcJg",7:"TgMtUBZ0lpM",8:"exZUTLbirY8",9:"QHOu7CEJR88",10:"BbT0IN3y2V4",
+ 11:"b4Jjh3xq4Qc",12:"NCfmEcyqgao",13:"NLSDDisVy5U",14:"Eg6h-7KgxXs",15:"Vrjrm6UDK1I",
+ 16:"oxZLNHlLUAI",17:"T4Et1bk3UDI",18:"654BzA_c4Zs",19:"xWlOXkYsR3g",20:"8d2ZIwMmoDY",
+ 21:"nvO-_tXqk9M",22:"NqBajgT6yj0"};
+
+/* Audio de LOCUTOR (voz neuronal Álvaro es-ES, generada con Edge-TTS, gratis).
+   Cada episodio: array de clips MP3 (data URI) alineado a las diapositivas de la clase.
+   Si un episodio tiene audio, suena la voz de locutor real; si no, cae a la voz del navegador. */
+const AUDIO=/*AUDIO_JSON*/{}/*END_AUDIO*/;
+function hasLocutor(n){return AUDIO[n]&&AUDIO[n].length;}
+
+/* ================= GUIONES DE CLASE (escritos, tono instructor) =================
+   Cada beat: t = titular en pantalla · s = narración (voz IA + subtítulo) */
+const SCRIPTS={
+ 1:[
+  {t:"Bienvenido a la Temporada 1",s:"Bienvenido. Durante los próximos minutos vas a entender por qué la hiperautomatización es la habilidad más rentable de esta década. No te voy a dar teoría de manual: te voy a dar el criterio que usan los consultores que cobran miles por un proyecto."},
+  {t:"¿Qué es la hiperautomatización?",s:"Automatizar una tarea es enseñarle a una máquina a hacer un paso. Hiperautomatizar es orquestar muchas tecnologías (inteligencia artificial, robots, reglas de negocio y análisis) para automatizar un proceso completo de principio a fin. La diferencia no es de grado, es de ambición."},
+  {t:"RPA no es suficiente",s:"El RPA clásico imita clics y teclas. Funciona, pero es frágil y solo cubre tareas estructuradas. Cuando le sumas inteligencia artificial, el sistema empieza a leer documentos, entender lenguaje y decidir. Ahí dejas de tener un robot y empiezas a tener un empleado digital."},
+  {t:"El dinero está en el proceso correcto",s:"El error número uno es automatizar lo que se ve bonito. El acierto es automatizar lo repetitivo, de alto volumen y basado en reglas. Ese es el proceso que se paga solo en semanas. Aprende a calcular horas ahorradas y errores evitados: ese número es tu propuesta de venta."},
+  {t:"Recapitulación",s:"Recuerda tres cosas: hiperautomatizar es orquestar, la inteligencia artificial es lo que multiplica el valor, y el ROI manda. En el próximo episodio, La Mente, abrimos la caja negra de la inteligencia artificial generativa. Supera el reto y nos vemos ahí."}],
+ 2:[
+  {t:"La Mente detrás de todo",s:"Todo lo que vas a construir en este curso se apoya en un motor: los modelos de lenguaje. Si entiendes cómo piensan, dejarás de tenerles miedo y empezarás a mandarles con precisión."},
+  {t:"Cómo piensa un modelo",s:"Un modelo de lenguaje no busca en internet ni razona como tú. Predice el siguiente fragmento de texto, llamado token, basándose en patrones que aprendió. Por eso es brillante redactando y peligroso inventando datos. A eso último lo llamamos alucinación."},
+  {t:"De chatbot a agente",s:"Un chatbot responde. Un agente actúa. La diferencia es que el agente tiene tres cosas: memoria para recordar, herramientas para ejecutar acciones, y un bucle de razonamiento para decidir qué hacer a continuación hasta cumplir un objetivo."},
+  {t:"Dónde brilla y dónde falla",s:"La inteligencia artificial generativa brilla resumiendo, clasificando, redactando y conversando. Falla en cálculos exactos y en datos que no tiene. La clave profesional es darle contexto y herramientas, no pedirle que adivine."},
+  {t:"Recapitulación",s:"Los modelos predicen texto, los agentes ejecutan objetivos, y las alucinaciones se controlan con contexto. En el siguiente episodio, El Lenguaje Secreto, aprenderás a hablarle a la máquina para que haga exactamente lo que quieres."}],
+ 3:[
+  {t:"El Lenguaje Secreto",s:"El prompt es el volante de la inteligencia artificial. La mayoría escribe pedidos vagos y culpa al modelo. Tú vas a aprender a escribir instrucciones que producen resultados consistentes, una y otra vez."},
+  {t:"La estructura que nunca falla",s:"Un buen prompt tiene rol, contexto, tarea, restricciones y formato. Le dices quién es, qué situación hay, qué debe hacer, qué límites tiene y cómo quieres la respuesta. Con esa estructura pasas de respuestas aleatorias a respuestas de calidad profesional."},
+  {t:"Piensa paso a paso",s:"Cuando la tarea es compleja, pídele al modelo que razone paso a paso antes de responder. Esta técnica, llamada cadena de pensamiento, mejora enormemente la precisión en lógica y cálculo. Y si necesitas datos estructurados, exige el formato: por ejemplo, un JSON válido."},
+  {t:"Blinda tu agente",s:"Si un usuario puede escribirle a tu agente, alguien intentará manipularlo. Se llama inyección de prompt. La defensa es separar las instrucciones del sistema de los datos del usuario y dar al agente solo los permisos mínimos que necesita."},
+  {t:"Recapitulación",s:"Estructura, razonamiento paso a paso y seguridad. Con esto ya escribes prompts de nivel profesional. En el próximo episodio recorremos el arsenal de herramientas de inteligencia artificial que vas a usar en el mundo real."}],
+ 4:[
+  {t:"El Arsenal Creativo",s:"No existe la mejor herramienta de inteligencia artificial. Existe la herramienta correcta para cada trabajo. En este episodio te doy el mapa para elegir sin perderte."},
+  {t:"Texto, imagen, voz y video",s:"Hoy puedes generar texto, imágenes, voz y video con inteligencia artificial. Cada familia de modelos tiene fortalezas distintas. Tu ventaja no es dominar una, sino saber combinarlas para producir en minutos lo que antes tomaba días."},
+  {t:"Los tres criterios que importan",s:"Elige según tres variables: costo, calidad y privacidad. Si trabajas con datos sensibles de empresa, la privacidad y el cumplimiento mandan sobre todo lo demás. A veces la respuesta correcta es un modelo que corre dentro de tu propia infraestructura."},
+  {t:"Todo se conecta por API",s:"La magia real aparece cuando conectas estas herramientas a tus flujos mediante sus interfaces de programación, las APIs. Una clave, una llamada, y tu automatización ya piensa. Eso es lo que construiremos en las próximas temporadas."},
+  {t:"Recapitulación",s:"Combina modalidades, decide por costo, calidad y privacidad, y conéctalo todo por API. Cierras la Temporada 1. En la Temporada 2, El Arsenal, empiezas a construir agentes de verdad con n8n."}],
+ 5:[
+  {t:"El Constructor",s:"Se acabó la teoría. En este episodio construyes tu primer agente funcional con n8n, una de las plataformas más potentes y flexibles que existen, y además de código abierto."},
+  {t:"Nodos, disparadores y datos",s:"En n8n todo es un flujo de nodos. Un disparador inicia el proceso, ya sea un webhook, un horario o un evento. Luego los nodos transforman datos y ejecutan acciones. Pensar en flujos de datos es el cambio mental que necesitas."},
+  {t:"El nodo de agente",s:"n8n incluye un nodo de agente de inteligencia artificial al que le conectas un modelo, una memoria y herramientas. Con eso montas un asistente que consulta, decide y responde dentro de tu propio flujo, sin escribir apenas código."},
+  {t:"Pensar en producción",s:"Construir es fácil; mantener es lo profesional. Diseña desde el inicio el manejo de errores: reintentos, un flujo de error que te avise, y registros para diagnosticar. Un agente que falla en silencio es peor que no tener agente."},
+  {t:"Recapitulación",s:"Disparador, nodos, agente y robustez. Ya tienes tu primer empleado digital. En el próximo episodio construimos lo mismo desde otro ángulo con Make, y aprenderás cuándo conviene cada uno."}],
+ 6:[
+  {t:"El Conector",s:"Make, antes Integromat, es la herramienta visual más elegante para automatizar. Si n8n es un taller flexible, Make es una línea de montaje clara y visual. Dominar ambas te vuelve imparable."},
+  {t:"Escenarios y módulos",s:"En Make construyes escenarios formados por módulos. Cada módulo ejecuta una acción y consume una operación. Entender ese modelo de operaciones es clave, porque de él depende tu costo mensual."},
+  {t:"Rutas y colecciones",s:"Con routers divides el flujo en varios caminos según condiciones. Con iteradores procesas listas elemento por elemento. Estas dos piezas te permiten modelar prácticamente cualquier lógica de negocio."},
+  {t:"n8n o Make",s:"Regla práctica: elige Make por rapidez, catálogo de aplicaciones y facilidad visual. Elige n8n por control total, código abierto y ejecuciones ilimitadas cuando lo alojas tú. No hay ganador absoluto, hay contexto."},
+  {t:"Recapitulación",s:"Escenarios, operaciones, routers e iteradores. Ya manejas las dos grandes plataformas no-code. En el próximo episodio damos un salto: automatizar y programar con Claude usando vibe coding."}],
+ 7:[
+  {t:"El Copiloto",s:"Y si te dijera que puedes construir software y automatizaciones describiendo lo que quieres en español. Eso es el vibe coding, y Claude es uno de los mejores copilotos para lograrlo."},
+  {t:"Qué es el vibe coding",s:"Vibe coding es programar por intención: describes el resultado y la inteligencia artificial escribe el código. Acelera todo de forma brutal, pero tiene una regla de oro: nunca aceptes código que no entiendes ni verificas. Velocidad sin control es deuda técnica."},
+  {t:"Claude como copiloto",s:"Usa Claude para generar scripts, transformar datos, crear integraciones y depurar errores. El secreto está en iterar en pasos pequeños y verificar cada salida. Pequeños pasos verificados vencen a un gran salto sin revisar."},
+  {t:"Conecta con el mundo real",s:"Con el protocolo de contexto, conocido como MCP, Claude puede acceder a archivos, APIs y servicios. Ahí deja de ser un chat y se convierte en un agente que opera sobre tus sistemas reales."},
+  {t:"Recapitulación",s:"Programa por intención, verifica siempre y conecta con MCP. Cierras la Temporada 2. En la Temporada 3, El Método, aprendes a detectar qué vale la pena automatizar antes de tocar una sola herramienta."}],
+ 8:[
+  {t:"El Cazador de Procesos",s:"Las mejores automatizaciones no empiezan en una herramienta, empiezan en una libreta. En este episodio aprendes a cazar oportunidades de oro dentro de cualquier empresa."},
+  {t:"El proceso real, no el ideal",s:"Cuando preguntas cómo funciona un proceso, te cuentan el ideal. La realidad tiene atajos, excepciones y parches. Tu trabajo es documentar el proceso tal como es de verdad, el estado actual, con entrevistas y observación directa."},
+  {t:"Deja que los datos hablen",s:"Los sistemas guardan registros de todo. Con técnicas de process mining reconstruyes el proceso real a partir de esos datos y descubres los cuellos de botella que nadie te iba a confesar."},
+  {t:"Prioriza como consultor",s:"No todo se automatiza primero. Ordena las oportunidades en una matriz de impacto contra complejidad. Los que dan alto impacto con baja complejidad son tus victorias rápidas: haz esas primero y ganarás credibilidad."},
+  {t:"Recapitulación",s:"Documenta la realidad, deja hablar a los datos y prioriza por impacto. Ya tienes ojo de consultor. En el próximo episodio convertimos esa oportunidad en una solución bien diseñada."}],
+ 9:[
+  {t:"El Arquitecto",s:"Una idea sin diseño es un caos garantizado. En este episodio aprendes a convertir una oportunidad en una solución documentada que cualquier equipo puede construir sin malentendidos."},
+  {t:"Los documentos que salvan proyectos",s:"Dos documentos evitan el noventa por ciento de los desastres: el que define el proceso, y el que define la solución. Uno describe qué hace el proceso; el otro, cómo lo va a resolver la automatización. Escríbelos y dormirás tranquilo."},
+  {t:"No automatices el desorden",s:"Antes de automatizar, rediseña. Automatizar un proceso ineficiente solo acelera el error. Diseña primero el estado deseado, límpialo, y recién entonces constrúyelo. Esta sola idea justifica el curso entero."},
+  {t:"El ciclo de vida",s:"Todo proyecto sigue un ciclo: análisis, diseño, desarrollo, pruebas con el usuario y puesta en marcha. Saltarte la validación del negocio es la forma más rápida de fracasar en producción."},
+  {t:"Recapitulación",s:"Documenta, rediseña antes de automatizar y respeta el ciclo de vida. Ya piensas como arquitecto de soluciones. En el próximo episodio aprendes el idioma universal de los procesos: BPMN."}],
+ 10:[
+  {t:"El Cartógrafo",s:"Necesitas un idioma que entiendan por igual el negocio y la tecnología. Ese idioma se llama BPMN, y es el mapa que ordena cualquier proceso por complejo que sea."},
+  {t:"Tres símbolos que lo explican todo",s:"BPMN se apoya en pocos símbolos: eventos, que son círculos y marcan inicios y fines; actividades, que son rectángulos y representan tareas; y compuertas, que son rombos y controlan las decisiones. Con eso ya modelas el ochenta por ciento."},
+  {t:"Quién hace qué",s:"Los carriles y piscinas muestran quién ejecuta cada paso: qué hace una persona, qué hace un sistema, qué hace otra área. Ver el proceso repartido por responsables revela dónde se pierde el tiempo."},
+  {t:"Del mapa a la máquina",s:"Un buen diagrama BPMN no es decoración: es la especificación que guía tu automatización. Modela las excepciones y los caminos alternativos, porque ahí es donde los procesos reales se rompen."},
+  {t:"Recapitulación",s:"Eventos, actividades, compuertas y carriles. Ya sabes cartografiar procesos. Cierras la Temporada 3. En la Temporada 4, La Fuerza, entras al mundo del RPA empresarial."}],
+ 11:[
+  {t:"La Máquina",s:"Bienvenido al RPA, la tecnología que pone robots de software a trabajar veinticuatro horas sin quejarse. En este episodio entiendes cómo funciona por dentro."},
+  {t:"Cómo ve el robot",s:"Un robot interactúa con las pantallas usando selectores, que son la dirección de cada botón y cada campo. El secreto de un robot que no se rompe está en usar selectores dinámicos, que toleran los cambios de la interfaz."},
+  {t:"Atendido o desatendido",s:"Hay dos tipos de robot. El atendido trabaja junto a una persona, en su computadora, ayudándola en el momento. El desatendido corre solo en servidores, sin supervisión, procesando volumen de noche y de día. Cada uno resuelve un problema distinto."},
+  {t:"Datos bajo control",s:"Un robot maneja variables, condiciones y bucles igual que un programa. Dominar el flujo de datos y las tablas es lo que separa un robot de juguete de uno que procesa miles de transacciones sin errores."},
+  {t:"Recapitulación",s:"Selectores robustos, el tipo de robot correcto y control de datos. Ya entiendes la fuerza bruta de la automatización. En el próximo episodio la apuntamos a documentos, datos y la web."}],
+ 12:[
+  {t:"El Extractor",s:"El ochenta por ciento de la información valiosa está atrapada en documentos y páginas web. En este episodio aprendes a liberarla y convertirla en datos que tus sistemas puedan usar."},
+  {t:"Documentos a escala",s:"Leer y escribir Excel, CSV y PDF de forma automática es pan de cada día en la automatización. La clave no es solo extraer, sino validar: datos sucios que entran producen decisiones equivocadas que salen."},
+  {t:"Limpia antes de usar",s:"El proceso se llama ETL: extraer, transformar y cargar. Entre la fuente y el destino, normalizas, eliminas duplicados y validas. Ese paso invisible es el que hace confiable a todo el sistema."},
+  {t:"Scraping con criterio",s:"Cuando no hay una API, el web scraping extrae datos directamente de las páginas. Pero hazlo con criterio: respeta los términos del sitio y el archivo robots. Y recuerda la regla: si existe una API oficial, úsala siempre antes que raspar HTML."},
+  {t:"Recapitulación",s:"Procesa documentos, limpia con ETL y raspa la web con responsabilidad. Ya alimentas de datos a tus automatizaciones. En el próximo episodio las hacemos a prueba de balas."}],
+ 13:[
+  {t:"El Guardián",s:"La diferencia entre un aficionado y un profesional no es lo que pasa cuando todo funciona, sino lo que pasa cuando algo falla. En este episodio blindas tus automatizaciones."},
+  {t:"Dos tipos de error",s:"Existen dos fallos distintos. El de negocio es una regla que no se cumple, como un dato inválido, y se resuelve con lógica. El de sistema es técnico, como una aplicación caída, y se resuelve reintentando o recuperando. Confundirlos es un error de novato."},
+  {t:"Reintentar sin romper",s:"Cuando reintentas una operación, necesitas que sea idempotente: que repetirla no genere efectos duplicados, como crear dos pedidos. La idempotencia es la base de todo reintento seguro."},
+  {t:"Registra para diagnosticar",s:"Un buen registro te deja resolver un incidente en minutos en lugar de horas. Registra hitos, decisiones y contexto suficiente para reproducir el problema, sin ahogarte en ruido."},
+  {t:"Recapitulación",s:"Distingue los errores, hazlo idempotente y registra con criterio. Tus automatizaciones ya resisten el mundo real. En el próximo episodio las desplegamos a escala con UiPath Orchestrator."}],
+ 14:[
+  {t:"El Orquestador",s:"Un robot está bien. Cien robots coordinados es una fábrica. En este episodio aprendes a gobernar tu fuerza robótica con UiPath Orchestrator."},
+  {t:"El centro de mando",s:"Orchestrator es la torre de control: organiza robots, entornos y procesos desde un solo lugar. Publicas, versionas y controlas todo de forma centralizada, como un director de orquesta frente a sus músicos."},
+  {t:"Colas para escalar",s:"El secreto de la escala son las colas. Cargas el trabajo en una cola y varios robots lo procesan en paralelo, con reintentos automáticos. Así pasas de un robot lento a un enjambre que devora volumen."},
+  {t:"Secretos y disparadores",s:"Nunca escribas contraseñas dentro de un proceso. Guárdalas como activos protegidos. Y programa disparadores para que los procesos arranquen solos, por horario o cuando llega trabajo a una cola."},
+  {t:"Recapitulación",s:"Centraliza, escala con colas y automatiza el arranque con disparadores. Cierras la Temporada 4. En la Temporada 5, La Expansión, entras al mundo low-code de Microsoft."}],
+ 15:[
+  {t:"El Alquimista",s:"Y si pudieras crear una aplicación empresarial completa casi sin programar. Con la Power Platform de Microsoft, eso es exactamente lo que vas a hacer."},
+  {t:"Cuatro piezas, infinitas soluciones",s:"La plataforma tiene cuatro piezas: Power Apps para crear aplicaciones, Power Automate para los flujos, Dataverse como base de datos, y los conectores para unirlo todo. Con ellas resuelves problemas reales de negocio en horas."},
+  {t:"Del lienzo a la app",s:"Con una aplicación de lienzo diseñas la interfaz arrastrando controles y conectándolos a tus datos. En una tarde tienes una app que tu equipo puede usar en el móvil. Esa velocidad es la promesa del low-code."},
+  {t:"Nube y escritorio",s:"Power Automate tiene dos caras: los flujos en la nube conectan servicios y APIs, y Power Automate Desktop hace RPA sobre aplicaciones de tu computadora. Juntos cubren casi cualquier automatización dentro del ecosistema Microsoft."},
+  {t:"Recapitulación",s:"Cuatro piezas, apps de lienzo y automatización en nube y escritorio. Ya construyes soluciones low-code. En el próximo episodio le damos ojos a la máquina con visión artificial."}],
+ 16:[
+  {t:"Los Ojos de la Máquina",s:"Hasta ahora tus automatizaciones leían datos limpios. En este episodio aprenden a ver: a entender documentos desordenados e imágenes como lo haría una persona."},
+  {t:"De píxeles a datos",s:"El OCR convierte una imagen en texto. Pero el procesamiento inteligente de documentos va mucho más allá: comprende el documento, clasifica su tipo y extrae los campos que importan, ya sea una factura, un contrato o un formulario."},
+  {t:"El humano en el bucle",s:"Ningún modelo acierta el cien por ciento. Por eso cada extracción trae un nivel de confianza. Cuando la confianza es baja, el caso pasa a revisión de una persona. Así combinas la velocidad de la máquina con el criterio humano."},
+  {t:"Visión más allá del texto",s:"La visión artificial también clasifica imágenes, detecta objetos y controla la calidad en una línea de producción. Donde hay una cámara, hay una oportunidad de automatizar una inspección."},
+  {t:"Recapitulación",s:"OCR, procesamiento inteligente con humano en el bucle y visión artificial. Tus automatizaciones ya ven. En el próximo episodio conectamos todos los sistemas entre sí."}],
+ 17:[
+  {t:"El Puente",s:"Ninguna automatización vive sola. Todo lo que has construido necesita hablar con otros sistemas, y el idioma de esa conversación son las APIs. Este es el pegamento de todo."},
+  {t:"Qué es una API",s:"Una API es la puerta por la que dos sistemas intercambian datos. Con métodos sencillos pides información o envías órdenes, y recibes respuestas en un formato ordenado, normalmente JSON. Entender esto abre miles de integraciones."},
+  {t:"El webhook, al revés",s:"Un webhook invierte la lógica. En vez de preguntar una y otra vez si pasó algo, el sistema te avisa en el instante en que ocurre. Es la diferencia entre revisar el buzón cada hora y recibir una notificación al momento."},
+  {t:"Seguridad primero",s:"Conectar sistemas exige cuidar el acceso. Se usan claves y protocolos como OAuth para autorizar sin exponer contraseñas. Y siempre, el principio de mínimo privilegio: cada conexión accede solo a lo que necesita."},
+  {t:"Recapitulación",s:"APIs para conectar, webhooks para reaccionar en tiempo real y seguridad como base. Cierras la Temporada 5. En la Temporada 6, El Dominio, llevamos los agentes al máximo nivel."}],
+ 18:[
+  {t:"La Voz",s:"Imagina un asistente que atiende a tus clientes por chat y por teléfono, veinticuatro horas, sin perder la paciencia. En este episodio lo construyes."},
+  {t:"Diseñar la conversación",s:"Un buen agente conversacional no improvisa. Se diseña alrededor de las intenciones del usuario: lo que realmente quiere lograr. Detectar la intención y mantener el contexto es lo que separa una conversación fluida de una frustrante."},
+  {t:"Chat y también voz",s:"En chat integras el agente en WhatsApp, la web o redes. En voz das un salto: la máquina transcribe lo que oye, razona y responde hablando. El reto técnico es la latencia, porque en una llamada cada segundo de silencio incomoda."},
+  {t:"Saber cuándo pasar la posta",s:"El mejor agente conoce sus límites. Cuando un caso lo supera, lo deriva a un humano con todo el contexto de la conversación, para que el cliente no tenga que repetir nada. Ese traspaso elegante define la calidad del servicio."},
+  {t:"Recapitulación",s:"Diseña por intenciones, atiende en chat y voz, y deriva con contexto. Ya creas asistentes conversacionales. En el próximo episodio les damos un rostro con avatares inteligentes."}],
+ 19:[
+  {t:"El Rostro Sintético",s:"El texto informa, pero un rostro conecta. En este episodio aprendes a crear presentadores y asistentes con cara y voz generados por inteligencia artificial."},
+  {t:"De guion a video",s:"Con las herramientas actuales, escribes un guion y obtienes un video con un avatar que lo narra, con la boca sincronizada y en varios idiomas. Puedes producir y actualizar formación a escala sin volver a grabar una cámara."},
+  {t:"Avatares que responden",s:"El siguiente nivel es conectar un avatar a un agente conversacional en tiempo real. El resultado es un asistente con rostro que escucha, piensa y te responde mirándote. Es el futuro de la atención digital."},
+  {t:"Poder con responsabilidad",s:"Esta tecnología exige ética. Usar la imagen o la voz de una persona requiere su consentimiento explícito y ser transparente sobre el uso de inteligencia artificial. El límite entre innovación y engaño es el permiso."},
+  {t:"Recapitulación",s:"Produce video desde un guion, conecta avatares a agentes y actúa con ética. En el próximo episodio orquestamos muchos agentes trabajando juntos."}],
+ 20:[
+  {t:"El Director",s:"Un agente resuelve una tarea. Los problemas grandes necesitan varios agentes especializados trabajando en equipo. En este episodio aprendes a dirigir esa orquesta."},
+  {t:"Cuando uno no basta",s:"En lugar de un agente que lo hace todo mal, usas varios que hacen una cosa bien. El patrón más común es orquestador y trabajadores: un agente coordina y reparte, y agentes especializados ejecutan. Luego el coordinador integra los resultados."},
+  {t:"Desacopla con eventos",s:"Los sistemas robustos se comunican por eventos y colas, no por conexiones directas. Así cada pieza reacciona a su ritmo, escala por separado y tolera fallos. A esto se le llama arquitectura orientada a eventos."},
+  {t:"Ver lo invisible",s:"Cuando muchos agentes interactúan, el comportamiento emerge y se vuelve difícil de seguir. Por eso necesitas observabilidad: trazas y métricas de extremo a extremo que te muestren qué está pasando por dentro."},
+  {t:"Recapitulación",s:"Divide en especialistas, desacopla con eventos y observa todo. Ya diseñas sistemas multiagente. En el próximo episodio aterrizamos lo legal y la ciberseguridad."}],
+ 21:[
+  {t:"El Centinela",s:"Automatizar sin cumplir la ley es construir sobre arena. En este episodio proteges tu trabajo y a tu empresa conociendo el marco legal y de seguridad."},
+  {t:"Protege los datos",s:"La protección de datos exige un principio clave: minimización. Trata solo los datos estrictamente necesarios para tu finalidad. Menos datos significa menos riesgo y menos responsabilidad si algo sale mal."},
+  {t:"La ley de la inteligencia artificial",s:"La nueva regulación clasifica los sistemas de inteligencia artificial por su nivel de riesgo. A mayor riesgo, más obligaciones de transparencia, control y documentación. Saber en qué categoría cae tu solución ya no es opcional."},
+  {t:"Seguridad por diseño",s:"Tus robots manejan credenciales y acceden a sistemas críticos. Gestiona los secretos con cuidado, aplica el mínimo privilegio y deja rastro de auditoría de quién hizo qué. Un bot comprometido es una puerta abierta a toda la empresa."},
+  {t:"Recapitulación",s:"Minimiza datos, clasifica por riesgo y asegura por diseño. Ya automatizas dentro de la ley. En el episodio final hablamos de lo más humano de todo: la ética."}],
+ 22:[
+  {t:"La Conciencia",s:"Llegaste al último episodio. Toda esta potencia que ahora dominas exige algo más que técnica: exige criterio. En este episodio cierras el círculo con la ética."},
+  {t:"El sesgo vive en los datos",s:"La inteligencia artificial aprende de datos, y los datos cargan los sesgos del pasado. Si no los detectas y corriges, tu sistema puede discriminar sin que nadie lo decida. Vigilar el sesgo es responsabilidad de quien construye."},
+  {t:"Transparencia real",s:"Las personas tienen derecho a saber cuándo interactúan con una inteligencia artificial y, en lo posible, a entender por qué se tomó una decisión que les afecta. Ocultarlo destruye la confianza que tanto cuesta ganar."},
+  {t:"Supervisión que importa",s:"Una supervisión humana significativa no es un botón decorativo de aprobar. Es dar a la persona información y poder reales para cuestionar y revertir lo que hace la máquina. La última palabra siempre debe poder ser humana."},
+  {t:"Fin de la serie",s:"Detecta el sesgo, sé transparente y mantén al humano al mando. Y con esto completas la serie. Has recorrido de los fundamentos al dominio. Ahora ve, automatiza el mundo con responsabilidad, y reclama tu certificado de Arquitecto. Felicitaciones."}]
+};
+
+/* ---- AI VIDEO PLAYER (narración por IA + slides, 100% navegador) ---- */
+let vp={slides:[],i:0,playing:false,rate:0.95,pitch:0.96,voice:null,mod:null,timer:null};
+const TTS=('speechSynthesis' in window)?window.speechSynthesis:null;
+function scoreVoice(v){
+  const n=(v.name||'').toLowerCase();
+  if(!/^es/i.test(v.lang))return -1;
+  let s=10;
+  if(/natural|neural|online|premium|enhanced/.test(n))s+=20;     // voz HUMANA: máxima prioridad
+  if(/google/.test(n))s+=6;                                      // Google suena más natural que SAPI
+  if(/(pablo|raul|raúl|jorge|diego|carlos|miguel|juan|enrique|álvaro|alvaro|alonso|gonzalo|lorenzo|dario|darío|andres|andrés|felipe|male|hombre|masculin)/.test(n))s+=9; // hombre
+  if(/(sabina|helena|mónica|monica|paulina|laura|elvira|dalia|ximena|marisol|isabela|paloma|catalina|female|mujer|femenin)/.test(n))s-=6; // leve preferencia por hombre
+  if(/es-es/i.test(v.lang))s+=3;                                 // castellano (España)
+  return s;
+}
+function spanishVoices(){return (TTS?TTS.getVoices():[]).filter(v=>/^es/i.test(v.lang)).sort((a,b)=>scoreVoice(b)-scoreVoice(a));}
+function pickVoice(){
+  if(!TTS)return null;
+  if(progress.voiceURI){const saved=TTS.getVoices().find(v=>v.voiceURI===progress.voiceURI);if(saved)return saved;}
+  const sv=spanishVoices();
+  return sv[0]||TTS.getVoices()[0]||null;
+}
+function populateVoices(){
+  const sel=document.getElementById('vvoice');if(!sel)return;
+  const sv=spanishVoices();
+  if(!sv.length){sel.style.display='none';return;}
+  sel.style.display='';
+  sel.innerHTML=sv.map(v=>{const label=v.name.replace(/microsoft|\(natural\)|online/gi,'').replace(/\s+/g,' ').trim();
+    return `<option value="${v.voiceURI}">🎙️ ${label.slice(0,28)}</option>`;}).join('');
+  if(vp.voice)sel.value=vp.voice.voiceURI;
+  updateVoiceHint();
+}
+function vpSetVoice(uri){
+  if(!TTS)return;
+  const v=TTS.getVoices().find(x=>x.voiceURI===uri);
+  if(v){vp.voice=v;progress.voiceURI=uri;saveProgress(progress);updateVoiceHint();if(vp.playing)vpSpeak(vp.i);}
+}
+if(TTS){TTS.onvoiceschanged=()=>{vp.voice=pickVoice();populateVoices();};}
+function buildSlides(m){
+  const s=seasonOf(m.n),sl=[];
+  sl.push({k:'title',big:'“'+CODE[m.n]+'”',title:m.title,sub:'Temporada '+s.n+' · Episodio '+pad2(epInSeason(m.n))+' · '+s.title,
+    say:m.title+'. '+m.desc});
+  if(SCRIPTS[m.n]){
+    SCRIPTS[m.n].forEach((b,i)=>sl.push({k:'lesson',kick:'Parte '+pad2(i+1),title:b.t,text:b.s,say:b.s}));
+  }else{
+    sl.push({k:'obj',kick:'Objetivos',title:'Lo que vas a dominar',bullets:m.obj,say:'En este episodio vas a lograr lo siguiente. '+m.obj.join('. ')+'.'});
+    m.lessons.forEach((l,i)=>sl.push({k:'lesson',kick:'Escena '+pad2(i+1)+' · '+l.d,title:l.t,text:l.desc,say:l.t+'. '+l.desc}));
+    sl.push({k:'end',kick:'Cierre',title:'Ahora te toca a ti',text:'Supera el reto del episodio para ganar tu XP.',say:'Excelente. Ahora supera el reto del episodio para ganar tu experiencia.'});
+  }
+  return sl;
+}
+function renderPlayer(m){
+  const yt=YTMAP[m.n];
+  const beats=(SCRIPTS[m.n]?SCRIPTS[m.n].length:m.lessons.length)+1;
+  return `<div class="vplayer">
+    <div class="vtabs">
+      <button class="vtab active" data-vm="yt" onclick="vpMode(${m.n},'yt')">🎬 Video</button>
+      <button class="vtab" data-vm="ia" onclick="vpMode(${m.n},'ia')">🎙️ Clase narrada por IA</button>
+      <a class="vtab vlink" href="https://youtu.be/${yt}" target="_blank" rel="noopener">Abrir en YouTube ↗</a>
+    </div>
+    <div id="vmYt">
+      <div class="ytfacade" id="ytFacade" onclick="loadYt('${yt}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter')loadYt('${yt}')">
+        <div class="vwm">Video de la clase</div>
+        <button class="vplay" aria-label="Reproducir video"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+        <div class="ytfTitle">${m.title}</div>
+        <div class="ytfNote">▶ Toca para reproducir · vía YouTube</div>
+      </div>
+    </div>
+    <div id="vmIa" style="display:none">
+      <audio id="vaudio" preload="none"></audio>
+      <div class="vstage" id="vstage">
+        <div class="vslide on"><div class="vposter">
+          <div class="vwm">Hyperflow</div>
+          <button class="vplay" onclick="vpToggle()" aria-label="Reproducir clase"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          <div class="vkick">${hasLocutor(m.n)?'🎙️ Voz de locutor (Álvaro)':'Clase narrada por IA'} · ${beats} partes</div>
+          <h3 style="max-width:80%">${m.title}</h3>
+        </div></div>
+      </div>
+      <div class="vcap" id="vcap"><span class="rec"></span><span id="vcapTxt">Pulsa play para iniciar la clase con voz de IA.</span></div>
+      <div class="vprog"><div class="vprog-fill" id="vprog"></div></div>
+      <div class="vctl">
+        <button class="vmain" onclick="vpToggle()"><span id="vpIcon">▶</span><span id="vpLabel">Reproducir</span></button>
+        <button onclick="vpGo(vp.i-1)" title="Escena anterior">⏮</button>
+        <button onclick="vpGo(vp.i+1)" title="Escena siguiente">⏭</button>
+        <span class="vcount" id="vcount">–</span>
+        <span class="vspacer"></span>
+        <select id="vvoice" onchange="vpSetVoice(this.value)" title="Voz de la narración (elige la mejor de tu equipo)" style="max-width:170px"></select>
+        <select id="vrate" onchange="vp.rate=parseFloat(this.value)" title="Velocidad de la voz">
+          <option value="0.9">0.9×</option><option value="1" selected>1×</option><option value="1.15">1.15×</option><option value="1.3">1.3×</option>
+        </select>
+      </div>
+      <div class="vhint" id="vhint" style="display:none">
+        <span>🎧 <b>¿La voz suena robótica?</b> Abre este curso en <b>Microsoft Edge</b> para activar gratis la voz humana natural (Álvaro, castellano). O elige el modo 🎬 Video arriba.</span>
+      </div>
+    </div>
+  </div>`;
+}
+function isNaturalVoice(v){return v&&/natural|neural|online|premium|enhanced|google/i.test(v.name||'');}
+function updateVoiceHint(){
+  const h=document.getElementById('vhint');if(!h)return;
+  const locutor=vp.mod&&hasLocutor(vp.mod.n);
+  h.style.display=(!locutor&&TTS&&!isNaturalVoice(vp.voice))?'':'none';
+}
+function loadYt(id){
+  const w=document.getElementById('vmYt');if(!w)return;
+  w.innerHTML='<div class="ytframe"><iframe src="https://www.youtube-nocookie.com/embed/'+id+'?rel=0&modestbranding=1&autoplay=1" title="Video de la clase" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen loading="lazy"></iframe></div>';
+}
+function vpMode(n,mode){
+  document.querySelectorAll('.vtab[data-vm]').forEach(t=>t.classList.toggle('active',t.dataset.vm===mode));
+  const yt=document.getElementById('vmYt'),ia=document.getElementById('vmIa');
+  if(mode==='ia'){yt.style.display='none';ia.style.display='';}
+  else{ia.style.display='none';yt.style.display='';vpStop();vpIcon(false);}
+}
+function vpInit(m){
+  vp.mod=m;vp.slides=buildSlides(m);vp.i=0;vp.playing=false;
+  if(TTS&&!vp.voice)vp.voice=pickVoice();
+  populateVoices();
+  const c=document.getElementById('vcount');if(c)c.textContent='0 / '+vp.slides.length;
+}
+function vpStop(){
+  vp.playing=false;
+  if(TTS)TTS.cancel();
+  const a=document.getElementById('vaudio');if(a){try{a.pause();}catch(e){}}
+  if(vp.timer){clearTimeout(vp.timer);vp.timer=null;}
+}
+function slideHTML(s){
+  if(s.k==='title')return `<div class="vwm">Hyperflow</div><div class="vkick">${s.sub}</div><div class="vbig">${s.big}</div><h3>${s.title}</h3>`;
+  if(s.k==='obj')return `<div class="vwm">Hyperflow</div><div class="vkick">${s.kick}</div><h3>${s.title}</h3><ul class="vbul">${s.bullets.map(b=>'<li>'+tickSvg+b+'</li>').join('')}</ul>`;
+  if(s.k==='lesson')return `<div class="vwm">Hyperflow</div><div class="vkick">${s.kick}</div><h3>${s.title}</h3><p class="vtext">${s.text}</p>`;
+  return `<div class="vwm">Hyperflow</div><div class="vkick">${s.kick}</div><div class="vbig" style="font-size:clamp(22px,4vw,36px)">${s.title}</div><p class="vtext">${s.text}</p>`;
+}
+function vpShow(i){
+  const stage=document.getElementById('vstage');if(!stage)return;
+  const s=vp.slides[i];
+  stage.innerHTML='<div class="vslide" id="curSlide">'+slideHTML(s)+'</div>';
+  requestAnimationFrame(()=>{const el=document.getElementById('curSlide');if(el)el.classList.add('on');});
+  const cap=document.getElementById('vcapTxt');if(cap)cap.textContent=s.say;
+  const pr=document.getElementById('vprog');if(pr)pr.style.width=((i+1)/vp.slides.length*100)+'%';
+  const c=document.getElementById('vcount');if(c)c.textContent=(i+1)+' / '+vp.slides.length;
+}
+function vpSpeak(i){
+  const s=vp.slides[i];
+  if(TTS)TTS.cancel();
+  if(vp.timer){clearTimeout(vp.timer);vp.timer=null;}
+  const clip=(AUDIO[vp.mod.n]||[])[i];
+  const a=document.getElementById('vaudio');
+  if(clip&&a){
+    try{
+      a.pause();a.src=clip;a.playbackRate=Math.min(2,Math.max(0.5,vp.rate));
+      a.onended=()=>{if(vp.playing&&vp.i===i)vpNextAuto();};
+      a.onerror=()=>{speakTTS(i,s);};
+      const p=a.play();if(p&&p.catch)p.catch(()=>speakTTS(i,s));
+      return;
+    }catch(e){speakTTS(i,s);return;}
+  }
+  speakTTS(i,s);
+}
+function speakTTS(i,s){
+  if(TTS){
+    TTS.cancel();
+    const u=new SpeechSynthesisUtterance(s.say);
+    u.lang=(vp.voice&&vp.voice.lang)||'es-ES';if(vp.voice)u.voice=vp.voice;u.rate=vp.rate;u.pitch=vp.pitch;
+    u.onend=()=>{if(vp.playing&&vp.i===i)vpNextAuto();};
+    TTS.speak(u);
+    const est=Math.max(3500,s.say.length*55/vp.rate);
+    vp.timer=setTimeout(()=>{if(vp.playing&&vp.i===i&&!TTS.speaking)vpNextAuto();},est+1500);
+  }else{
+    const est=Math.max(3500,s.say.length*55/vp.rate);
+    vp.timer=setTimeout(()=>{if(vp.playing&&vp.i===i)vpNextAuto();},est);
+  }
+}
+function vpNextAuto(){
+  if(vp.i<vp.slides.length-1){vpGo(vp.i+1);}
+  else{vp.playing=false;vpIcon(false);const cap=document.getElementById('vcapTxt');if(cap)cap.textContent='Fin de la clase. Pasa al reto del episodio para ganar tu XP. ▸';}
+}
+function vpGo(i){
+  if(i<0)i=0;if(i>vp.slides.length-1)i=vp.slides.length-1;
+  if(vp.timer){clearTimeout(vp.timer);vp.timer=null;}
+  vp.i=i;vpShow(i);
+  if(vp.playing)vpSpeak(i);
+}
+function vpToggle(){
+  if(!vp.slides.length&&vp.mod)vpInit(vp.mod);
+  if(vp.playing){vp.playing=false;vpIcon(false);if(TTS)TTS.cancel();if(vp.timer)clearTimeout(vp.timer);
+    const a=document.getElementById('vaudio');if(a){try{a.pause();}catch(e){}}
+    const cap=document.getElementById('vcapTxt');if(cap)cap.textContent='⏸ En pausa · '+(vp.slides[vp.i]?vp.slides[vp.i].say:'');
+  }else{
+    vp.playing=true;vpIcon(true);vpShow(vp.i);vpSpeak(vp.i);
+  }
+}
+function vpIcon(playing){
+  const ic=document.getElementById('vpIcon'),lb=document.getElementById('vpLabel');
+  if(ic)ic.textContent=playing?'⏸':'▶';if(lb)lb.textContent=playing?'Pausar':'Reproducir';
+}
+function resourceNote(e){e.preventDefault();alert('📎 Recurso de demostración.\n\nAl publicar el curso, enlaza aquí tus PDFs, plantillas y ejercicios reales (alojados en tu Drive, S3 o la propia plataforma).');}
+
+/* =================================================================
+   CERTIFICATE
+   ================================================================= */
+function showCertificate(){
+  vpStop();
+  const total=COURSE.length,done=progress.done.length;
+  document.querySelector('.main').style.display='none';
+  const cv=document.getElementById('certView');cv.classList.add('active');
+  document.querySelectorAll('.side-mod').forEach(s=>s.classList.remove('current'));
+  if(done<total){
+    cv.innerHTML=`<div class="locked-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+      <h2 style="margin-bottom:10px">Certificado bloqueado</h2>
+      <p>Completa los ${total} episodios de la serie para desbloquear tu certificado.<br>Progreso actual: <b style="color:var(--text)">${done}/${total}</b> (${Math.round(done/total*100)}%).</p>
+      <button class="btn btn-primary" style="margin-top:24px" onclick="loadModule(${Math.min(total,done+1)})">Continuar la serie →</button>
+    </div>`;
+    return;
+  }
+  const name=progress.name||'Nombre del Alumno';
+  cv.innerHTML=`
+    <div class="cert">
+      <div class="ceb">Certificado de Finalización</div>
+      <h2>Programa de Hiperautomatización con IA + RPA</h2>
+      <p>Se certifica que</p>
+      <div class="name" id="certName">${name}</div>
+      <p>ha completado las 6 temporadas y los 22 episodios de la serie, dominando agentes de IA generativa, RPA, orquestación empresarial y automatización de procesos de extremo a extremo.</p>
+      <div class="sig">
+        <div><b>Hyperflow Academy</b>Entidad formadora</div>
+        <div><b>2026</b>Año de emisión</div>
+        <div><b>HF-${1000+done}-CERT</b>Código verificable</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:24px">
+      <input id="certInput" placeholder="Escribe tu nombre para el certificado" value="${progress.name||''}"
+        style="padding:13px 16px;background:var(--ink-3);border:1px solid var(--line-2);border-radius:11px;color:var(--text);width:320px;max-width:100%;font-size:14px"
+        oninput="updateCertName(this.value)">
+      <div style="margin-top:16px"><button class="btn btn-amber" onclick="printCert()">📥 Descargar / imprimir certificado</button></div>
+      <p class="muted" style="font-size:12px;margin-top:12px">🎓 ¡Felicidades! Has completado el programa completo.</p>
+    </div>`;
+  window.scrollTo(0,0);
+}
+function updateCertName(v){progress.name=v;saveProgress(progress);const n=document.getElementById('certName');if(n)n.textContent=v||'Nombre del Alumno';}
+
+/* =================================================================
+   CHECKOUT
+   ================================================================= */
+/* ====== CONFIG DE PAGO (Stripe) ======
+   Pega aquí tus Payment Links de Stripe (Dashboard → Payment Links). Si quedan vacíos,
+   el botón funciona en modo demostración. Con el link puesto, redirige al checkout real. */
+const STRIPE_LINKS={self:'',pro:'',empresa:''};
+const PLANS={self:{p:'$197',n:'Self-paced · pago único',b:'Acceso de por vida'},
+  pro:{p:'$497',n:'Pro + Mentoría · pago único',b:'Más popular'},
+  empresa:{p:'A medida',n:'Empresas · licencias por volumen',b:'B2B'}};
+let currentPlan='pro';
+function openCheckout(plan){
+  currentPlan=plan||'pro';const pl=PLANS[currentPlan];
+  document.getElementById('coTitle').textContent='Inscripción · '+pl.n.split(' · ')[0];
+  document.getElementById('coPrice').textContent=pl.p;
+  document.getElementById('coPlan').textContent=pl.n;
+  document.getElementById('coBadge').textContent=pl.b;
+  document.getElementById('checkoutModal').classList.add('show');
+}
+function closeCheckout(){document.getElementById('checkoutModal').classList.remove('show');}
+function fakeCheckout(){
+  const name=document.getElementById('coName').value.trim();
+  const email=document.getElementById('coEmail').value.trim();
+  if(!name||!email){alert('Completa nombre y email para continuar.');return;}
+  progress.name=name;saveProgress(progress);
+  const link=STRIPE_LINKS[currentPlan];
+  if(link){
+    // Pago real: redirige al Payment Link de Stripe (prellena email)
+    window.location.href=link+(link.includes('?')?'&':'?')+'prefilled_email='+encodeURIComponent(email);
+    return;
+  }
+  progress.enrolled=true;saveProgress(progress);
+  closeCheckout();
+  alert('✓ ¡Inscripción confirmada! (demostración)\n\nPara cobrar de verdad: pega tu Payment Link de Stripe en STRIPE_LINKS dentro del código. Con eso, este botón lleva al checkout real y Stripe confirma el pago.\n\nAbriendo tu campus...');
+  openCampus();
+}
+document.getElementById('checkoutModal').addEventListener('click',e=>{if(e.target.id==='checkoutModal')closeCheckout();});
+
+/* =================================================================
+   HERO NETWORK CANVAS (orquestación de agentes)
+   ================================================================= */
+function initNet(){
+  const c=document.getElementById('net');if(!c)return;
+  const ctx=c.getContext('2d');
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let w,h,nodes=[];
+  function resize(){w=c.width=c.offsetWidth;h=c.height=c.offsetHeight;
+    const count=Math.min(46,Math.floor(w/32));nodes=[];
+    for(let i=0;i<count;i++)nodes.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35});}
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    for(let i=0;i<nodes.length;i++){
+      const a=nodes[i];
+      for(let j=i+1;j<nodes.length;j++){
+        const b=nodes[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy);
+        if(d<150){ctx.strokeStyle='rgba(102,116,255,'+(1-d/150)*.28+')';ctx.lineWidth=1;
+          ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}
+      }
+    }
+    nodes.forEach(n=>{ctx.fillStyle='rgba(139,123,255,.9)';ctx.beginPath();ctx.arc(n.x,n.y,2,0,7);ctx.fill();
+      n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>w)n.vx*=-1;if(n.y<0||n.y>h)n.vy*=-1;});
+    if(!reduce)requestAnimationFrame(draw);
+  }
+  resize();draw();window.addEventListener('resize',resize);
+}
+
+/* ---- TESTIMONIOS ---- */
+const TESTI=[
+ {n:'Mariana Ríos',r:'Analista de procesos',t:'Entré sin saber programar y salí montando agentes con n8n para mi empresa. El formato de serie hace que no puedas parar.',a:'#FFB454'},
+ {n:'Sebastián Cortés',r:'Consultor freelance',t:'Cerré mi primer proyecto de automatización de 3.000 dólares aplicando lo del episodio de levantamiento de procesos. Se pagó solo el curso.',a:'#6674FF'},
+ {n:'Daniela Ferreira',r:'Ops manager',t:'La gamificación me mantuvo enganchada hasta el final. Nunca había terminado un curso online completo. Aquí terminé las 6 temporadas.',a:'#3FD07F'},
+ {n:'Andrés Molina',r:'Emprendedor',t:'Los guiones son oro. Descargué los apuntes de cada episodio y armé mi propio manual de automatización para el equipo.',a:'#8B7BFF'},
+ {n:'Lucía Herrera',r:'Marketing',t:'Automaticé el reporte semanal que me robaba 6 horas. Ahora corre solo. Esto no es teoría, es dinero y tiempo de vuelta.',a:'#FF9A3D'},
+ {n:'Tomás Aguirre',r:'Dev junior',t:'El módulo de vibe coding con Claude me cambió la forma de trabajar. Construyo el doble en la mitad de tiempo.',a:'#5AC8FA'}
+];
+function renderTesti(){
+  const el=document.getElementById('testiList');if(!el)return;
+  el.innerHTML=TESTI.map(t=>`<div class="testi">
+    <div class="stars">★★★★★</div>
+    <p>“${t.t}”</p>
+    <div class="who"><div class="av" style="background:${t.a}">${t.n.split(' ').map(w=>w[0]).join('')}</div>
+      <div><b>${t.n}</b><span>${t.r}</span></div></div>
+  </div>`).join('');
+}
+/* ---- LEGAL ---- */
+const LEGAL={
+ terminos:{title:'Términos y condiciones',body:`
+  <p>Al inscribirte en Hyperflow Academy aceptas estos términos. Este es un texto base de ejemplo; adáptalo con tu asesor legal antes de vender.</p>
+  <h4>1. Objeto</h4><p>El curso otorga acceso a contenidos formativos (videos, textos, evaluaciones y materiales) sobre hiperautomatización, IA y RPA, con fines educativos.</p>
+  <h4>2. Licencia de uso</h4><p>El acceso es personal e intransferible. No está permitido revender, redistribuir ni compartir públicamente el material sin autorización.</p>
+  <h4>3. Marcas de terceros</h4><p>Las herramientas mencionadas (n8n, Make, UiPath, Microsoft, Anthropic, YouTube, entre otras) pertenecen a sus respectivos titulares y se citan con fines educativos.</p>
+  <h4>4. Limitación de responsabilidad</h4><p>El contenido es formativo. Los resultados dependen de la aplicación de cada alumno; no se garantizan ingresos ni resultados económicos específicos.</p>`},
+ privacidad:{title:'Política de privacidad',body:`
+  <p>Tu privacidad importa. Texto base de ejemplo; ajústalo a tu jurisdicción (GDPR, LOPD, etc.).</p>
+  <h4>1. Datos que tratamos</h4><p>Nombre y email para gestionar tu acceso y comunicarnos contigo. El progreso del curso se guarda localmente en tu navegador.</p>
+  <h4>2. Finalidad</h4><p>Dar acceso al curso, soporte y comunicaciones relacionadas. No vendemos tus datos a terceros.</p>
+  <h4>3. Pagos</h4><p>Los pagos se procesan mediante Stripe; no almacenamos datos de tu tarjeta en nuestros servidores.</p>
+  <h4>4. Tus derechos</h4><p>Puedes solicitar acceso, rectificación o eliminación de tus datos escribiendo al correo de contacto.</p>`},
+ reembolso:{title:'Política de reembolso',body:`
+  <p>Queremos que compres sin miedo.</p>
+  <h4>Garantía de 14 días</h4><p>Si dentro de los 14 días posteriores a tu compra sientes que el curso no es para ti, escríbenos y te devolvemos el 100% del importe, sin preguntas.</p>
+  <h4>Cómo solicitarlo</h4><p>Envía un correo desde el email de tu compra indicando tu nombre. Procesamos el reembolso por la misma vía de pago en un plazo razonable.</p>
+  <h4>Excepciones</h4><p>La garantía aplica a compras individuales de buena fe. No aplica a licencias empresariales negociadas por contrato aparte.</p>`}
+};
+function openLegal(k){
+  const l=LEGAL[k];if(!l)return;
+  document.getElementById('legalTitle').textContent=l.title;
+  document.getElementById('legalBody').innerHTML=l.body;
+  document.getElementById('legalModal').classList.add('show');
+}
+function closeLegal(){document.getElementById('legalModal').classList.remove('show');}
+document.getElementById('legalModal').addEventListener('click',e=>{if(e.target.id==='legalModal')closeLegal();});
+/* ---- CERTIFICADO: imprimir/guardar PDF ---- */
+function printCert(){window.print();}
+
+/* ---- OUTCOMES / TRANSFORMACIÓN ---- */
+const OUTCOMES=[
+ {t:"Construir agentes de IA que trabajan solos",d:"Automatizaciones con n8n, Make y Claude que ejecutan tareas 24/7 sin ti."},
+ {t:"Detectar oportunidades rentables",d:"Identificar qué procesos automatizar primero para el máximo ROI, como un consultor."},
+ {t:"Automatizar procesos de punta a punta",d:"De RPA con UiPath a Power Platform, con control de excepciones y robustez."},
+ {t:"Vender automatización como servicio",d:"Levantar procesos, diseñar la solución y presentar una propuesta con ROI defendible."},
+ {t:"Crear chatbots y agentes de voz",d:"Asistentes que atienden por chat y teléfono, con avatares e IA generativa."},
+ {t:"Desplegar en producción con criterio",d:"Orquestación, seguridad, marco legal y ética para automatizar sin romper nada."}
+];
+function renderOutcomes(){
+  const el=document.getElementById('outcomesList');if(!el)return;
+  const chk='<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>';
+  el.innerHTML=OUTCOMES.map(o=>`<div class="oc"><span class="ocn">${chk}</span><div><b>${o.t}</b><p>${o.d}</p></div></div>`).join('');
+}
+/* ---- COUNTDOWN (oferta de lanzamiento, evergreen 72h por navegador) ---- */
+function getDeadline(){
+  let d=+localStorage.getItem('hf_deadline');
+  if(!d||d<Date.now()){d=Date.now()+72*3600*1000;try{localStorage.setItem('hf_deadline',d);}catch(e){}}
+  return d;
+}
+function cd2(n){return String(n).padStart(2,'0');}
+function tickCountdown(){
+  let s=Math.max(0,Math.floor((getDeadline()-Date.now())/1000));
+  const h=Math.floor(s/3600);s%=3600;const m=Math.floor(s/60),sec=s%60;
+  const top=document.getElementById('cdTop');
+  if(top)top.innerHTML='<span>'+cd2(h)+'</span>:<span>'+cd2(m)+'</span>:<span>'+cd2(sec)+'</span>';
+  const inl=document.getElementById('cdInline');
+  if(inl)inl.textContent=cd2(h)+':'+cd2(m)+':'+cd2(sec);
+}
+/* ---- CAPTURA DE LEAD (descarga temario + 1ª clase) ---- */
+function captureLead(e){
+  e.preventDefault();
+  const email=(document.getElementById('leadEmail')||{}).value?.trim();
+  if(!email)return false;
+  progress.lead=email;saveProgress(progress);
+  downloadTemario();downloadNotes(1);
+  const ok=document.getElementById('leadOk');if(ok)ok.style.display='block';
+  showToast('📥','Material enviado','Temario + apuntes del EP1 descargados');
+  return false;
+}
+function downloadTemario(){
+  let md='# Temario · Programa de Hiperautomatización con IA + RPA\n\n_6 temporadas · 22 episodios · Hyperflow Academy_\n';
+  SEASONS.forEach(s=>{
+    md+='\n## Temporada '+s.n+' — '+s.title+'\n*'+s.sub+'*\n\n';
+    s.eps.forEach(n=>{const m=COURSE.find(c=>c.n===n);
+      md+='- **EP'+cd2(epInSeason(n))+' · “'+CODE[n]+'”** — '+m.title+'\n   '+m.desc+'\n';});
+  });
+  md+='\n---\n¿Listo para empezar? Asegura tu plaza en la oferta de lanzamiento.\n';
+  const blob=new Blob([md],{type:'text/markdown;charset=utf-8'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='Temario-Hyperflow-Academy.md';document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+}
+
+/* INIT */
+renderCurriculum();renderFaq();renderTesti();renderOutcomes();initNet();
+tickCountdown();setInterval(tickCountdown,1000);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCheckout();});
+</script>
