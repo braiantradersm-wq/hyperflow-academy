@@ -353,6 +353,30 @@
 
   .locked-note{text-align:center;padding:80px 20px;color:var(--muted)}
   .locked-note svg{width:48px;height:48px;stroke:var(--muted-2);margin-bottom:16px}
+  /* sidebar locked */
+  .side-mod.locked{opacity:.62}
+  .side-mod.locked .sc{border-color:transparent}
+  .side-mod.locked .sc svg{display:block;width:15px;height:15px;stroke:var(--muted-2)}
+  .freebadge{font-family:var(--font-mono);font-size:10px;vertical-align:middle;margin-left:4px}
+  .freebadge.free{color:var(--green);border:1px solid var(--green-dim);background:var(--green-dim);padding:1px 5px;border-radius:5px;letter-spacing:.06em}
+  /* locked episode screen */
+  .locked-hero{margin-top:26px;background:linear-gradient(150deg,var(--ink-3),var(--ink-2));border:1px solid var(--line-2);border-radius:20px;padding:44px 38px;text-align:center;position:relative;overflow:hidden}
+  .locked-hero::before{content:"";position:absolute;top:-40%;left:50%;transform:translateX(-50%);width:520px;height:420px;background:radial-gradient(closest-side,var(--amber-dim),transparent 70%);pointer-events:none}
+  .locked-hero>*{position:relative}
+  .locked-seal{width:76px;height:76px;margin:0 auto 20px;border-radius:50%;background:var(--amber-dim);border:2px solid var(--amber);display:grid;place-items:center}
+  .locked-seal svg{width:36px;height:36px;stroke:var(--amber)}
+  .locked-hero h2{font-size:26px;margin-bottom:12px}
+  .locked-hero>p{color:var(--muted);max-width:520px;margin:0 auto 22px;font-size:15px}
+  .locked-teaser{max-width:440px;margin:0 auto 26px;text-align:left;background:var(--ink);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+  .locked-teaser .lt-k{font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:12px}
+  .locked-teaser .obj li{color:var(--muted);font-size:14px}
+  .locked-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:14px}
+  .locked-foot{font-family:var(--font-mono);font-size:12px;color:var(--muted-2)}
+  /* ribbon de modo */
+  #modeRibbon{position:fixed;bottom:14px;left:14px;z-index:130;font-family:var(--font-mono);font-size:11px;
+    padding:7px 12px;border-radius:9px;border:1px solid var(--line-2);background:rgba(14,16,32,.86);backdrop-filter:blur(8px);color:var(--muted);display:none;gap:8px;align-items:center}
+  #modeRibbon.show{display:inline-flex}
+  #modeRibbon .dot{width:7px;height:7px;border-radius:50%}
 
   /* ---------- SERIE / TEMPORADAS ---------- */
   .season-head{display:flex;align-items:baseline;gap:14px;margin:34px 0 14px;padding-bottom:12px;border-bottom:1px solid var(--line)}
@@ -1246,6 +1270,14 @@ function saveProgress(p){try{localStorage.setItem(LS_KEY,JSON.stringify(p))}catc
 let progress=loadProgress();
 let currentModule=1;
 
+/* ===== CONTROL DE ACCESO / MODOS ===== */
+const _P=new URLSearchParams(location.search);
+const ADMIN=_P.has('admin')||_P.has('full');           // ?admin=1 -> todo desbloqueado (vista dueño)
+if(_P.has('preview')||_P.has('user')) progress.enrolled=false; // ?preview=1 -> fuerza vista de alumno sin comprar (no persiste)
+const FREE_EPS=[1];                                    // EP01 = muestra gratis
+function hasAccess(n){return ADMIN||progress.enrolled||FREE_EPS.includes(n);}
+function unlockedCount(){return ADMIN||progress.enrolled?COURSE.length:FREE_EPS.length;}
+
 /* =================================================================
    CAMPUS
    ================================================================= */
@@ -1269,11 +1301,11 @@ function renderSide(){
   el.innerHTML=SEASONS.map(s=>{
     const sdone=s.eps.filter(n=>progress.done.includes(n)).length;
     return `<div class="side-season"><span>T${s.n} · ${s.title}</span><span class="sst">${sdone}/${s.eps.length}</span></div>
-    ${s.eps.map(n=>{const m=COURSE.find(x=>x.n===n);const done=progress.done.includes(n);
-      return `<button class="side-mod ${done?'done':''} ${n===currentModule?'current':''}" id="side${n}" onclick="loadModule(${n})">
+    ${s.eps.map(n=>{const m=COURSE.find(x=>x.n===n);const done=progress.done.includes(n);const acc=hasAccess(n);
+      return `<button class="side-mod ${done?'done':''} ${acc?'':'locked'} ${n===currentModule?'current':''}" id="side${n}" onclick="loadModule(${n})">
         <span class="sn">EP${pad2(epInSeason(n))}</span>
-        <span class="st">${m.title}</span>
-        <span class="sc"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>
+        <span class="st">${m.title}${!acc?' <span class="freebadge">🔒</span>':(FREE_EPS.includes(n)&&!progress.enrolled&&!ADMIN?' <span class="freebadge free">GRATIS</span>':'')}</span>
+        <span class="sc">${acc?'<svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>'}</span>
       </button>`;}).join('')}`;
   }).join('');
   updateProgressBar();
@@ -1299,6 +1331,7 @@ function loadModule(n){
   const m=COURSE.find(x=>x.n===n);
   document.querySelectorAll('.side-mod').forEach(s=>s.classList.remove('current'));
   const sd=document.getElementById('side'+n);if(sd)sd.classList.add('current');
+  if(!hasAccess(n)){renderLocked(n);return;}
   const done=progress.done.includes(n);
   const s=seasonOf(n);
   const main=document.getElementById('lessonMain');
@@ -1326,6 +1359,31 @@ function loadModule(n){
       <button class="btn btn-primary" onclick="loadModule(${Math.min(22,n+1)})" ${n===22?'style="visibility:hidden"':''}>Siguiente episodio →</button>
     </div>`;
   vpInit(m);
+  if(window.innerWidth<=960){const el=document.getElementById('lessonMain');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}
+  else window.scrollTo(0,0);
+}
+function renderLocked(n){
+  const m=COURSE.find(x=>x.n===n);const s=seasonOf(n);
+  const main=document.getElementById('lessonMain');
+  main.innerHTML=`
+    <div class="ep-eyebrow">Temporada ${s.n} · Episodio ${pad2(epInSeason(n))} · ${s.title}</div>
+    <div class="ep-code">“${CODE[n]}”</div>
+    <h1>${m.title}</h1>
+    <div class="locked-hero">
+      <div class="locked-seal"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></div>
+      <h2>Episodio bloqueado</h2>
+      <p>Este episodio forma parte del programa completo. Desbloquea las <b>6 temporadas · 22 episodios</b> con voz de locutor, videos, retos y certificado.</p>
+      <div class="locked-teaser">
+        <span class="lt-k">Vista previa del contenido</span>
+        <ul class="obj">${m.obj.slice(0,3).map(o=>`<li>${tickSvg}${o}</li>`).join('')}</ul>
+      </div>
+      <div class="locked-cta">
+        <button class="btn btn-amber" onclick="openCheckout('pro')">🔓 Desbloquear el curso completo →</button>
+        <button class="btn btn-ghost" onclick="loadModule(1)">▶ Ver el episodio gratis (EP01)</button>
+      </div>
+      <p class="locked-foot">Garantía de 14 días · Acceso de por vida · Pago único</p>
+    </div>`;
+  vpStop();
   if(window.innerWidth<=960){const el=document.getElementById('lessonMain');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}
   else window.scrollTo(0,0);
 }
@@ -2061,6 +2119,16 @@ function downloadTemario(){
 renderCurriculum();renderFaq();renderTesti();renderOutcomes();initNet();
 tickCountdown();setInterval(tickCountdown,1000);
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCheckout();});
+/* ribbon de modo (solo visible en admin o preview) */
+(function(){
+  let label='',color='';
+  if(ADMIN){label='VISTA DUEÑO · todo desbloqueado';color='var(--indigo-2)';}
+  else if(_P.has('preview')||_P.has('user')){label='VISTA ALUMNO · así lo ve quien aún no compró';color='var(--amber)';}
+  if(!label)return;
+  const r=document.createElement('div');r.id='modeRibbon';r.className='show';
+  r.innerHTML=`<span class="dot" style="background:${color}"></span>${label}`;
+  document.body.appendChild(r);
+})();
 </script>
 
 </body>
