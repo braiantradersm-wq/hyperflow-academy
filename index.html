@@ -883,6 +883,42 @@
   #vaultView .vlist{text-align:left;background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:18px 0;column-count:2;column-gap:24px;font-size:13px}
   #vaultView .vlist div{margin-bottom:7px;break-inside:avoid;color:var(--text)}
   @media(max-width:620px){#vaultView .vlist{column-count:1}}
+  /* ===== RETO INTERACTIVO ===== */
+  .reto{max-width:640px}
+  .reto.shake{animation:rshake .42s} @keyframes rshake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .reto-head{margin-bottom:12px}
+  .reto-badge{display:inline-block;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);background:var(--amber-dim);border:1px solid rgba(255,180,84,.3);border-radius:7px;padding:4px 9px;margin-bottom:9px}
+  .reto-head h3{font-size:18px;margin-bottom:5px}
+  .reto-head p{color:var(--muted);font-size:13.5px;line-height:1.5}
+  .reto-slots{display:flex;flex-direction:column;margin:14px 0}
+  .rslot{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:var(--ink-2);border:1.5px solid var(--line-2);border-radius:13px;padding:12px 13px;transition:.15s}
+  .rslot:hover{border-color:var(--indigo)} .rslot.sel{border-color:var(--indigo);box-shadow:0 0 0 2px var(--indigo-dim)}
+  .rslot.filled{border-color:var(--green);background:var(--green-dim)}
+  .rslot .rnum{width:25px;height:25px;flex:none;border-radius:50%;background:var(--ink-4);display:grid;place-items:center;font-family:var(--font-mono);font-size:12px;font-weight:700}
+  .rslot.filled .rnum{background:var(--green);color:#04120a}
+  .rslot .rbody{flex:1;min-width:0} .rslot .rhint{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted-2);display:block}
+  .rslot .rempty{font-size:13.5px;color:var(--indigo-2);font-weight:600} .rslot .rfill{display:flex;align-items:center;gap:8px;margin-top:2px} .rslot .rfill .ric{font-size:18px} .rslot .rfill b{font-size:14px}
+  .rslot .rx{margin-left:auto;font-size:16px;color:var(--muted-2);width:28px;height:28px;border-radius:7px;flex:none;display:grid;place-items:center}
+  .rslot .rx:hover{color:var(--red);background:var(--ink-3)}
+  .rconn{text-align:center;color:var(--muted-2);font-size:11px;line-height:1;padding:3px 0}
+  .reto-tray,.reto-pool{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+  .rpiece,.ritem{display:flex;align-items:center;gap:7px;background:var(--ink-3);border:1px solid var(--line-2);border-radius:11px;padding:9px 12px;font-size:13px;font-weight:600;transition:.15s;text-align:left}
+  .rpiece:hover,.ritem:hover{border-color:var(--indigo);transform:translateY(-1px)} .rpiece .ric,.ritem .ric{font-size:17px}
+  .rpiece.used{opacity:.35;text-decoration:line-through;pointer-events:none}
+  .ritem.sel{border-color:var(--amber);box-shadow:0 0 0 2px var(--amber-dim)}
+  .reto-buckets{display:grid;grid-template-columns:1fr;gap:10px}
+  @media(min-width:560px){.reto-buckets{grid-template-columns:repeat(3,1fr)}}
+  .rbucket{background:var(--ink-2);border:1.5px dashed var(--line-2);border-radius:13px;padding:12px;min-height:92px;cursor:pointer;transition:.15s}
+  .rbucket:hover{border-color:var(--indigo)}
+  .rbh{font-size:12.5px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .rbitems{display:flex;flex-direction:column;gap:6px}
+  .rchip{font-size:12px;background:var(--green-dim);border:1px solid rgba(63,208,127,.3);border-radius:8px;padding:6px 9px;cursor:pointer}
+  .reto-fb{display:none;font-size:13px;line-height:1.5;border-radius:11px;padding:11px 13px;margin:12px 0}
+  .reto-fb.show{display:block} .reto-fb.ok{background:var(--green-dim);border:1px solid rgba(63,208,127,.35);color:var(--text)} .reto-fb.bad{background:var(--amber-dim);border:1px solid rgba(255,180,84,.3);color:var(--text)}
+  .reto-check{width:100%;padding:14px;border-radius:12px;background:var(--ink-3);color:var(--muted-2);font-weight:800;font-size:15px;border:1px solid var(--line-2);cursor:not-allowed;transition:.16s}
+  .reto-check.on{background:linear-gradient(135deg,var(--indigo),var(--indigo-2));color:#fff;cursor:pointer;box-shadow:0 10px 24px -12px var(--indigo)}
+  .reto-check.on:hover{transform:translateY(-1px)}
+  .tab[data-t="reto"]{color:var(--amber)}
 </style>
 <div id="vaultAssets" style="display:none" aria-hidden="true">
 <!-- ================= BÓVEDA DEL ACELERADOR · 20 assets copiables ================= -->
@@ -1910,6 +1946,7 @@ function loadModule(n){
   if(!hasAccess(n)){renderLocked(n);return;}
   const done=progress.done.includes(n);
   const s=seasonOf(n);
+  if(hasReto(n)) retoInit(n);
   const main=document.getElementById('lessonMain');
   main.innerHTML=`
     <div class="ep-eyebrow">Temporada ${s.n} · Episodio ${pad2(epInSeason(n))} · ${s.title} ${done?'· ✅ SUPERADO':''}</div>
@@ -1923,10 +1960,12 @@ function loadModule(n){
     <p class="player-note">// 🎬 Video: clase real curada de YouTube (verificada). 🎙️ Clase IA: narración con voz de IA + subtítulos, 100% gratis y sin depender de internet. Elige el modo arriba.</p>
     <div class="tabs">
       <button class="tab active" data-t="contenido" onclick="switchTab('contenido')">Contenido</button>
+      ${hasReto(n)?`<button class="tab" data-t="reto" onclick="switchTab('reto')">🎮 Reto interactivo</button>`:''}
       <button class="tab" data-t="recursos" onclick="switchTab('recursos')">Recursos</button>
       <button class="tab" data-t="quiz" onclick="switchTab('quiz')">Cuestionario</button>
     </div>
     <div class="tab-panel active" id="panel-contenido">${renderContent(m)}</div>
+    ${hasReto(n)?`<div class="tab-panel" id="panel-reto"><div class="reto" id="reto-${n}">${retoBody(n)}</div></div>`:''}
     <div class="tab-panel" id="panel-recursos">${renderResources(m)}</div>
     <div class="tab-panel" id="panel-quiz">${renderQuiz(m)}</div>
     ${renderCliff(n)}
@@ -2114,10 +2153,12 @@ function showToast(icon,title,sub){
   t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),4000);
 }
 function switchTab(t){
+  const panel=document.getElementById('panel-'+t);
+  if(!panel) return;                       // guarda: pestaña inexistente no rompe
   currentTab=t;
   document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.t===t));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('panel-'+t).classList.add('active');
+  panel.classList.add('active');
 }
 function gradeQuiz(n){
   const m=COURSE.find(x=>x.n===n);
@@ -2160,6 +2201,204 @@ function gradeQuiz(n){
   }
   updateProgressBar();
 }
+
+/* =================================================================
+   RETO INTERACTIVO — motor gamificado por episodio (2 formatos:
+   'sequence' = ordena/arma en pasos · 'sort' = clasifica en categorías)
+   ================================================================= */
+function rEsc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function rDing(f){ try{ if(typeof cDing==='function') cDing(f||760); }catch(e){} }
+function rWinSound(){ try{ if(typeof cBell==='function'){ cBell(523.25,.5,.1); setTimeout(()=>cBell(659.25,.5,.1),90); setTimeout(()=>cBell(783.99,.6,.11),185);} }catch(e){} }
+const RS={};
+function hasReto(n){ return !!INTERACT[n]; }
+function retoIsDone(n){ try{ return localStorage.getItem('hyperflow_reto_'+n)==='1'; }catch(e){ return false; } }
+function retoInit(n){ const c=INTERACT[n]; if(!c||RS[n])return; const solved=retoIsDone(n);
+  if(c.type==='sequence') RS[n]={placed: solved?c.slots.map(s=>s.accept):c.slots.map(()=>null), sel:0, done:solved};
+  else { const placed={}; if(solved)c.items.forEach(it=>placed[it.id]=it.bucket); RS[n]={placed, sel:null, done:solved}; }
+}
+function retoReset(n){ const c=INTERACT[n];
+  if(c.type==='sequence') RS[n]={placed:c.slots.map(()=>null), sel:0, done:false};
+  else RS[n]={placed:{}, sel:null, done:false};
+  retoRender(n);
+}
+function retoReady(n){ const c=INTERACT[n], st=RS[n]; if(!st||st.done)return false;
+  return c.type==='sequence' ? st.placed.every(Boolean) : c.items.every(it=>st.placed[it.id]); }
+function retoRender(n){ const host=document.getElementById('reto-'+n); if(host) host.innerHTML=retoBody(n); }
+function retoBody(n){
+  const c=INTERACT[n], st=RS[n];
+  let h=`<div class="reto-head"><span class="reto-badge">🎮 Reto interactivo</span><h3>${rEsc(c.title)}</h3><p>${rEsc(c.intro)}</p></div>`;
+  if(c.type==='sequence'){
+    h+='<div class="reto-slots">';
+    c.slots.forEach((s,i)=>{ const pid=st.placed[i], p=pid?c.pieces.find(x=>x.id===pid):null;
+      h+=`<button class="rslot${p?' filled':''}${st.sel===i?' sel':''}" onclick="retoSelSlot(${n},${i})"><span class="rnum">${p?'✓':(i+1)}</span><span class="rbody"><span class="rhint">${rEsc(s.hint)}</span>${p?`<span class="rfill"><span class="ric">${p.ic}</span><b>${rEsc(p.name)}</b></span>`:'<span class="rempty">toca y elige la pieza</span>'}</span>${p?`<span class="rx" onclick="event.stopPropagation();retoClear(${n},${i})">×</span>`:''}</button>`;
+      if(i<c.slots.length-1) h+='<div class="rconn">▼</div>';
+    });
+    h+='</div><div class="reto-tray">';
+    c.pieces.forEach(p=>{ const used=st.placed.includes(p.id);
+      h+=`<button class="rpiece${used?' used':''}" ${used?'disabled':`onclick="retoPlace(${n},'${p.id}')"`}><span class="ric">${p.ic}</span><span>${rEsc(p.name)}</span></button>`; });
+    h+='</div>';
+  } else {
+    h+='<div class="reto-pool">'; let anyPool=false;
+    c.items.forEach(it=>{ if(st.placed[it.id])return; anyPool=true; h+=`<button class="ritem${st.sel===it.id?' sel':''}" onclick="retoSelItem(${n},'${it.id}')"><span class="ric">${it.ic}</span>${rEsc(it.name)}</button>`; });
+    if(!anyPool) h+='<span style="color:var(--muted-2);font-size:12.5px">Todo clasificado — pulsa Comprobar.</span>';
+    h+='</div><div class="reto-buckets">';
+    c.buckets.forEach(b=>{ h+=`<div class="rbucket" onclick="retoDrop(${n},'${b.id}')"><div class="rbh"><span>${b.ic}</span> ${rEsc(b.label)}</div><div class="rbitems">`;
+      Object.keys(st.placed).forEach(iid=>{ if(st.placed[iid]===b.id){ const it=c.items.find(x=>x.id===iid); h+=`<span class="rchip" onclick="event.stopPropagation();retoUnplace(${n},'${iid}')">${it.ic} ${rEsc(it.name)} ×</span>`; } });
+      h+='</div></div>'; });
+    h+='</div>';
+  }
+  h+=`<div class="reto-fb${st.done?' show ok':''}" id="retoFb-${n}">${st.done?('✅ <b>'+rEsc(c.win.msg)+'</b>'):''}</div>`;
+  if(st.done) h+=`<button class="reto-check on" onclick="retoReset(${n})">↺ Rehacer el reto</button>`;
+  else { const ready=retoReady(n); h+=`<button class="reto-check${ready?' on':''}" onclick="retoCheck(${n})"${ready?'':' disabled'}>Comprobar</button>`; }
+  return h;
+}
+function retoSelSlot(n,i){ if(RS[n].done)return; RS[n].sel=i; rDing(620); retoRender(n); }
+function retoPlace(n,pid){ const st=RS[n]; if(st.done)return; let i=st.sel; if(i==null||st.placed[i]) i=st.placed.findIndex(x=>!x); if(i<0)return;
+  st.placed[i]=pid; const nx=st.placed.findIndex(x=>!x); st.sel=nx<0?i:nx; rDing(820); retoRender(n); }
+function retoClear(n,i){ if(RS[n].done)return; RS[n].placed[i]=null; RS[n].sel=i; rDing(430); retoRender(n); }
+function retoSelItem(n,id){ if(RS[n].done)return; RS[n].sel=id; rDing(620); retoRender(n); }
+function retoDrop(n,b){ const st=RS[n]; if(st.done||st.sel==null)return; st.placed[st.sel]=b; st.sel=null; rDing(820); retoRender(n); }
+function retoUnplace(n,id){ if(RS[n].done)return; delete RS[n].placed[id]; rDing(430); retoRender(n); }
+function retoCheck(n){ const c=INTERACT[n], st=RS[n]; if(!retoReady(n))return;
+  let ok=true, msg='';
+  if(c.type==='sequence'){
+    if(st.placed.some(pid=>{ const p=c.pieces.find(x=>x.id===pid); return p&&p.distractor; })){ ok=false; msg=c.fails.distractor; }
+    else if(!st.placed.every((pid,i)=>pid===c.slots[i].accept)){ ok=false; msg=c.fails.order; }
+  } else { if(!c.items.every(it=>st.placed[it.id]===it.bucket)){ ok=false; msg=c.fails.sort; } }
+  if(ok){ retoWin(n); return; }
+  const fb=document.getElementById('retoFb-'+n); if(fb){ fb.className='reto-fb show bad'; fb.innerHTML='⚠️ '+rEsc(msg); }
+  const host=document.getElementById('reto-'+n); if(host){ host.classList.add('shake'); setTimeout(()=>host.classList.remove('shake'),450); }
+  rDing(190);
+}
+function retoWin(n){ const c=INTERACT[n]; RS[n].done=true; try{ localStorage.setItem('hyperflow_reto_'+n,'1'); }catch(e){}
+  retoRender(n); rWinSound();
+  if(typeof showToast==='function') showToast(c.win.medal[1],'🎮 '+c.win.medal[0],'+'+c.win.xp+' XP · reto interactivo superado');
+}
+/* API de test: resuelve el reto (bien o mal) y devuelve si gana */
+function retoSolveTEST(n,wrong){ const c=INTERACT[n]; if(!c)return null; if(!RS[n])retoInit(n); const st=RS[n]; st.done=false;
+  if(c.type==='sequence'){ st.placed=c.slots.map((s,i)=> wrong ? c.slots[(i+1)%c.slots.length].accept : s.accept); }
+  else { st.placed={}; c.items.forEach(it=>{ const bi=c.buckets.findIndex(b=>b.id===it.bucket); st.placed[it.id]= wrong ? c.buckets[(bi+1)%c.buckets.length].id : it.bucket; }); }
+  retoCheck(n); return st.done; }
+
+/* ---- Retos por episodio (piloto: EP3 y EP4; resto se añade con la misma estructura) ---- */
+const INTERACT={
+ 3:{ type:'sequence', title:'Arma el prompt profesional',
+   intro:'Tu agente responde a clientes. Un prompt flojo da respuestas flojas. Coloca en orden los 4 bloques que convierten una orden vaga en un prompt de nivel pro (sobra 1 que no sirve).',
+   slots:[ {hint:'1 · ¿QUIÉN es el agente?',accept:'rol'}, {hint:'2 · ¿Qué CONTEXTO y objetivo?',accept:'contexto'}, {hint:'3 · ¿Qué FORMATO de salida?',accept:'formato'}, {hint:'4 · ¿Qué REGLAS y límites?',accept:'reglas'} ],
+   pieces:[
+     {id:'rol',ic:'🎭',name:'Asigna un rol experto',pill:''},
+     {id:'contexto',ic:'📚',name:'Da contexto y objetivo',pill:''},
+     {id:'formato',ic:'📐',name:'Define el formato de salida',pill:''},
+     {id:'reglas',ic:'🛡️',name:'Pon reglas y límites',pill:''},
+     {id:'creativo',ic:'🎲',name:'“Sé creativo, tú puedes”',distractor:true,pill:''}
+   ],
+   win:{medal:['Prompt Engineer','✍️'],xp:60,msg:'Ese prompt ya no improvisa: tiene rol, contexto, formato y reglas. Así se construye un agente confiable, no uno que alucina.'},
+   fails:{ order:'Casi. El orden importa: primero QUIÉN es (rol), luego su CONTEXTO y objetivo, después el FORMATO de salida y al final las REGLAS.', distractor:'“Sé creativo” no es una instrucción: no le dice nada útil a la IA. Sácalo y usa los 4 bloques que de verdad guían.' } },
+ 4:{ type:'sort', title:'¿Qué herramienta de IA para cada trabajo?',
+   intro:'No toda IA sirve para todo. Toca una tarea y luego la familia de herramienta correcta. Elegir bien la herramienta es la mitad del trabajo.',
+   buckets:[ {id:'texto',ic:'🧠',label:'LLM · texto y chat'}, {id:'imagen',ic:'🎨',label:'Generador de imagen'}, {id:'av',ic:'🎬',label:'Video y voz'} ],
+   items:[
+     {id:'i1',ic:'✉️',name:'Redactar y responder emails',bucket:'texto'},
+     {id:'i2',ic:'📄',name:'Resumir un informe largo',bucket:'texto'},
+     {id:'i3',ic:'🖼️',name:'Crear un logo o ilustración',bucket:'imagen'},
+     {id:'i4',ic:'📱',name:'Imagen para un post de redes',bucket:'imagen'},
+     {id:'i5',ic:'🎙️',name:'Locutar un texto con voz IA',bucket:'av'},
+     {id:'i6',ic:'🧑‍💻',name:'Avatar que presenta a cámara',bucket:'av'}
+   ],
+   win:{medal:['Maestro del Arsenal','🎨'],xp:50,msg:'Cada trabajo con su herramienta: texto con LLM, arte con generadores de imagen, y presencia con video/voz. Eso es tener un arsenal.'},
+   fails:{ sort:'Casi. Pista: chatear, redactar o resumir = LLM de texto; crear gráficos = imagen; hablar o aparecer en cámara = video y voz. Revisa las que quedaron mal.' } },
+ 5:{ type:'sequence', title:'Arma la anatomía de un agente', intro:'Un agente no es un chatbot. Coloca sus 4 partes en orden y entenderás por qué puede actuar solo (sobra 1 que no es parte del agente).',
+   slots:[ {hint:'1 · ¿Qué lo DISPARA?',accept:'trigger'}, {hint:'2 · ¿Su CEREBRO?',accept:'llm'}, {hint:'3 · ¿Sus HERRAMIENTAS?',accept:'tools'}, {hint:'4 · ¿Qué DEVUELVE?',accept:'out'} ],
+   pieces:[ {id:'trigger',ic:'📩',name:'Disparador que lo inicia'}, {id:'llm',ic:'🧠',name:'Modelo de IA que razona'}, {id:'tools',ic:'🔧',name:'Herramientas/APIs que ejecuta'}, {id:'out',ic:'📤',name:'Respuesta o acción final'}, {id:'x',ic:'🖼️',name:'Un fondo de pantalla bonito',distractor:true} ],
+   win:{medal:['Agente n8n','🤖'],xp:55,msg:'Agente = disparador + cerebro que decide + herramientas para actuar + una salida. Eso es orquestar, no solo conectar cajitas.'},
+   fails:{ order:'Casi. El flujo es: algo lo DISPARA, el CEREBRO (IA) decide, usa sus HERRAMIENTAS y entrega una SALIDA.', distractor:'Un fondo de pantalla no es parte de un agente. Sácalo y usa las 4 piezas que sí lo forman.' } },
+ 6:{ type:'sort', title:'Clasifica los módulos de Make', intro:'Todo escenario de Make se arma con 3 tipos de módulo. Toca cada uno y llévalo a su categoría.',
+   buckets:[ {id:'disparo',ic:'⚡',label:'Disparadores (inician)'}, {id:'accion',ic:'▶️',label:'Acciones (hacen algo)'}, {id:'ia',ic:'🧠',label:'IA (entienden)'} ],
+   items:[ {id:'i1',ic:'📨',name:'Watch: llega un email nuevo',bucket:'disparo'}, {id:'i2',ic:'📝',name:'Nuevo registro en un formulario',bucket:'disparo'}, {id:'i3',ic:'💬',name:'Enviar mensaje de WhatsApp',bucket:'accion'}, {id:'i4',ic:'📊',name:'Crear fila en Google Sheets',bucket:'accion'}, {id:'i5',ic:'🔍',name:'Analizar el texto con GPT',bucket:'ia'}, {id:'i6',ic:'📄',name:'Resumir un documento',bucket:'ia'} ],
+   win:{medal:['Arquitecto de escenarios','🧩'],xp:50,msg:'Disparador → (IA que entiende) → Acción. Ese es el esqueleto de cualquier escenario de Make.'},
+   fails:{ sort:'Casi. “Watch/llega/nuevo” = disparador; “enviar/crear” = acción; “analizar/resumir” = IA. Revisa las que quedaron mal.' } },
+ 7:{ type:'sequence', title:'El ciclo del vibe coding', intro:'Programar con IA no es magia: es dirigirla con método. Ordena el ciclo (sobra 1 que es un mal hábito).',
+   slots:[ {hint:'1 · EMPIEZA por',accept:'idea'}, {hint:'2 · luego',accept:'prompt'}, {hint:'3 · después',accept:'gen'}, {hint:'4 · y',accept:'test'} ],
+   pieces:[ {id:'idea',ic:'💡',name:'Describe la idea y el objetivo'}, {id:'prompt',ic:'✍️',name:'Escribe un prompt claro'}, {id:'gen',ic:'🤖',name:'La IA genera el código'}, {id:'test',ic:'🧪',name:'Pruebas y pides ajustes'}, {id:'x',ic:'📋',name:'Copiar código ajeno sin leerlo',distractor:true} ],
+   win:{medal:['Vibe Coder','⚡'],xp:55,msg:'Idea → prompt → generar → probar e iterar. Con criterio, la IA multiplica; sin criterio, multiplica el desastre.'},
+   fails:{ order:'Casi. Primero la IDEA, luego el PROMPT, después la IA GENERA y por último PRUEBAS e iteras.', distractor:'Copiar código sin leerlo es la receta del desastre. Sácalo del flujo.' } },
+ 8:{ type:'sequence', title:'Levanta un proceso, paso a paso', intro:'Antes de automatizar hay que entender. Ordena el levantamiento de un proceso (sobra 1 error clásico).',
+   slots:[ {hint:'1',accept:'ident'}, {hint:'2',accept:'observar'}, {hint:'3',accept:'documentar'}, {hint:'4',accept:'priorizar'} ],
+   pieces:[ {id:'ident',ic:'🔎',name:'Identifica el proceso'}, {id:'observar',ic:'👀',name:'Observa cómo se hace hoy'}, {id:'documentar',ic:'📝',name:'Documenta los pasos'}, {id:'priorizar',ic:'🎯',name:'Prioriza qué automatizar'}, {id:'x',ic:'🚀',name:'Automatizar antes de entender',distractor:true} ],
+   win:{medal:['Analista de Procesos','🔎'],xp:55,msg:'Primero entender, después automatizar. Quien salta el levantamiento automatiza el caos y lo vuelve más rápido.'},
+   fails:{ order:'Casi. Identifica → observa cómo se hace hoy → documenta → prioriza qué automatizar.', distractor:'Automatizar antes de entender es el error nº1. Fuera.' } },
+ 9:{ type:'sequence', title:'El ciclo de vida de una solución', intro:'Todo proyecto sigue un ciclo. Ordena sus 5 fases (sobra 1 atajo peligroso).',
+   slots:[ {hint:'1',accept:'analisis'}, {hint:'2',accept:'diseno'}, {hint:'3',accept:'desarrollo'}, {hint:'4',accept:'pruebas'}, {hint:'5',accept:'despliegue'} ],
+   pieces:[ {id:'analisis',ic:'📋',name:'Análisis de requisitos'}, {id:'diseno',ic:'✏️',name:'Diseño de la solución'}, {id:'desarrollo',ic:'🛠️',name:'Desarrollo'}, {id:'pruebas',ic:'🧪',name:'Pruebas'}, {id:'despliegue',ic:'🚀',name:'Despliegue y mantenimiento'}, {id:'x',ic:'⏭️',name:'Saltar directo a producción',distractor:true} ],
+   win:{medal:['Gestor de Proyectos','📐'],xp:60,msg:'Análisis → diseño → desarrollo → pruebas → despliegue. Saltarte una fase te la cobra el doble después.'},
+   fails:{ order:'Casi. Requisitos → diseño → desarrollo → pruebas → despliegue.', distractor:'Saltar directo a producción sin pruebas es cómo explotan los proyectos. Fuera.' } },
+ 10:{ type:'sort', title:'Clasifica los símbolos BPMN', intro:'Un diagrama BPMN se lee con 3 tipos de símbolo. Lleva cada elemento a su familia.',
+   buckets:[ {id:'evento',ic:'⭕',label:'Eventos (inicio/fin)'}, {id:'actividad',ic:'🔷',label:'Actividades (tareas)'}, {id:'compuerta',ic:'🔶',label:'Compuertas (decisiones)'} ],
+   items:[ {id:'i1',ic:'🟢',name:'Inicio del proceso',bucket:'evento'}, {id:'i2',ic:'🔴',name:'Fin del proceso',bucket:'evento'}, {id:'i3',ic:'📧',name:'Enviar la factura',bucket:'actividad'}, {id:'i4',ic:'🔎',name:'Revisar el documento',bucket:'actividad'}, {id:'i5',ic:'❓',name:'¿Está aprobado?',bucket:'compuerta'}, {id:'i6',ic:'💰',name:'¿El monto supera 1000?',bucket:'compuerta'} ],
+   win:{medal:['Modelador BPMN','🗺️'],xp:55,msg:'Eventos marcan inicio/fin, actividades son tareas, compuertas son decisiones. Con eso ya lees cualquier diagrama.'},
+   fails:{ sort:'Casi. Inicio/fin = evento; una tarea (“enviar”, “revisar”) = actividad; una pregunta con “¿?” = compuerta.' } },
+ 11:{ type:'sort', title:'¿Buen candidato para RPA?', intro:'No todo se debe automatizar con un robot. Clasifica cada tarea según convenga o no.',
+   buckets:[ {id:'si',ic:'✅',label:'Ideal para RPA'}, {id:'no',ic:'❌',label:'Mejor NO'} ],
+   items:[ {id:'i1',ic:'🔁',name:'Tarea repetitiva con reglas claras',bucket:'si'}, {id:'i2',ic:'📈',name:'Alto volumen, mismo patrón',bucket:'si'}, {id:'i3',ic:'📥',name:'Copiar datos entre dos sistemas',bucket:'si'}, {id:'i4',ic:'🎨',name:'Decisión creativa y subjetiva',bucket:'no'}, {id:'i5',ic:'🔀',name:'Cambia de forma cada vez',bucket:'no'}, {id:'i6',ic:'❤️',name:'Requiere criterio humano/empatía',bucket:'no'} ],
+   win:{medal:['Cazador de Procesos','🎯'],xp:50,msg:'RPA brilla en lo repetitivo, reglado y de alto volumen. Falla en lo creativo, subjetivo o que cambia siempre.'},
+   fails:{ sort:'Casi. Repetitivo + reglas + volumen = ideal. Creativo, subjetivo o cambiante = mejor no.' } },
+ 12:{ type:'sort', title:'¿De dónde saco el dato?', intro:'Tres formas de obtener datos, de la mejor a la última opción. Clasifica cada caso.',
+   buckets:[ {id:'api',ic:'🔌',label:'API oficial (lo mejor)'}, {id:'scraping',ic:'🕷️',label:'Web scraping'}, {id:'doc',ic:'📄',label:'Procesar documento'} ],
+   items:[ {id:'i1',ic:'✅',name:'El sitio ofrece una API pública',bucket:'api'}, {id:'i2',ic:'🔗',name:'Integración con un CRM conocido',bucket:'api'}, {id:'i3',ic:'🌐',name:'Web sin API, datos en el HTML',bucket:'scraping'}, {id:'i4',ic:'🏷️',name:'Precios de una tienda sin API',bucket:'scraping'}, {id:'i5',ic:'📑',name:'Datos dentro de un PDF',bucket:'doc'}, {id:'i6',ic:'🧾',name:'Facturas escaneadas',bucket:'doc'} ],
+   win:{medal:['Ingeniero de Datos','🗃️'],xp:50,msg:'Si hay API, úsala (estable y legal). Si no, scraping. Si el dato está en un documento, procésalo. En ese orden.'},
+   fails:{ sort:'Casi. Con API → API. Sin API pero en la web → scraping. Dentro de un archivo → procesar documento.' } },
+ 13:{ type:'sort', title:'Clasifica el error del bot', intro:'Un bot profesional trata distinto cada error. Lleva cada uno a su cajón: reintentar o registrar.',
+   buckets:[ {id:'retry',ic:'🔄',label:'Transitorio → reintentar'}, {id:'negocio',ic:'📋',label:'De negocio → registrar y seguir'} ],
+   items:[ {id:'i1',ic:'⏱️',name:'Timeout de red',bucket:'retry'}, {id:'i2',ic:'🐢',name:'La página tardó en cargar',bucket:'retry'}, {id:'i3',ic:'🔌',name:'Servicio caído un momento',bucket:'retry'}, {id:'i4',ic:'💳',name:'Saldo insuficiente',bucket:'negocio'}, {id:'i5',ic:'❌',name:'Dato inválido en la factura',bucket:'negocio'}, {id:'i6',ic:'👤',name:'El cliente no existe en el sistema',bucket:'negocio'} ],
+   win:{medal:['Ingeniero de Robustez','🛡️'],xp:60,msg:'Transitorio = reintenta con backoff. De negocio = regístralo y sigue. Nunca reintentes lo que jamás va a funcionar.'},
+   fails:{ sort:'Casi. Red/timeout/caído un momento = reintentar. Saldo, dato inválido, cliente inexistente = no reintentar, registrar.' } },
+ 14:{ type:'sequence', title:'Despliega un robot con Orchestrator', intro:'Un robot no se manda por email. Ordena los pasos para ponerlo en producción (sobra 1 disparate).',
+   slots:[ {hint:'1',accept:'dev'}, {hint:'2',accept:'publish'}, {hint:'3',accept:'process'}, {hint:'4',accept:'run'} ],
+   pieces:[ {id:'dev',ic:'🛠️',name:'Desarrollas el robot en Studio'}, {id:'publish',ic:'📦',name:'Publicas el paquete al Orchestrator'}, {id:'process',ic:'⚙️',name:'Creas el proceso y lo asignas'}, {id:'run',ic:'▶️',name:'Ejecutas/programas y monitoreas'}, {id:'x',ic:'📧',name:'Le mandas el .exe por email al robot',distractor:true} ],
+   win:{medal:['Orquestador RPA','🎼'],xp:60,msg:'Studio → publicar → crear proceso → ejecutar y monitorear. El Orchestrator es la sala de control de tus robots.'},
+   fails:{ order:'Casi. Desarrollas → publicas → creas el proceso → ejecutas y monitoreas.', distractor:'Mandar un .exe por email no es desplegar. Fuera.' } },
+ 15:{ type:'sort', title:'¿PowerApps o Power Automate?', intro:'Dos herramientas hermanas, dos trabajos distintos. Clasifica cada necesidad.',
+   buckets:[ {id:'apps',ic:'📱',label:'PowerApps (crear apps)'}, {id:'flow',ic:'🔄',label:'Power Automate (flujos)'} ],
+   items:[ {id:'i1',ic:'🧾',name:'Pantalla para cargar gastos',bucket:'apps'}, {id:'i2',ic:'📲',name:'Formulario móvil para el equipo',bucket:'apps'}, {id:'i3',ic:'📦',name:'App de inventario',bucket:'apps'}, {id:'i4',ic:'🔔',name:'Avisar cuando llega un email',bucket:'flow'}, {id:'i5',ic:'✅',name:'Aprobar solicitudes automáticamente',bucket:'flow'}, {id:'i6',ic:'🔗',name:'Sincronizar dos sistemas',bucket:'flow'} ],
+   win:{medal:['Low-code Pro','🧱'],xp:50,msg:'PowerApps = pantallas donde la gente interactúa. Power Automate = flujos que corren solos por detrás.'},
+   fails:{ sort:'Casi. Si es una pantalla/app para usar = PowerApps. Si corre solo por detrás (avisos, aprobaciones, sync) = Power Automate.' } },
+ 16:{ type:'sequence', title:'El pipeline de un documento (IDP)', intro:'Procesar una factura con IA es una línea de montaje. Ordénala (sobra 1 método del siglo pasado).',
+   slots:[ {hint:'1',accept:'capturar'}, {hint:'2',accept:'leer'}, {hint:'3',accept:'clasificar'}, {hint:'4',accept:'extraer'}, {hint:'5',accept:'validar'} ],
+   pieces:[ {id:'capturar',ic:'📥',name:'Capturar el documento'}, {id:'leer',ic:'👁️',name:'Leer con OCR/visión'}, {id:'clasificar',ic:'🗂️',name:'Clasificar el tipo'}, {id:'extraer',ic:'🔎',name:'Extraer los datos'}, {id:'validar',ic:'✅',name:'Validar y confirmar'}, {id:'x',ic:'⌨️',name:'Teclearlo todo a mano',distractor:true} ],
+   win:{medal:['Maestro del IDP','🧾'],xp:60,msg:'Capturar → leer → clasificar → extraer → validar. Así una IA procesa miles de documentos sin teclear uno.'},
+   fails:{ order:'Casi. Captura → lee (OCR) → clasifica → extrae → valida.', distractor:'Teclear a mano es justo lo que venimos a eliminar. Fuera.' } },
+ 17:{ type:'sort', title:'¿Pull, Push o Conector?', intro:'Tres formas de conectar sistemas. Clasifica cada situación.',
+   buckets:[ {id:'pull',ic:'🔌',label:'API (tú pides)'}, {id:'push',ic:'📡',label:'Webhook (te avisan)'}, {id:'conector',ic:'🧩',label:'Conector prehecho'} ],
+   items:[ {id:'i1',ic:'🕐',name:'Consultas el stock cada hora',bucket:'pull'}, {id:'i2',ic:'📥',name:'Pides los pedidos del día',bucket:'pull'}, {id:'i3',ic:'⚡',name:'Te avisan al instante de un pago',bucket:'push'}, {id:'i4',ic:'🔔',name:'Notificación cuando algo cambia',bucket:'push'}, {id:'i5',ic:'🧱',name:'Módulo de Slack listo en Make',bucket:'conector'}, {id:'i6',ic:'🔗',name:'Conector oficial de Google',bucket:'conector'} ],
+   win:{medal:['Integrador','🔗'],xp:55,msg:'API = tú pides el dato. Webhook = te avisan al instante. Conector = integración ya empaquetada. Elige según urgencia y esfuerzo.'},
+   fails:{ sort:'Casi. Si tú consultas cada tanto = API (pull). Si te avisan al instante = webhook (push). Si ya viene hecho = conector.' } },
+ 18:{ type:'sequence', title:'Cómo responde un agente conversacional', intro:'Un buen bot no improvisa. Ordena cómo procesa un mensaje (sobra 1 pésima costumbre).',
+   slots:[ {hint:'1',accept:'entender'}, {hint:'2',accept:'consultar'}, {hint:'3',accept:'responder'}, {hint:'4',accept:'escalar'} ],
+   pieces:[ {id:'entender',ic:'🧠',name:'Entiende la intención'}, {id:'consultar',ic:'📚',name:'Consulta datos/FAQ'}, {id:'responder',ic:'💬',name:'Responde con claridad'}, {id:'escalar',ic:'🙋',name:'Escala a un humano si hace falta'}, {id:'x',ic:'🙈',name:'Inventa si no sabe la respuesta',distractor:true} ],
+   win:{medal:['Diseñador de Bots','💬'],xp:55,msg:'Entiende → consulta → responde → escala. Un bot que inventa destruye la confianza; uno que deriva la construye.'},
+   fails:{ order:'Casi. Entiende la intención → consulta la info → responde → escala a humano si hace falta.', distractor:'Inventar respuestas (alucinar) es lo peor que puede hacer un bot. Fuera.' } },
+ 19:{ type:'sequence', title:'Crea un avatar que presenta', intro:'Grabar un video con IA lleva minutos, no un estudio. Ordena los pasos (sobra 1 de la era analógica).',
+   slots:[ {hint:'1',accept:'guion'}, {hint:'2',accept:'avatar'}, {hint:'3',accept:'voz'}, {hint:'4',accept:'generar'} ],
+   pieces:[ {id:'guion',ic:'✍️',name:'Escribe el guion'}, {id:'avatar',ic:'🧑‍🎤',name:'Elige el avatar'}, {id:'voz',ic:'🎙️',name:'Elige o clona la voz'}, {id:'generar',ic:'🎬',name:'Genera el video'}, {id:'x',ic:'📹',name:'Alquilar un estudio de cine',distractor:true} ],
+   win:{medal:['Creador de Avatares','🎭'],xp:50,msg:'Guion → avatar → voz → generar. Un video de presentación profesional sin cámara, sin set y sin actores.'},
+   fails:{ order:'Casi. Guion → elige avatar → elige voz → genera el video.', distractor:'Alquilar un estudio es justo lo que la IA te ahorra. Fuera.' } },
+ 20:{ type:'sequence', title:'Orquesta un equipo de agentes', intro:'Los problemas grandes no los resuelve un solo agente. Ordena cómo trabaja un sistema multiagente (sobra 1 idea ingenua).',
+   slots:[ {hint:'1',accept:'plan'}, {hint:'2',accept:'asignar'}, {hint:'3',accept:'ejecutar'}, {hint:'4',accept:'consolidar'} ],
+   pieces:[ {id:'plan',ic:'🧭',name:'Un planificador divide la tarea'}, {id:'asignar',ic:'👥',name:'Asigna a agentes especialistas'}, {id:'ejecutar',ic:'🔧',name:'Cada uno usa sus herramientas'}, {id:'consolidar',ic:'🧩',name:'Se consolida el resultado'}, {id:'x',ic:'🦸',name:'Un solo agente hace todo a la vez',distractor:true} ],
+   win:{medal:['Arquitecto de Agentes','🏛️'],xp:65,msg:'Planificar → asignar a especialistas → ejecutar → consolidar. Dividir y coordinar vence a un “superagente” que lo hace todo.'},
+   fails:{ order:'Casi. Un planificador divide → asigna a especialistas → cada uno ejecuta → se consolida.', distractor:'Un solo agente haciéndolo todo es justo lo que la orquestación evita. Fuera.' } },
+ 21:{ type:'sort', title:'¿Buena práctica o riesgo?', intro:'Automatizar sin cuidar lo legal y la seguridad es jugar con fuego. Clasifica cada acción.',
+   buckets:[ {id:'ok',ic:'✅',label:'Buena práctica'}, {id:'riesgo',ic:'⛔',label:'Riesgo / evitar'} ],
+   items:[ {id:'i1',ic:'📝',name:'Pedir consentimiento para usar datos',bucket:'ok'}, {id:'i2',ic:'🔐',name:'Cifrar los datos personales',bucket:'ok'}, {id:'i3',ic:'📋',name:'Registrar quién accede a qué',bucket:'ok'}, {id:'i4',ic:'🌐',name:'Subir datos de clientes a una IA pública sin permiso',bucket:'riesgo'}, {id:'i5',ic:'🗝️',name:'Guardar contraseñas en texto plano',bucket:'riesgo'}, {id:'i6',ic:'🤖',name:'Decidir sin supervisión ni aviso',bucket:'riesgo'} ],
+   win:{medal:['Guardián del Cumplimiento','⚖️'],xp:55,msg:'Consentimiento, cifrado y trazabilidad: sí. Datos al aire, contraseñas en claro y decisiones a ciegas: no. La automatización también responde ante la ley.'},
+   fails:{ sort:'Casi. Consentir, cifrar y registrar = bien. Exponer datos, contraseñas en texto plano y decidir a ciegas = riesgo.' } },
+ 22:{ type:'sort', title:'¿Uso responsable o cruzó la línea?', intro:'La IA potente exige ética. Clasifica cada práctica.',
+   buckets:[ {id:'etico',ic:'✅',label:'Uso responsable'}, {id:'noetico',ic:'⛔',label:'Cruzó la línea'} ],
+   items:[ {id:'i1',ic:'💬',name:'Avisar que se habla con una IA',bucket:'etico'}, {id:'i2',ic:'⚖️',name:'Revisar sesgos del modelo',bucket:'etico'}, {id:'i3',ic:'🙋',name:'Dejar siempre una salida a un humano',bucket:'etico'}, {id:'i4',ic:'🎭',name:'Usar IA para engañar (deepfake)',bucket:'noetico'}, {id:'i5',ic:'🚫',name:'Decidir despidos solo con IA, a ciegas',bucket:'noetico'}, {id:'i6',ic:'🕵️',name:'Ocultar que el contenido es de IA',bucket:'noetico'} ],
+   win:{medal:['IA Responsable','🕊️'],xp:55,msg:'Transparencia, revisar sesgos y dejar el humano al mando: responsable. Engañar, decidir a ciegas u ocultar: cruzó la línea.'},
+   fails:{ sort:'Casi. Avisar, revisar sesgos y dejar salida humana = responsable. Engañar, decidir a ciegas u ocultar el uso de IA = no.' } }
+};
+
 /* ---- Videos reales por episodio (IDs verificados vía oEmbed de YouTube) ---- */
 const YTMAP={1:"UjBJJuxo5C4",2:"-VBmFYQR6ss",3:"wM1NrkwJrvU",4:"4j5Za97fSqI",5:"3o5aljS0ohk",
  6:"nqBTZvAwcJg",7:"TgMtUBZ0lpM",8:"exZUTLbirY8",9:"QHOu7CEJR88",10:"BbT0IN3y2V4",
