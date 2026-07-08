@@ -944,6 +944,30 @@
   .scen-opt:disabled{opacity:.55;cursor:default}
   .scen-opt.bad{border-color:var(--red);background:var(--red-dim);opacity:1}
   .scen-opt.good{border-color:var(--green);background:var(--green-dim);opacity:1}
+  /* cloze (completar huecos) */
+  .cloze-sent{background:var(--ink-2);border:1px solid var(--line);border-radius:13px;padding:15px 15px 13px;line-height:2.2;font-size:14px;margin:6px 0 12px}
+  .ctext{color:var(--text)}
+  .cgap{display:inline-flex;align-items:center;gap:5px;vertical-align:middle;margin:2px 1px;padding:5px 10px;border-radius:9px;background:var(--ink-4);border:1px dashed var(--muted-2);color:var(--text);font-size:12.5px;font-weight:700;transition:.15s;line-height:1.2}
+  .cgap .cghint{font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+  .cgap.sel{border-style:solid;border-color:var(--indigo);box-shadow:0 0 0 3px var(--indigo-dim)}
+  .cgap.filled{border-style:solid;border-color:var(--indigo-2);background:var(--indigo-dim)}
+  .cgap.ok{border-style:solid;border-color:var(--green);background:var(--green-dim)}
+  .cgap.bad{border-style:solid;border-color:var(--red);background:var(--red-dim)}
+  .cgap .cx{cursor:pointer;color:var(--muted);font-weight:800;margin-left:1px}
+  .cloze-bank{display:flex;flex-wrap:wrap;gap:8px}
+  .cchip{background:var(--ink-3);border:1px solid var(--line-2);border-radius:10px;padding:9px 13px;font-size:13px;font-weight:600;transition:.15s}
+  .cchip:hover:not(:disabled){border-color:var(--indigo);transform:translateY(-1px)}
+  .cchip.used{opacity:.32;text-decoration:line-through;cursor:default}
+  /* swipe (mito o realidad) */
+  .swipe-prog{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin-bottom:10px}
+  .swipe-card{background:linear-gradient(160deg,var(--ink-3),var(--ink-2));border:1px solid var(--line-2);border-radius:15px;padding:26px 20px;font-size:16.5px;font-weight:700;line-height:1.4;text-align:center;min-height:104px;display:grid;place-items:center;margin-bottom:13px}
+  .swipe-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .swipe-btn{padding:14px 12px;border-radius:12px;font-size:14.5px;font-weight:800;border:1.5px solid var(--line-2);background:var(--ink-3);transition:.15s}
+  .swipe-btn.mito:hover:not(:disabled){border-color:var(--red);background:var(--red-dim)}
+  .swipe-btn.real:hover:not(:disabled){border-color:var(--green);background:var(--green-dim)}
+  .swipe-btn:disabled{opacity:.5;cursor:default}
+  .swipe-btn.good{border-color:var(--green);background:var(--green-dim);opacity:1}
+  .swipe-btn.bad{border-color:var(--red);background:var(--red-dim);opacity:1}
 </style>
 <div id="vaultAssets" style="display:none" aria-hidden="true">
 <!-- ================= BÓVEDA DEL ACELERADOR · 20 assets copiables ================= -->
@@ -2247,6 +2271,8 @@ function retoNew(n,solved){ const c=INTERACT[n];
   if(c.type==='sequence') return {placed: solved?c.slots.map(s=>s.accept):c.slots.map(()=>null), sel:0, done:!!solved, order:rShuffle(c.pieces.map(p=>p.id))};
   if(c.type==='sort'){ const placed={}; if(solved)c.items.forEach(it=>placed[it.id]=it.bucket); return {placed, sel:null, done:!!solved, pool:rShuffle(c.items.map(it=>it.id))}; }
   if(c.type==='scenario') return {round:0, picked:null, goodFb:null, wrongPick:null, done:!!solved, order:c.rounds.map(r=>rShuffle(r.options.map((o,i)=>i)))};
+  if(c.type==='cloze') return {filled: solved?c.gaps.map(g=>g.accept):c.gaps.map(()=>null), sel:0, done:!!solved, bank:rShuffle(c.chips.map(ch=>ch.id))};
+  if(c.type==='swipe') return {round:0, goodFb:null, wrongVal:null, picked:null, done:!!solved, order:rShuffle(c.cards.map((_,i)=>i))};
   const matches={}, matchOrder=[]; if(solved)c.pairs.forEach((p,i)=>{matches[i]=i;matchOrder.push(i);});
   return {matches, matchOrder, sel:null, done:!!solved, left:rShuffle(c.pairs.map((p,i)=>i)), right:rShuffle(c.pairs.map((p,i)=>i))};
 }
@@ -2257,12 +2283,14 @@ function retoReady(n){ const c=INTERACT[n], st=RS[n]; if(!st||st.done)return fal
   if(c.type==='sequence') return st.placed.every(Boolean);
   if(c.type==='sort') return c.items.every(it=>st.placed[it.id]);
   if(c.type==='match') return Object.keys(st.matches).length===c.pairs.length;
-  return false; /* scenario no usa Comprobar */ }
+  if(c.type==='cloze') return st.filled.every(Boolean);
+  return false; /* scenario y swipe no usan Comprobar */ }
 function retoRender(n){ const host=document.getElementById('reto-'+n); if(host) host.innerHTML=retoBody(n); }
 function retoBody(n){
   const c=INTERACT[n], st=RS[n];
   let h=`<div class="reto-head"><span class="reto-badge">🎮 Reto interactivo</span><h3>${rEsc(c.title)}</h3><p>${rEsc(c.intro)}</p></div>`;
   if(c.type==='scenario') return h+scenarioBody(n);
+  if(c.type==='swipe') return h+swipeBody(n);
   if(c.type==='sequence'){
     h+='<div class="reto-slots">';
     c.slots.forEach((s,i)=>{ const pid=st.placed[i], p=pid?c.pieces.find(x=>x.id===pid):null;
@@ -2291,6 +2319,16 @@ function retoBody(n){
     st.right.forEach(ri=>{ const li=matchOwner(st,ri); const matched=li!=null; const mk=st.marks?st.marks['r'+ri]:''; const bd=matched?matchBadge(st,li):0;
       h+=`<button class="mrow${st.sel&&st.sel.s==='r'&&st.sel.i===ri?' sel':''}${matched?' done':''}${mk==='bad'?' bad':mk==='ok'?' ok':''}" onclick="matchTap(${n},'r',${ri})"><span class="ric">${c.pairs[ri].r.ic||''}</span><span class="mtxt">${rEsc(c.pairs[ri].r.txt)}</span>${matched?`<span class="mbadge">${bd}</span>`:''}</button>`; });
     h+='</div></div>';
+  } else if(c.type==='cloze'){
+    h+='<div class="reto-hint2">Toca un hueco y luego la ficha que lo completa. Arma el prompt correcto.</div><div class="cloze-sent">';
+    c.parts.forEach(pt=>{ if(pt.t!=null){ h+=`<span class="ctext">${rEsc(pt.t)}</span>`; return; }
+      const gi=pt.gap, cid=st.filled[gi], ch=cid?c.chips.find(x=>x.id===cid):null; const mk=st.marks?st.marks[gi]:'';
+      const cls=mk==='bad'?' bad':mk==='ok'?' ok':(ch?' filled':'')+(st.sel===gi?' sel':'');
+      h+=`<button class="cgap${cls}" onclick="clozeSelGap(${n},${gi})">${ch?`${rEsc(ch.t)}${mk==='bad'?' ✗':''}<span class="cx" onclick="event.stopPropagation();clozeClear(${n},${gi})">×</span>`:`<span class="cghint">${rEsc(c.gaps[gi].hint)}</span>`}</button>`; });
+    h+='</div><div class="cloze-bank">';
+    st.bank.forEach(cid=>{ const ch=c.chips.find(x=>x.id===cid); const used=st.filled.includes(cid);
+      h+=`<button class="cchip${used?' used':''}" ${used?'disabled':`onclick="clozePlace(${n},'${cid}')"`}>${rEsc(ch.t)}</button>`; });
+    h+='</div>';
   }
   h+=`<div class="reto-fb${st.done?' show ok':''}" id="retoFb-${n}">${st.done?('✅ <b>'+rEsc(c.win.msg)+'</b>'):''}</div>`;
   if(st.done) h+=`<button class="reto-check on" onclick="retoReset(${n})">↺ Rehacer el reto</button>`;
@@ -2331,6 +2369,29 @@ function scenPick(n,oi){ const c=INTERACT[n], st=RS[n]; if(st.done||st.goodFb!=n
   else { st.wrongPick=oi; rDing(190); retoRender(n); const host=document.getElementById('reto-'+n); if(host){host.classList.add('shake'); setTimeout(()=>host.classList.remove('shake'),450);} } }
 function scenNext(n){ const c=INTERACT[n], st=RS[n]; st.goodFb=null; st.wrongPick=null; st.picked=null;
   if(st.round>=c.rounds.length-1){ retoWin(n); } else { st.round++; retoRender(n); } }
+/* cloze (completar huecos) */
+function clozeSelGap(n,i){ const st=RS[n]; if(st.done)return; if(st.filled[i]){ st.filled[i]=null; st.marks=null; } st.sel=i; rDing(620); retoRender(n); }
+function clozePlace(n,cid){ const st=RS[n]; if(st.done)return; let i=st.sel; if(i==null||st.filled[i]) i=st.filled.findIndex(x=>!x); if(i<0)return;
+  st.filled[i]=cid; st.marks=null; const nx=st.filled.findIndex(x=>!x); st.sel=nx<0?i:nx; rDing(820); retoRender(n); }
+function clozeClear(n,i){ const st=RS[n]; if(st.done)return; st.filled[i]=null; st.marks=null; st.sel=i; rDing(430); retoRender(n); }
+/* swipe (mito o realidad) */
+function swipeBody(n){ const c=INTERACT[n], st=RS[n];
+  if(st.done) return `<div class="reto-fb show ok">✅ <b>${rEsc(c.win.msg)}</b></div><button class="reto-check on" onclick="retoReset(${n})">↺ Rehacer el reto</button>`;
+  const card=c.cards[st.order[st.round]], last=st.round>=st.order.length-1;
+  let h=`<div class="swipe"><div class="swipe-prog">🃏 Carta ${st.round+1} de ${st.order.length}</div><div class="swipe-card">${rEsc(card.t)}</div><div class="swipe-btns">`;
+  const answered=st.goodFb!=null;
+  const btn=(val,cls,label)=>{ const good=answered&&card.real===val, bad=st.wrongVal===val;
+    return `<button class="swipe-btn ${cls}${good?' good':''}${bad?' bad':''}" ${answered?'disabled':''} onclick="swipePick(${n},${val})">${label}</button>`; };
+  h+=btn(false,'mito','❌ Mito')+btn(true,'real','✅ Realidad')+'</div>';
+  if(st.wrongVal!=null) h+=`<div class="reto-fb show bad">⚠️ ${rEsc(card.fb)}</div>`;
+  if(answered){ h+=`<div class="reto-fb show ok">✅ ${rEsc(card.fb)}</div><button class="reto-check on" onclick="swipeNext(${n})">${last?'Terminar el reto ✓':'Siguiente carta →'}</button>`; }
+  return h+'</div>';
+}
+function swipePick(n,val){ const c=INTERACT[n], st=RS[n]; if(st.done||st.goodFb!=null)return; const card=c.cards[st.order[st.round]];
+  if(val===card.real){ st.wrongVal=null; st.goodFb=card.fb; st.picked=val; rDing(880); retoRender(n); }
+  else { st.wrongVal=val; rDing(190); retoRender(n); const host=document.getElementById('reto-'+n); if(host){host.classList.add('shake'); setTimeout(()=>host.classList.remove('shake'),450);} } }
+function swipeNext(n){ const c=INTERACT[n], st=RS[n]; st.goodFb=null; st.wrongVal=null; st.picked=null;
+  if(st.round>=st.order.length-1){ retoWin(n); } else { st.round++; retoRender(n); } }
 function retoCheck(n){ const c=INTERACT[n], st=RS[n]; if(!retoReady(n))return;
   let ok=true, msg='';
   if(c.type==='sequence'){
@@ -2338,11 +2399,13 @@ function retoCheck(n){ const c=INTERACT[n], st=RS[n]; if(!retoReady(n))return;
     else if(!st.placed.every((pid,i)=>pid===c.slots[i].accept)){ ok=false; msg=c.fails.order; }
   } else if(c.type==='sort'){ if(!c.items.every(it=>st.placed[it.id]===it.bucket)){ ok=false; msg=c.fails.sort; } }
   else if(c.type==='match'){ if(!Object.keys(st.matches).every(li=>st.matches[li]==li)){ ok=false; msg=c.fails.match; } }
+  else if(c.type==='cloze'){ if(!st.filled.every((cid,i)=>cid===c.gaps[i].accept)){ ok=false; msg=c.fails.cloze; } }
   if(ok){ retoWin(n); return; }
   // marcar en rojo/verde para que el usuario sepa qué corregir
   st.marks={};
   if(c.type==='sequence') st.placed.forEach((pid,i)=>{ st.marks[i]=(pid===c.slots[i].accept)?'ok':'bad'; });
   else if(c.type==='sort') c.items.forEach(it=>{ st.marks[it.id]=(st.placed[it.id]===it.bucket)?'ok':'bad'; });
+  else if(c.type==='cloze') st.filled.forEach((cid,i)=>{ st.marks[i]=(cid===c.gaps[i].accept)?'ok':'bad'; });
   else Object.keys(st.matches).forEach(li=>{ const good=(st.matches[li]==li); st.marks['l'+li]=good?'ok':'bad'; st.marks['r'+st.matches[li]]=good?'ok':'bad'; });
   const bad=Object.values(st.marks).filter(v=>v==='bad').length;
   retoRender(n);
@@ -2359,6 +2422,11 @@ function retoSolveTEST(n,wrong){ const c=INTERACT[n]; if(!c)return null; if(!RS[
   if(c.type==='sequence'){ st.placed=c.slots.map((s,i)=> wrong ? c.slots[(i+1)%c.slots.length].accept : s.accept); retoCheck(n); return st.done; }
   if(c.type==='sort'){ st.placed={}; c.items.forEach(it=>{ const bi=c.buckets.findIndex(b=>b.id===it.bucket); st.placed[it.id]= wrong ? c.buckets[(bi+1)%c.buckets.length].id : it.bucket; }); retoCheck(n); return st.done; }
   if(c.type==='match'){ st.matches={}; st.matchOrder=[]; c.pairs.forEach((p,i)=>{ st.matches[i]= wrong ? (i+1)%c.pairs.length : i; st.matchOrder.push(i); }); retoCheck(n); return st.done; }
+  if(c.type==='cloze'){ st.filled=c.gaps.map((g,i)=> wrong ? c.gaps[(i+1)%c.gaps.length].accept : g.accept); retoCheck(n); return st.done; }
+  if(c.type==='swipe'){ RS[n]=retoNew(n,false); const sw=RS[n];
+    if(wrong){ const card0=c.cards[sw.order[0]]; swipePick(n,!card0.real); return sw.done===true; }
+    for(let k=0;k<c.cards.length;k++){ const card=c.cards[sw.order[sw.round]]; swipePick(n,card.real); if(sw.goodFb==null) return false; swipeNext(n); }
+    return sw.done; }
   // scenario: recorre las rondas de verdad usando scenPick/scenNext
   RS[n]=retoNew(n,false); const s=RS[n];
   if(wrong){ const r0=c.rounds[0]; const badI=r0.options.findIndex(o=>!o.ok); if(badI<0) return null; scenPick(n,badI); return s.done===true; }
@@ -2367,31 +2435,36 @@ function retoSolveTEST(n,wrong){ const c=INTERACT[n]; if(!c)return null; if(!RS[
 
 /* ---- Retos por episodio (piloto: EP3 y EP4; resto se añade con la misma estructura) ---- */
 const INTERACT={
- 3:{ type:'sequence', title:'Arma el prompt profesional',
-   intro:'Tu agente responde a clientes. Un prompt flojo da respuestas flojas. Coloca en orden los 4 bloques que convierten una orden vaga en un prompt de nivel pro (sobra 1 que no sirve).',
-   slots:[ {hint:'1 · ¿QUIÉN es el agente?',accept:'rol'}, {hint:'2 · ¿Qué CONTEXTO y objetivo?',accept:'contexto'}, {hint:'3 · ¿Qué FORMATO de salida?',accept:'formato'}, {hint:'4 · ¿Qué REGLAS y límites?',accept:'reglas'} ],
-   pieces:[
-     {id:'rol',ic:'🎭',name:'Asigna un rol experto',pill:''},
-     {id:'contexto',ic:'📚',name:'Da contexto y objetivo',pill:''},
-     {id:'formato',ic:'📐',name:'Define el formato de salida',pill:''},
-     {id:'reglas',ic:'🛡️',name:'Pon reglas y límites',pill:''},
-     {id:'creativo',ic:'🎲',name:'“Sé creativo, tú puedes”',distractor:true,pill:''}
+ 3:{ type:'cloze', title:'Completa el prompt profesional',
+   intro:'Un prompt flojo da respuestas flojas. Toca cada hueco y elige la ficha que lo completa: vas a escribir, palabra por palabra, un prompt de nivel pro.',
+   parts:[
+     {t:'Actúa como '},{gap:0},{t:'. '},
+     {t:'Tu tarea es '},{gap:1},{t:'. '},
+     {t:'Ten en cuenta que '},{gap:2},{t:'. '},
+     {t:'Devuelve la respuesta '},{gap:3},{t:'.'}
    ],
-   win:{medal:['Prompt Engineer','✍️'],xp:60,msg:'Ese prompt ya no improvisa: tiene rol, contexto, formato y reglas. Así se construye un agente confiable, no uno que alucina.'},
-   fails:{ order:'Casi. El orden importa: primero QUIÉN es (rol), luego su CONTEXTO y objetivo, después el FORMATO de salida y al final las REGLAS.', distractor:'“Sé creativo” no es una instrucción: no le dice nada útil a la IA. Sácalo y usa los 4 bloques que de verdad guían.' } },
- 4:{ type:'sort', title:'¿Qué herramienta de IA para cada trabajo?',
-   intro:'No toda IA sirve para todo. Toca una tarea y luego la familia de herramienta correcta. Elegir bien la herramienta es la mitad del trabajo.',
-   buckets:[ {id:'texto',ic:'🧠',label:'LLM · texto y chat'}, {id:'imagen',ic:'🎨',label:'Generador de imagen'}, {id:'av',ic:'🎬',label:'Video y voz'} ],
-   items:[
-     {id:'i1',ic:'✉️',name:'Redactar y responder emails',bucket:'texto'},
-     {id:'i2',ic:'📄',name:'Resumir un informe largo',bucket:'texto'},
-     {id:'i3',ic:'🖼️',name:'Crear un logo o ilustración',bucket:'imagen'},
-     {id:'i4',ic:'📱',name:'Imagen para un post de redes',bucket:'imagen'},
-     {id:'i5',ic:'🎙️',name:'Locutar un texto con voz IA',bucket:'av'},
-     {id:'i6',ic:'🧑‍💻',name:'Avatar que presenta a cámara',bucket:'av'}
+   gaps:[ {accept:'rol',hint:'ROL'}, {accept:'tarea',hint:'TAREA'}, {accept:'contexto',hint:'CONTEXTO'}, {accept:'formato',hint:'FORMATO'} ],
+   chips:[
+     {id:'rol',t:'un agente de soporte experto y cordial'},
+     {id:'tarea',t:'responder la consulta del cliente'},
+     {id:'contexto',t:'el cliente es premium y tiene prisa'},
+     {id:'formato',t:'en 3 líneas, tono cercano'},
+     {id:'x1',t:'sé creativo, tú puedes',distractor:true},
+     {id:'x2',t:'hazlo lo mejor posible',distractor:true}
    ],
-   win:{medal:['Maestro del Arsenal','🎨'],xp:50,msg:'Cada trabajo con su herramienta: texto con LLM, arte con generadores de imagen, y presencia con video/voz. Eso es tener un arsenal.'},
-   fails:{ sort:'Casi. Pista: chatear, redactar o resumir = LLM de texto; crear gráficos = imagen; hablar o aparecer en cámara = video y voz. Revisa las que quedaron mal.' } },
+   win:{medal:['Prompt Engineer','✍️'],xp:60,msg:'Rol + tarea + contexto + formato: ese prompt ya no improvisa. Así se construye un agente confiable, no uno que alucina. Frases vacías como “sé creativo” no guían nada.'},
+   fails:{ cloze:'Casi. Cada hueco pide algo concreto: QUIÉN es (rol), QUÉ hace (tarea), el CONTEXTO y el FORMATO de salida. Las frases vagas no sirven.' } },
+ 4:{ type:'swipe', title:'¿Mito o realidad de la IA?',
+   intro:'Circula mucha leyenda sobre la IA generativa. Decide carta por carta: ¿es un mito o una realidad? Cada respuesta te explica por qué.',
+   cards:[
+     {t:'Un mismo modelo de texto sirve igual de bien para crear un logo profesional.', real:false, fb:'Mito. Cada trabajo tiene su familia: LLM para texto, generadores de imagen para gráficos, video/voz para presencia. Elegir bien la herramienta es media batalla.'},
+     {t:'La IA puede “alucinar” y darte datos falsos con total seguridad.', real:true, fb:'Realidad. Por eso nunca confías a ciegas: verificas los datos críticos que te da.'},
+     {t:'Para tareas de imagen conviene una herramienta especializada, no un chat de texto.', real:true, fb:'Realidad. Un generador de imagen (o de video/voz) hace lo que un LLM de texto no puede.'},
+     {t:'Cuanto más vago el prompt, mejor: así la IA “usa su creatividad”.', real:false, fb:'Mito. Un prompt vago da resultados vagos. Rol + tarea + contexto + formato = respuestas útiles.'},
+     {t:'Locutar un texto y poner un avatar a cámara se resuelve con herramientas de video/voz.', real:true, fb:'Realidad. Voz IA y avatares son familia audiovisual, no texto.'}
+   ],
+   win:{medal:['Cazador de Mitos','🎨'],xp:50,msg:'Ya distingues qué hace cada IA y qué es leyenda: cada trabajo con su herramienta, y siempre verificando. Eso es tener criterio, no solo un arsenal.'},
+   fails:{} },
  5:{ type:'scenario', title:'Decisiones al construir tu primer agente', intro:'Tu jefe quiere un agente que procese pedidos. Toma las decisiones correctas: cada una tiene su consecuencia.',
    rounds:[
      {ic:'🧩', q:'El agente debe arrancar cuando llega un pedido nuevo por email. ¿Qué pones primero?', options:[
@@ -2416,19 +2489,25 @@ const INTERACT={
    ],
    win:{medal:['Arquitecto de escenarios','🧩'],xp:55,msg:'Disparador, acción, IA, router y filtro: con esos ladrillos armas cualquier escenario de Make.'},
    fails:{ match:'Casi. Une cada módulo con su función; lo marcado en rojo no coincide.' } },
- 7:{ type:'scenario', title:'Dirige a la IA como un vibe coder', intro:'Estás creando una app con Claude. Cada decisión define si terminas hoy o te trabas.',
-   rounds:[
-     {ic:'💡', q:'Quieres una app de reservas. ¿Cómo se lo pides a la IA?', options:[
-       {t:'Describes objetivo, usuarios y qué debe hacer, paso a paso', ok:true, fb:'Sí: un prompt claro y específico produce código útil. Dirigir bien es el 80% del trabajo.'},
-       {t:'Le dices "hazme una app buena"', ok:false, fb:'Demasiado vago: la IA adivina y te da cualquier cosa. Sé específico.'} ]},
-     {ic:'🧪', q:'La IA te entrega el código. ¿Qué haces?', options:[
-       {t:'Lo pruebas y le pides ajustes concretos', ok:true, fb:'Correcto: probar e iterar es el ciclo. Nunca confíes a ciegas.'},
-       {t:'Lo subes a producción sin probar', ok:false, fb:'Riesgo altísimo. Prueba primero y corrige con la IA.'} ]},
-     {ic:'🐛', q:'Aparece un error que no entiendes. ¿Mejor jugada?', options:[
-       {t:'Le pegas el error a la IA y pides que lo explique y lo arregle', ok:true, fb:'Exacto: la IA también depura. Aprendes y avanzas.'},
-       {t:'Copias una solución de internet sin leerla', ok:false, fb:'Puede empeorarlo. Deja que la IA te lo explique y lo corrija con contexto.'} ]}
+ 7:{ type:'cloze', title:'Escribe la instrucción de código',
+   intro:'Como vibe coder no programas: diriges. Completa la instrucción que le das a la IA para que genere una función útil, sin ambigüedades.',
+   parts:[
+     {t:'Crea una función que reciba '},{gap:0},{t:', '},
+     {t:'que '},{gap:1},{t:', '},
+     {t:'y si el dato es inválido, que '},{gap:2},{t:'. '},
+     {t:'Devuélvela '},{gap:3},{t:'.'}
    ],
-   win:{medal:['Vibe Coder','⚡'],xp:60,msg:'Prompt claro, probar, iterar y depurar con la IA. Así se crea software sin ser programador.'}, fails:{} },
+   gaps:[ {accept:'entrada',hint:'ENTRADA'}, {accept:'accion',hint:'ACCIÓN'}, {accept:'error',hint:'MANEJO DE ERROR'}, {accept:'salida',hint:'SALIDA'} ],
+   chips:[
+     {id:'entrada',t:'una lista de pedidos'},
+     {id:'accion',t:'calcule el total con impuestos'},
+     {id:'error',t:'devuelva un mensaje claro'},
+     {id:'salida',t:'con comentarios y lista para probar'},
+     {id:'x1',t:'hazla buena',distractor:true},
+     {id:'x2',t:'como tú veas',distractor:true}
+   ],
+   win:{medal:['Vibe Coder','⚡'],xp:60,msg:'Entrada, acción, manejo de error y formato de salida: instrucción sin ambigüedad = código que sirve al primer intento. Dirigir bien es el 80% del trabajo.'},
+   fails:{ cloze:'Casi. Una buena instrucción dice QUÉ recibe, QUÉ hace, QUÉ pasa si falla y CÓMO la entrega. “Hazla buena” no le dice nada a la IA.' } },
  8:{ type:'sequence', title:'Levanta un proceso, paso a paso', intro:'Antes de automatizar hay que entender. Ordena el levantamiento de un proceso (sobra 1 error clásico).',
    slots:[ {hint:'1',accept:'ident'}, {hint:'2',accept:'observar'}, {hint:'3',accept:'documentar'}, {hint:'4',accept:'priorizar'} ],
    pieces:[ {id:'ident',ic:'🔎',name:'Identifica el proceso'}, {id:'observar',ic:'👀',name:'Observa cómo se hace hoy'}, {id:'documentar',ic:'📝',name:'Documenta los pasos'}, {id:'priorizar',ic:'🎯',name:'Prioriza qué automatizar'}, {id:'x',ic:'🚀',name:'Automatizar antes de entender',distractor:true} ],
@@ -2535,11 +2614,17 @@ const INTERACT={
    items:[ {id:'i1',ic:'📝',name:'Pedir consentimiento para usar datos',bucket:'ok'}, {id:'i2',ic:'🔐',name:'Cifrar los datos personales',bucket:'ok'}, {id:'i3',ic:'📋',name:'Registrar quién accede a qué',bucket:'ok'}, {id:'i4',ic:'🌐',name:'Subir datos de clientes a una IA pública sin permiso',bucket:'riesgo'}, {id:'i5',ic:'🗝️',name:'Guardar contraseñas en texto plano',bucket:'riesgo'}, {id:'i6',ic:'🤖',name:'Decidir sin supervisión ni aviso',bucket:'riesgo'} ],
    win:{medal:['Guardián del Cumplimiento','⚖️'],xp:55,msg:'Consentimiento, cifrado y trazabilidad: sí. Datos al aire, contraseñas en claro y decisiones a ciegas: no. La automatización también responde ante la ley.'},
    fails:{ sort:'Casi. Consentir, cifrar y registrar = bien. Exponer datos, contraseñas en texto plano y decidir a ciegas = riesgo.' } },
- 22:{ type:'sort', title:'¿Uso responsable o cruzó la línea?', intro:'La IA potente exige ética. Clasifica cada práctica.',
-   buckets:[ {id:'etico',ic:'✅',label:'Uso responsable'}, {id:'noetico',ic:'⛔',label:'Cruzó la línea'} ],
-   items:[ {id:'i1',ic:'💬',name:'Avisar que se habla con una IA',bucket:'etico'}, {id:'i2',ic:'⚖️',name:'Revisar sesgos del modelo',bucket:'etico'}, {id:'i3',ic:'🙋',name:'Dejar siempre una salida a un humano',bucket:'etico'}, {id:'i4',ic:'🎭',name:'Usar IA para engañar (deepfake)',bucket:'noetico'}, {id:'i5',ic:'🚫',name:'Decidir despidos solo con IA, a ciegas',bucket:'noetico'}, {id:'i6',ic:'🕵️',name:'Ocultar que el contenido es de IA',bucket:'noetico'} ],
-   win:{medal:['IA Responsable','🕊️'],xp:55,msg:'Transparencia, revisar sesgos y dejar el humano al mando: responsable. Engañar, decidir a ciegas u ocultar: cruzó la línea.'},
-   fails:{ sort:'Casi. Avisar, revisar sesgos y dejar salida humana = responsable. Engañar, decidir a ciegas u ocultar el uso de IA = no.' } }
+ 22:{ type:'swipe', title:'IA responsable: ¿mito o realidad?',
+   intro:'La IA potente exige ética. Decide carta por carta si cada afirmación es un mito peligroso o una realidad que debes respetar.',
+   cards:[
+     {t:'Puedes usar un deepfake de una persona real sin su permiso mientras sea “solo marketing”.', real:false, fb:'Mito peligroso. Suplantar a alguien sin consentimiento es engaño y puede ser ilegal. La transparencia no es opcional.'},
+     {t:'Está bien decidir despidos automáticamente con IA, sin que un humano revise.', real:false, fb:'Mito. Decisiones que afectan la vida de la gente exigen supervisión humana. La IA asiste, no sentencia a ciegas.'},
+     {t:'Conviene avisar a la persona cuando está hablando con una IA y no con un humano.', real:true, fb:'Realidad. La transparencia genera confianza y en muchos países ya es obligación legal.'},
+     {t:'Revisar el modelo en busca de sesgos es parte de un uso responsable.', real:true, fb:'Realidad. Un modelo sesgado discrimina sin querer. Auditarlo es tu responsabilidad.'},
+     {t:'Siempre conviene dejar una salida para escalar a un humano.', real:true, fb:'Realidad. El humano al mando es la última red de seguridad de todo sistema automatizado.'}
+   ],
+   win:{medal:['IA Responsable','🕊️'],xp:55,msg:'Transparencia, revisar sesgos y humano al mando: eso es uso responsable. Engañar, decidir a ciegas u ocultar el uso de IA cruza la línea. La automatización también responde ante la ley.'},
+   fails:{} }
 };
 
 /* ---- Videos reales por episodio (IDs verificados vía oEmbed de YouTube) ---- */
