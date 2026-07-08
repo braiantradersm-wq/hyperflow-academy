@@ -414,6 +414,20 @@
   .cadd input:focus{outline:none;border-color:var(--indigo)}
   .cItem{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
   .cempty{color:var(--muted);font-size:13.5px;padding:14px 16px;background:var(--ink-2);border:1px dashed var(--line-2);border-radius:11px}
+  /* Compromiso de honestidad */
+  .pledge{background:linear-gradient(160deg,var(--ink-3),var(--ink-2));border:1px solid var(--line-2);border-radius:18px;padding:26px 22px;margin-bottom:22px}
+  .pledge-h{font-family:var(--font-serif);font-size:20px;margin-bottom:6px}
+  .pledge-sub{color:var(--muted);font-size:14px;margin-bottom:20px;max-width:640px}
+  .pledge-cols{display:grid;grid-template-columns:1fr;gap:16px}
+  .pledge-yes,.pledge-no{background:var(--ink);border:1px solid var(--line);border-radius:13px;padding:16px 18px}
+  .pledge-yes{border-color:rgba(63,208,127,.32)}
+  .pledge-no{border-color:rgba(255,107,122,.28)}
+  .pledge-cols b{display:block;font-size:14px;margin-bottom:10px}
+  .pledge-yes b{color:var(--green)} .pledge-no b{color:var(--red)}
+  .pledge-cols ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+  .pledge-cols li{font-size:13.5px;color:var(--text);line-height:1.5;padding-left:2px}
+  @media(min-width:680px){ .pledge-cols{grid-template-columns:1fr 1fr;gap:18px} }
+  .pledge-foot{margin-top:16px;padding:14px 16px;background:var(--indigo-dim);border:1px solid rgba(102,116,255,.3);border-radius:12px;font-size:13.5px;color:var(--text);line-height:1.55}
   /* Botón de menú principal (flotante, campus) */
   #fab{position:fixed;right:18px;bottom:18px;z-index:120;display:none}
   #fab.show{display:block}
@@ -654,7 +668,7 @@
       <div class="stats">
         <div class="stat"><b>6</b><span>Temporadas con trama</span></div>
         <div class="stat"><b>22</b><span>Episodios con misión</span></div>
-        <div class="stat"><b>22</b><span>Retos interactivos</span></div>
+        <div class="stat"><b>22</b><span>Episodios interactivos</span></div>
         <div class="stat"><b>∞</b><span>XP, niveles y logros</span></div>
       </div>
     </div>
@@ -692,9 +706,9 @@
   <section class="blk" style="padding-top:0">
     <div class="wrap">
       <div class="sec-head">
-        <div class="eyebrow">La transformación</div>
-        <h2>Al terminar la serie, serás capaz de…</h2>
-        <p>No sales con apuntes: sales con habilidades que el mercado paga. Esto es lo que podrás hacer.</p>
+        <div class="eyebrow">Lo que vas a aprender</div>
+        <h2>A lo largo de la serie trabajás estas habilidades…</h2>
+        <p>Estas son las competencias que se enseñan y practicás en el programa. Cuánto las domines y qué hagas con ellas depende exclusivamente de vos.</p>
       </div>
       <div class="outcomes" id="outcomesList"></div>
     </div>
@@ -764,13 +778,13 @@
           </div>
         </div>
         <div class="host-txt">
-          <div class="eyebrow">Tu guía en la serie</div>
-          <h2>Aprende de alguien que <span style="color:var(--indigo-2)">automatiza para vivir</span>, no que solo lo enseña</h2>
-          <p class="muted" style="margin:16px 0">No vas a recibir teoría recalentada. Cada episodio está construido por operadores que implementan agentes, RPA y automatizaciones en empresas reales, y que convierten esos proyectos en ingresos. Vas a copiar el criterio, no solo los pasos.</p>
+          <div class="eyebrow">El método</div>
+          <h2>Aprendés con las <span style="color:var(--indigo-2)">herramientas reales</span>, haciendo — no mirando teoría</h2>
+          <p class="muted" style="margin:16px 0">Nada de teoría recalentada. Cada episodio te pone a construir con las herramientas que se usan de verdad hoy —n8n, Make, Claude, UiPath, Power Platform— sobre casos concretos. Te llevás el criterio para decidir qué automatizar y cómo, no solo los pasos.</p>
           <ul class="obj" style="gap:12px">
-            <li><span class="tick">✓</span> Método probado en proyectos reales de automatización</li>
-            <li><span class="tick">✓</span> Enfoque en ROI: cada episodio apunta a que ganes o ahorres dinero</li>
-            <li><span class="tick">✓</span> Cero relleno: al grano, como se trabaja en el mundo real</li>
+            <li><span class="tick">✓</span> Construido sobre las herramientas y flujos que se usan hoy en automatización</li>
+            <li><span class="tick">✓</span> Enfoque en ROI: cada episodio apunta a que ahorres tiempo o dinero</li>
+            <li><span class="tick">✓</span> Cero relleno: práctico y al grano</li>
           </ul>
         </div>
       </div>
@@ -798,8 +812,31 @@
         <h2>Un solo pago. Acceso para siempre.</h2>
         <p>Sin suscripciones ni cuotas mensuales. Pagas una vez y el programa completo es tuyo de por vida, con todas las actualizaciones incluidas.</p>
       </div>
+      <div class="pledge">
+        <div class="pledge-h">🤝 Nuestro compromiso: cero humo</div>
+        <p class="pledge-sub">Un tema complejo, enseñado de forma estructurada y agradable. Lo que ves acá es exactamente lo que recibís al entrar.</p>
+        <div class="pledge-cols">
+          <div class="pledge-yes">
+            <b>✅ Lo que sí</b>
+            <ul>
+              <li>Un camino paso a paso para aprender IA, agentes, RPA y automatización, sin que sea aburrido.</li>
+              <li>Aprendés haciendo: construís vos en cada episodio, con las herramientas reales.</li>
+              <li>El temario completo está a la vista. No inventamos testimonios ni resultados.</li>
+            </ul>
+          </div>
+          <div class="pledge-no">
+            <b>❌ Lo que no</b>
+            <ul>
+              <li>No te garantizamos resultados, ingresos ni nada mágico.</li>
+              <li>No hay atajos: lo que logres depende exclusivamente de vos.</li>
+              <li>No vendemos nada que no esté dentro del curso.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="pledge-foot">Lo único que te garantizamos: que hicimos el trabajo lo mejor posible para darte un curso que de verdad enseñe. El resto lo ponés vos.</div>
+      </div>
       <div class="whybuy">
-        <div class="wb"><span class="wbic">💸</span><b>Se paga solo</b><span>Automatizar <b>un</b> proceso repetitivo te ahorra, en tu primera semana, más horas y dinero de lo que cuesta el curso completo. Lo recuperas casi de inmediato.</span></div>
+        <div class="wb"><span class="wbic">💸</span><b>Puede pagarse solo</b><span>Con automatizar <b>un</b> proceso repetitivo que hoy haces a mano, muchas personas ahorran en horas más de lo que cuesta el curso. El resultado depende de que lo apliques.</span></div>
         <div class="wb"><span class="wbic">⚖️</span><b>Comparado, no es nada</b><span>Un bootcamp de automatización supera los <b>$2.000</b>. Una sola hora de consultoría cuesta más que esto. Aquí es <b>$89.99, una vez</b>, y es tuyo para siempre.</span></div>
         <div class="wb"><span class="wbic">⏳</span><b>Lo caro es no hacerlo</b><span>Cada semana haciendo a mano lo que un bot haría solo son horas, clientes y oportunidades que no vuelven. Eso sí es costoso.</span></div>
       </div>
@@ -2156,7 +2193,7 @@ function renderLocked(n){
     <div class="locked-hero">
       <div class="locked-seal"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></div>
       <h2>Episodio bloqueado</h2>
-      <p>Este episodio forma parte del programa completo. Desbloquea las <b>6 temporadas · 22 episodios</b> con voz de locutor, videos, retos y certificado.</p>
+      <p>Este episodio forma parte del programa completo. Desbloquea las <b>6 temporadas · 22 episodios</b> con narración por voz IA, videos, retos y certificado.</p>
       <div class="locked-teaser">
         <span class="lt-k">Vista previa del contenido</span>
         <ul class="obj">${m.obj.slice(0,3).map(o=>`<li>${tickSvg}${o}</li>`).join('')}</ul>
@@ -2732,7 +2769,7 @@ const YTMAP={1:"UjBJJuxo5C4",2:"-VBmFYQR6ss",3:"wM1NrkwJrvU",4:"4j5Za97fSqI",5:"
 
 /* Audio de LOCUTOR (voz neuronal Álvaro es-ES, generada con Edge-TTS, gratis).
    Cada episodio: array de clips MP3 (data URI) alineado a las diapositivas de la clase.
-   Si un episodio tiene audio, suena la voz de locutor real; si no, cae a la voz del navegador. */
+   Si un episodio tiene audio pregenerado (voz IA Edge-TTS), suena ese; si no, cae a la voz del navegador. */
 const AUDIO=/*AUDIO_JSON*/{"1":["audio/ep1/0.mp3","audio/ep1/1.mp3","audio/ep1/2.mp3","audio/ep1/3.mp3","audio/ep1/4.mp3","audio/ep1/5.mp3"],"2":["audio/ep2/0.mp3","audio/ep2/1.mp3","audio/ep2/2.mp3","audio/ep2/3.mp3","audio/ep2/4.mp3","audio/ep2/5.mp3"],"3":["audio/ep3/0.mp3","audio/ep3/1.mp3","audio/ep3/2.mp3","audio/ep3/3.mp3","audio/ep3/4.mp3","audio/ep3/5.mp3"],"4":["audio/ep4/0.mp3","audio/ep4/1.mp3","audio/ep4/2.mp3","audio/ep4/3.mp3","audio/ep4/4.mp3","audio/ep4/5.mp3"],"5":["audio/ep5/0.mp3","audio/ep5/1.mp3","audio/ep5/2.mp3","audio/ep5/3.mp3","audio/ep5/4.mp3","audio/ep5/5.mp3"],"6":["audio/ep6/0.mp3","audio/ep6/1.mp3","audio/ep6/2.mp3","audio/ep6/3.mp3","audio/ep6/4.mp3","audio/ep6/5.mp3"],"7":["audio/ep7/0.mp3","audio/ep7/1.mp3","audio/ep7/2.mp3","audio/ep7/3.mp3","audio/ep7/4.mp3","audio/ep7/5.mp3"],"8":["audio/ep8/0.mp3","audio/ep8/1.mp3","audio/ep8/2.mp3","audio/ep8/3.mp3","audio/ep8/4.mp3","audio/ep8/5.mp3"],"9":["audio/ep9/0.mp3","audio/ep9/1.mp3","audio/ep9/2.mp3","audio/ep9/3.mp3","audio/ep9/4.mp3","audio/ep9/5.mp3"],"10":["audio/ep10/0.mp3","audio/ep10/1.mp3","audio/ep10/2.mp3","audio/ep10/3.mp3","audio/ep10/4.mp3","audio/ep10/5.mp3"],"11":["audio/ep11/0.mp3","audio/ep11/1.mp3","audio/ep11/2.mp3","audio/ep11/3.mp3","audio/ep11/4.mp3","audio/ep11/5.mp3"],"12":["audio/ep12/0.mp3","audio/ep12/1.mp3","audio/ep12/2.mp3","audio/ep12/3.mp3","audio/ep12/4.mp3","audio/ep12/5.mp3"],"13":["audio/ep13/0.mp3","audio/ep13/1.mp3","audio/ep13/2.mp3","audio/ep13/3.mp3","audio/ep13/4.mp3","audio/ep13/5.mp3"],"14":["audio/ep14/0.mp3","audio/ep14/1.mp3","audio/ep14/2.mp3","audio/ep14/3.mp3","audio/ep14/4.mp3","audio/ep14/5.mp3"],"15":["audio/ep15/0.mp3","audio/ep15/1.mp3","audio/ep15/2.mp3","audio/ep15/3.mp3","audio/ep15/4.mp3","audio/ep15/5.mp3"],"16":["audio/ep16/0.mp3","audio/ep16/1.mp3","audio/ep16/2.mp3","audio/ep16/3.mp3","audio/ep16/4.mp3","audio/ep16/5.mp3"],"17":["audio/ep17/0.mp3","audio/ep17/1.mp3","audio/ep17/2.mp3","audio/ep17/3.mp3","audio/ep17/4.mp3","audio/ep17/5.mp3"],"18":["audio/ep18/0.mp3","audio/ep18/1.mp3","audio/ep18/2.mp3","audio/ep18/3.mp3","audio/ep18/4.mp3","audio/ep18/5.mp3"],"19":["audio/ep19/0.mp3","audio/ep19/1.mp3","audio/ep19/2.mp3","audio/ep19/3.mp3","audio/ep19/4.mp3","audio/ep19/5.mp3"],"20":["audio/ep20/0.mp3","audio/ep20/1.mp3","audio/ep20/2.mp3","audio/ep20/3.mp3","audio/ep20/4.mp3","audio/ep20/5.mp3"],"21":["audio/ep21/0.mp3","audio/ep21/1.mp3","audio/ep21/2.mp3","audio/ep21/3.mp3","audio/ep21/4.mp3","audio/ep21/5.mp3"],"22":["audio/ep22/0.mp3","audio/ep22/1.mp3","audio/ep22/2.mp3","audio/ep22/3.mp3","audio/ep22/4.mp3","audio/ep22/5.mp3"]}/*END_AUDIO*/;
 function hasLocutor(n){return AUDIO[n]&&AUDIO[n].length;}
 
@@ -2880,7 +2917,7 @@ function scoreVoice(v){
   const n=(v.name||'').toLowerCase();
   if(!/^es/i.test(v.lang))return -1;
   let s=10;
-  if(/natural|neural|online|premium|enhanced/.test(n))s+=20;     // voz HUMANA: máxima prioridad
+  if(/natural|neural|online|premium|enhanced/.test(n))s+=20;     // voz IA más natural: máxima prioridad
   if(/google/.test(n))s+=6;                                      // Google suena más natural que SAPI
   if(/(pablo|raul|raúl|jorge|diego|carlos|miguel|juan|enrique|álvaro|alvaro|alonso|gonzalo|lorenzo|dario|darío|andres|andrés|felipe|male|hombre|masculin)/.test(n))s+=9; // hombre
   if(/(sabina|helena|mónica|monica|paulina|laura|elvira|dalia|ximena|marisol|isabela|paloma|catalina|female|mujer|femenin)/.test(n))s-=6; // leve preferencia por hombre
@@ -2946,7 +2983,7 @@ function renderPlayer(m){
         <div class="vslide on"><div class="vposter">
           <div class="vwm">Hyperflow</div>
           <button class="vplay" onclick="vpToggle()" aria-label="Reproducir clase"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
-          <div class="vkick">${hasLocutor(m.n)?'🎙️ Voz de locutor (Álvaro)':'Clase narrada por IA'} · ${beats} partes</div>
+          <div class="vkick">${hasLocutor(m.n)?'🎙️ Narración con voz IA (Álvaro)':'Clase narrada por IA'} · ${beats} partes</div>
           <h3 style="max-width:80%">${m.title}</h3>
         </div></div>
       </div>
@@ -2964,7 +3001,7 @@ function renderPlayer(m){
         </select>
       </div>
       <div class="vhint" id="vhint" style="display:none">
-        <span>🎧 <b>¿La voz suena robótica?</b> Abre este curso en <b>Microsoft Edge</b> para activar gratis la voz humana natural (Álvaro, castellano). O elige el modo 🎬 Video arriba.</span>
+        <span>🎧 <b>¿La voz suena robótica?</b> Abre este curso en <b>Microsoft Edge</b> para activar gratis una voz IA más natural (Álvaro, castellano). O elige el modo 🎬 Video arriba.</span>
       </div>
     </div>
   </div>`;
@@ -3443,21 +3480,7 @@ function renderOutcomes(){
   const chk='<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>';
   el.innerHTML=OUTCOMES.map(o=>`<div class="oc"><span class="ocn">${chk}</span><div><b>${o.t}</b><p>${o.d}</p></div></div>`).join('');
 }
-/* ---- COUNTDOWN (oferta de lanzamiento, evergreen 72h por navegador) ---- */
-function getDeadline(){
-  let d=+localStorage.getItem('hf_deadline');
-  if(!d||d<Date.now()){d=Date.now()+72*3600*1000;try{localStorage.setItem('hf_deadline',d);}catch(e){}}
-  return d;
-}
-function cd2(n){return String(n).padStart(2,'0');}
-function tickCountdown(){
-  let s=Math.max(0,Math.floor((getDeadline()-Date.now())/1000));
-  const h=Math.floor(s/3600);s%=3600;const m=Math.floor(s/60),sec=s%60;
-  const top=document.getElementById('cdTop');
-  if(top)top.innerHTML='<span>'+cd2(h)+'</span>:<span>'+cd2(m)+'</span>:<span>'+cd2(sec)+'</span>';
-  const inl=document.getElementById('cdInline');
-  if(inl)inl.textContent=cd2(h)+':'+cd2(m)+':'+cd2(sec);
-}
+/* Countdown de urgencia fingida ELIMINADO — nada de relojes falsos, todo transparente. */
 /* ---- CAPTURA DE LEAD (descarga temario + 1ª clase) ---- */
 function captureLead(e){
   e.preventDefault();
@@ -3485,7 +3508,7 @@ function downloadTemario(){
 
 /* INIT */
 renderCurriculum();renderFaq();renderTesti();renderOutcomes();initNet();
-tickCountdown();setInterval(tickCountdown,1000);
+try{localStorage.removeItem('hf_deadline');}catch(e){}  // limpia rastro del countdown viejo
 /* Vuelta del pago exitoso de Stripe: entra directo al campus por el Episodio 1 */
 if(_P.has('enrolled')||_P.has('success')){ try{ if(typeof showToast==='function') showToast('🎉','¡Bienvenido al curso!','Tu acceso está activo · empezá por el Episodio 1'); }catch(e){} currentModule=1; openCampus(); }
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCheckout();});
