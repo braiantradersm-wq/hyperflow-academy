@@ -42,6 +42,21 @@
   .intro .k{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--amber);margin-bottom:10px}
   .intro h1{font-family:var(--serif);font-style:italic;font-size:clamp(26px,7vw,42px);line-height:1.05}
   .intro p{color:var(--muted);font-size:14px;margin-top:10px}
+  /* ESCALERA DE CARRERA */
+  .ladder-wrap{margin-top:20px;background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:16px 12px 14px}
+  .ladder-k{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted-2);text-align:center;margin-bottom:12px}
+  .ladder{display:flex;align-items:flex-start;overflow-x:auto;padding:2px;scrollbar-width:none}
+  .ladder::-webkit-scrollbar{display:none}
+  .rung{flex:none;width:62px;text-align:center;opacity:.4;transition:.3s}
+  .rung.reached{opacity:.85}
+  .rung.cur{opacity:1}
+  .rung .ri{width:42px;height:42px;margin:0 auto 6px;border-radius:12px;background:var(--ink-3);border:1px solid var(--line-2);display:grid;place-items:center;font-size:20px;transition:.3s}
+  .rung.reached .ri{border-color:var(--green)}
+  .rung.cur .ri{border-color:var(--amber);background:rgba(255,180,84,.14);box-shadow:0 6px 18px -8px var(--amber);transform:scale(1.14)}
+  .rung span{font-size:10px;color:var(--muted);line-height:1.15;display:block}
+  .rung.cur span{color:var(--amber);font-weight:700}
+  .rsep{flex:none;width:16px;height:2px;background:var(--ink-4);border-radius:2px;margin-top:20px}
+  .rsep.on{background:var(--green)}
   .badges{display:flex;gap:9px;overflow-x:auto;padding:16px 2px 6px;scrollbar-width:none}
   .badges::-webkit-scrollbar{display:none}
   .bdg{flex:none;width:76px;text-align:center;opacity:.35;transition:.3s;filter:grayscale(1)}
@@ -118,6 +133,11 @@
     <p>Cada misión que superas ilumina el camino, te da XP y sube tu rango. Aprende jugando hasta el certificado.</p>
   </div>
 
+  <div class="ladder-wrap">
+    <div class="ladder-k">Tu carrera · de Novato a Experto</div>
+    <div class="ladder" id="ladder"></div>
+  </div>
+
   <div class="badges" id="badges"></div>
 
   <div id="map"></div>
@@ -148,7 +168,16 @@ const SEASONS=[
  {n:6,title:"El Dominio",eps:[18,19,20,21,22]}
 ];
 const XP_EP=120;
-const RANKS=[{min:0,name:"Aprendiz",ic:"🎖️"},{min:360,name:"Operador",ic:"🥉"},{min:840,name:"Analista",ic:"🥈"},{min:1440,name:"Arquitecto Jr.",ic:"🥇"},{min:2040,name:"Arquitecto",ic:"💎"},{min:2640,name:"Maestro",ic:"👑"}];
+/* Escalera de carrera: Novato -> ... -> Consultor -> ... -> Experto (22 eps x120 = 2640 XP) */
+const RANKS=[
+ {min:0,   name:"Novato",     ic:"🌱"},
+ {min:300, name:"Aprendiz",   ic:"🎖️"},
+ {min:720, name:"Operador",   ic:"🥉"},
+ {min:1200,name:"Analista",   ic:"🥈"},
+ {min:1680,name:"Consultor",  ic:"🥇"},
+ {min:2160,name:"Arquitecto", ic:"💎"},
+ {min:2640,name:"Experto",    ic:"👑"}
+];
 const BADGES=[
  {ic:"🏅",name:"Primer paso",has:d=>d.length>=1},
  {ic:"🎯",name:"Clasificador",has:d=>d.includes(1)},
@@ -212,7 +241,22 @@ function renderMap(){
   $('#certNode').classList.toggle('ready',all);
   $('#certSub').textContent=all?'¡Desbloqueado! Reclama tu certificado':'Jefe final · completa las 22 misiones';
 }
-function renderAll(){renderHeader();renderBadges();renderMap();}
+function renderLadder(){
+  const x=xp(), cur=rankOf(x); let h='';
+  RANKS.forEach((r,i)=>{
+    if(i>0){ h+=`<div class="rsep ${x>=r.min?'on':''}"></div>`; }
+    const reached=x>=r.min, isCur=(r.name===cur.name);
+    h+=`<div class="rung ${reached?'reached':''} ${isCur?'cur':''}"><div class="ri">${r.ic}</div><span>${r.name}</span></div>`;
+  });
+  $('#ladder').innerHTML=h;
+}
+function checkRankUp(){
+  const cur=rankOf(xp()); let last=null;
+  try{last=localStorage.getItem('hf_lastrank');}catch(e){}
+  if(last && last!==cur.name){ setTimeout(()=>toast('🎉 ¡Ascendiste de categoría! Ahora eres '+cur.name),500); }
+  try{localStorage.setItem('hf_lastrank',cur.name);}catch(e){}
+}
+function renderAll(){renderHeader();renderLadder();renderBadges();renderMap();}
 
 /* ============ INTERACCIÓN ============ */
 function tapNode(n){
@@ -224,12 +268,13 @@ function tapNode(n){
 }
 let tt;
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2600);}
-function resetGame(){ if(confirm('¿Reiniciar tu progreso del mapa?')){G={done:[],streak:3};save(G);try{localStorage.removeItem('hyperflow_ep01_done')}catch(e){}renderAll();toast('Progreso reiniciado. Empieza por “El Origen”.');} }
+function resetGame(){ if(confirm('¿Reiniciar tu progreso del mapa?')){G={done:[],streak:3};save(G);try{localStorage.removeItem('hyperflow_ep01_done');localStorage.removeItem('hf_lastrank');}catch(e){}renderAll();toast('Progreso reiniciado. Empieza por “El Origen”.');} }
 
 /* demo hint */
 $('#demohint').textContent = P.has('demo')?'modo demo: progreso de ejemplo':(G.done.length?('progreso real: '+G.done.length+'/22'):'juega EP01 y vuelve aquí');
 
 renderAll();
+checkRankUp();
 </script>
 </body>
 </html>
