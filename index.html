@@ -553,6 +553,16 @@
   .game-hint{margin-left:auto;font-size:12px;color:var(--muted);font-family:var(--font-mono)}
   #gameFrame{flex:1;width:100%;border:0;background:var(--ink)}
   @media(max-width:640px){ .game-hint{display:none} }
+  .pricing.pricing-one{display:flex;justify-content:center}
+  .pricing.pricing-one .price{max-width:460px;width:100%}
+  .whybuy{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:920px;margin:0 auto 26px}
+  .whybuy .wb{background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:18px 16px;display:flex;flex-direction:column;gap:6px}
+  .whybuy .wbic{font-size:22px}
+  .whybuy .wb b{font-size:15px;color:var(--text)}
+  .whybuy .wb>span:last-child{font-size:13px;color:var(--muted);line-height:1.5}
+  .whybuy .wb b b{color:var(--amber)}
+  .micro{font-size:12.5px;color:var(--muted);text-align:center;margin:2px 0 14px;font-style:italic}
+  @media(max-width:760px){ .whybuy{grid-template-columns:1fr;max-width:460px} }
 </style>
 
 <div class="cine" id="cine"><div class="cbar" id="cineBar"></div><div class="cscene" id="cineBody"></div><button class="skip" onclick="skipCine()">saltar intro ⏭</button></div>
@@ -602,7 +612,7 @@
       <div class="hero-note">
         <span><span class="tick">✓</span> Acceso de por vida</span>
         <span><span class="tick">✓</span> Gamificación + XP</span>
-        <span><span class="tick">✓</span> Garantía 14 días</span>
+        <span><span class="tick">✓</span> Acceso de por vida</span>
       </div>
       <div class="stats">
         <div class="stat"><b>6</b><span>Temporadas con trama</span></div>
@@ -748,93 +758,36 @@
     <div class="wrap">
       <div class="sec-head">
         <div class="eyebrow">Inversión</div>
-        <h2>Elige cómo quieres avanzar</h2>
-        <p>Pago único con acceso de por vida, o plan pro con mentoría y comunidad. Sin permanencia. Garantía de 14 días.</p>
+        <h2>Un solo pago. Acceso para siempre.</h2>
+        <p>Sin suscripciones ni cuotas mensuales. Pagas una vez y el programa completo es tuyo de por vida, con todas las actualizaciones incluidas.</p>
       </div>
-      <div class="pricing">
-        <div class="price">
-          <h3>Self-paced</h3>
-          <p class="sub">Aprende a tu ritmo, para siempre.</p>
-          <div class="amt"><b>$197</b><s>$397</s></div>
-          <div class="pay">pago único · acceso de por vida</div>
-          <ul>
-            <li><span class="tick">✓</span> Las 6 temporadas · 22 episodios</li>
-            <li><span class="tick">✓</span> Gamificación: XP, niveles y logros</li>
-            <li><span class="tick">✓</span> Retos, comentarios y material descargable</li>
-            <li><span class="tick">✓</span> Certificado de finalización</li>
-            <li><span class="tick">✓</span> Actualizaciones incluidas</li>
-          </ul>
-          <button class="btn btn-ghost" onclick="openCheckout('self')">Empezar ahora</button>
-        </div>
+      <div class="whybuy">
+        <div class="wb"><span class="wbic">💸</span><b>Se paga solo</b><span>Automatizar <b>un</b> proceso repetitivo te ahorra, en tu primera semana, más horas y dinero de lo que cuesta el curso completo. Lo recuperas casi de inmediato.</span></div>
+        <div class="wb"><span class="wbic">⚖️</span><b>Comparado, no es nada</b><span>Un bootcamp de automatización supera los <b>$2.000</b>. Una sola hora de consultoría cuesta más que esto. Aquí es <b>$89.99, una vez</b>, y es tuyo para siempre.</span></div>
+        <div class="wb"><span class="wbic">⏳</span><b>Lo caro es no hacerlo</b><span>Cada semana haciendo a mano lo que un bot haría solo son horas, clientes y oportunidades que no vuelven. Eso sí es costoso.</span></div>
+      </div>
+      <div class="pricing pricing-one">
         <div class="price feat">
-          <span class="flag">Más popular</span>
-          <h3>Pro + Mentoría</h3>
-          <p class="sub">Acompañamiento para implementar de verdad.</p>
-          <div class="amt"><b>$497</b><s>$897</s></div>
-          <div class="pay">pago único · o 3× $179</div>
+          <span class="flag">Acceso completo</span>
+          <h3>Hyperflow Academy</h3>
+          <p class="sub">Todo el programa, para siempre, con un único pago.</p>
+          <div class="amt"><b>$89.99</b><s>$199</s></div>
+          <div class="pay">pago único · acceso de por vida · sin suscripción</div>
           <div class="cd-mini" id="cdPrice">⏳ Precio de lanzamiento termina en <span id="cdInline">—</span></div>
           <ul>
-            <li><span class="tick">✓</span> Todo lo de Self-paced</li>
-            <li><span class="tick">✓</span> 4 sesiones grupales de mentoría en vivo</li>
-            <li><span class="tick">✓</span> Comunidad privada de alumnos</li>
-            <li><span class="tick">✓</span> Revisión de tu proyecto final</li>
+            <li><span class="tick">✓</span> Las 6 temporadas · 22 episodios</li>
+            <li><span class="tick">✓</span> Experiencias interactivas tipo juego (aprendes haciendo)</li>
+            <li><span class="tick">✓</span> Gamificación: XP, niveles, logros y ruta guiada</li>
+            <li><span class="tick">✓</span> Retos, comentarios y material descargable</li>
+            <li><span class="tick">✓</span> Certificado de finalización</li>
+            <li><span class="tick">✓</span> Actualizaciones de por vida incluidas</li>
           </ul>
-          <div class="bonus">
-            <div class="bh">🎁 Bonos incluidos hoy</div>
-            <ul>
-              <li><span>+ Pack de 30 plantillas y flujos (n8n/Make)</span><s>$97</s></li>
-              <li><span>+ Biblioteca de 50 prompts para agentes</span><s>$47</s></li>
-              <li><span>+ Plantilla de propuesta para vender automatización</span><s>$37</s></li>
-              <li><span>+ Acceso a actualizaciones de por vida</span><s>$120</s></li>
-            </ul>
-          </div>
-          <div class="valuerow"><span>Valor total</span><b><s style="color:var(--muted-2)">$798</s></b></div>
-          <div class="valuerow"><span>Hoy pagas</span><b style="color:var(--amber)">$497</b></div>
-          <button class="btn btn-primary" onclick="openCheckout('pro')">Inscribirme en Pro</button>
+          <div class="valuerow"><span>Valor real</span><b><s style="color:var(--muted-2)">$199</s></b></div>
+          <div class="valuerow"><span>Hoy pagas (único)</span><b style="color:var(--amber)">$89.99</b></div>
+          <div class="micro">≈ lo que gastas en café en un mes. Solo que esto no se acaba: es para toda la vida.</div>
+          <button class="btn btn-primary" onclick="openCheckout('unico')">Obtener acceso completo →</button>
+          <div class="pay" style="margin-top:12px">Lo importante es lo que te llevas. El pago es lo de menos: <b>una sola vez</b> y empiezas probando el Episodio 1 gratis, sin registrarte.</div>
         </div>
-        <div class="price">
-          <h3>Empresas</h3>
-          <p class="sub">Forma a tu equipo de automatización.</p>
-          <div class="amt"><b>A medida</b></div>
-          <div class="pay">licencias por volumen · facturación</div>
-          <ul>
-            <li><span class="tick">✓</span> Licencias multiusuario</li>
-            <li><span class="tick">✓</span> Panel de progreso del equipo</li>
-            <li><span class="tick">✓</span> Casos adaptados a tu sector</li>
-            <li><span class="tick">✓</span> Onboarding y soporte dedicado</li>
-            <li><span class="tick">✓</span> Factura y contrato</li>
-          </ul>
-          <button class="btn btn-ghost" onclick="openCheckout('empresa')">Hablar con ventas</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- GUARANTEE -->
-  <section class="blk" style="padding-top:0">
-    <div class="wrap">
-      <div class="guarantee">
-        <div class="seal"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V5z"/><path d="M9 12l2 2 4-4"/></svg></div>
-        <div>
-          <h3>Garantía de satisfacción de 14 días</h3>
-          <p>Entra, revisa los primeros módulos y aplica lo que aprendas. Si en 14 días sientes que no es para ti, te devolvemos el 100% sin preguntas. El riesgo es nuestro, no tuyo.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- LEAD CAPTURE -->
-  <section class="blk" style="padding-top:0">
-    <div class="wrap">
-      <div class="lead">
-        <div class="eyebrow" style="justify-content:center">¿Aún lo piensas?</div>
-        <h2>Llévate el temario completo + la 1ª clase, gratis</h2>
-        <p>Déjanos tu email y descarga ahora mismo el temario de las 6 temporadas y los apuntes del Episodio 1. Sin compromiso.</p>
-        <form class="lead-form" onsubmit="return captureLead(event)">
-          <input id="leadEmail" type="email" required placeholder="tu@email.com" autocomplete="email">
-          <button class="btn btn-amber" type="submit">Descargar gratis →</button>
-        </form>
-        <div class="lead-ok" id="leadOk">✓ ¡Listo! Descargamos tu material. Revisa tu carpeta de descargas.</div>
       </div>
     </div>
   </section>
@@ -859,7 +812,7 @@
       <div class="foot-links">
         <button onclick="openLegal('terminos')">Términos</button>
         <button onclick="openLegal('privacidad')">Privacidad</button>
-        <button onclick="openLegal('reembolso')">Reembolso</button>
+        <button onclick="openLegal('reembolso')">Política de compra</button>
         <button onclick="openCheckout()">Inscribirme</button>
       </div>
     </div>
@@ -899,14 +852,14 @@
     <h3 id="coTitle">Inscripción · Pro + Mentoría</h3>
     <p>Acceso inmediato al campus tras el pago. Procesado de forma segura con Stripe.</p>
     <div class="plan-row">
-      <div><b id="coPrice">$497</b><div class="muted" style="font-size:12px" id="coPlan">Pro + Mentoría · pago único</div></div>
+      <div><b id="coPrice">$89.99</b><div class="muted" style="font-size:12px" id="coPlan">Acceso completo · pago único</div></div>
       <span class="chip" id="coBadge">Más popular</span>
     </div>
     <div class="field"><label>Nombre completo</label><input id="coName" placeholder="Tu nombre" autocomplete="name"></div>
     <div class="field"><label>Email</label><input id="coEmail" type="email" placeholder="tu@email.com" autocomplete="email"></div>
     <label class="bump"><input type="checkbox" id="coBump"><span><b>Sí, añade el Pack Acelerador (+$27)</b><span>20 automatizaciones ya montadas para copiar y pegar. Ahorra semanas de trabajo.</span></span></label>
     <button class="btn btn-amber" onclick="fakeCheckout()">Pagar y acceder al campus →</button>
-    <div class="secure">🔒 Pago cifrado con Stripe · 💳 Visa · Mastercard · 🛡️ Garantía 14 días</div>
+    <div class="secure">🔒 Pago cifrado con Stripe · 💳 Visa · Mastercard · ♾️ Acceso de por vida</div>
   </div>
 </div>
 
@@ -1350,7 +1303,7 @@ const FAQ=[
  {q:"¿Cuánto tiempo tengo para completarlo?",a:"El acceso es de por vida en los planes Self-paced y Pro. Avanzas a tu ritmo y conservas todas las actualizaciones futuras del programa sin coste adicional."},
  {q:"¿El certificado tiene validez?",a:"Emitimos un certificado de finalización verificable al completar los 22 módulos y sus evaluaciones. Acredita las competencias trabajadas; no es un título oficial universitario, sino una certificación de programa profesional."},
  {q:"¿Qué herramientas necesito y tienen coste?",a:"La mayoría ofrece planes gratuitos suficientes para aprender (n8n, Make, Power Platform, UiPath Community). Te indicamos en cada módulo qué usar y cómo empezar sin gastar."},
- {q:"¿Y si no me convence?",a:"Tienes 14 días de garantía. Si sientes que no es para ti, escríbenos y te devolvemos el 100%, sin preguntas."},
+ {q:"¿Puedo probar antes de pagar?",a:"Sí. El Episodio 1 completo es gratis y sin registro: entra, vívelo y comprueba el formato interactivo tú mismo. Así decides con conocimiento de causa. Por ser contenido digital de acceso inmediato y de por vida, la compra es final y no admite reembolso: por eso te dejamos probar antes."},
  {q:"¿Incluye soporte o es solo grabado?",a:"Self-paced es autoguiado con evaluaciones. El plan Pro añade mentorías grupales en vivo, comunidad privada y revisión de tu proyecto final."},
  {q:"No tengo mucho tiempo, ¿podré con esto?",a:"Sí. Está en formato serie por episodios cortos: avanzas 15-25 minutos cuando puedas, con XP y progreso que te mantienen enganchado. Muchos alumnos completan una temporada por semana."},
  {q:"¿Esto no lo hace gratis la IA por sí sola?",a:"La IA es la herramienta; el valor está en el criterio para detectar oportunidades, diseñar la solución y ponerla en producción sin que se rompa. Eso es lo que se paga y lo que enseña esta serie."},
@@ -1560,7 +1513,7 @@ function renderLocked(n){
         <button class="btn btn-amber" onclick="openCheckout('pro')">🔓 Desbloquear el curso completo →</button>
         <button class="btn btn-ghost" onclick="loadModule(1)">▶ Ver el episodio gratis (EP01)</button>
       </div>
-      <p class="locked-foot">Garantía de 14 días · Acceso de por vida · Pago único</p>
+      <p class="locked-foot">Un solo pago de $89.99 · Acceso de por vida · Sin suscripción</p>
     </div>`;
   }
   main.innerHTML=head+body;
@@ -2133,13 +2086,11 @@ function updateCertName(v){progress.name=v;saveProgress(progress);const n=docume
 /* ====== CONFIG DE PAGO (Stripe) ======
    Pega aquí tus Payment Links de Stripe (Dashboard → Payment Links). Si quedan vacíos,
    el botón funciona en modo demostración. Con el link puesto, redirige al checkout real. */
-const STRIPE_LINKS={self:'',pro:'',empresa:''};
-const PLANS={self:{p:'$197',n:'Self-paced · pago único',b:'Acceso de por vida'},
-  pro:{p:'$497',n:'Pro + Mentoría · pago único',b:'Más popular'},
-  empresa:{p:'A medida',n:'Empresas · licencias por volumen',b:'B2B'}};
-let currentPlan='pro';
+const STRIPE_LINKS={unico:''};
+const PLANS={unico:{p:'$89.99',n:'Acceso completo · pago único',b:'Acceso completo'}};
+let currentPlan='unico';
 function openCheckout(plan){
-  currentPlan=plan||'pro';const pl=PLANS[currentPlan];
+  currentPlan=(plan&&PLANS[plan])?plan:'unico';const pl=PLANS[currentPlan];
   document.getElementById('coTitle').textContent='Inscripción · '+pl.n.split(' · ')[0];
   document.getElementById('coPrice').textContent=pl.p;
   document.getElementById('coPlan').textContent=pl.n;
@@ -2225,11 +2176,11 @@ const LEGAL={
   <h4>2. Finalidad</h4><p>Dar acceso al curso, soporte y comunicaciones relacionadas. No vendemos tus datos a terceros.</p>
   <h4>3. Pagos</h4><p>Los pagos se procesan mediante Stripe; no almacenamos datos de tu tarjeta en nuestros servidores.</p>
   <h4>4. Tus derechos</h4><p>Puedes solicitar acceso, rectificación o eliminación de tus datos escribiendo al correo de contacto.</p>`},
- reembolso:{title:'Política de reembolso',body:`
-  <p>Queremos que compres sin miedo.</p>
-  <h4>Garantía de 14 días</h4><p>Si dentro de los 14 días posteriores a tu compra sientes que el curso no es para ti, escríbenos y te devolvemos el 100% del importe, sin preguntas.</p>
-  <h4>Cómo solicitarlo</h4><p>Envía un correo desde el email de tu compra indicando tu nombre. Procesamos el reembolso por la misma vía de pago en un plazo razonable.</p>
-  <h4>Excepciones</h4><p>La garantía aplica a compras individuales de buena fe. No aplica a licencias empresariales negociadas por contrato aparte.</p>`}
+ reembolso:{title:'Política de compra',body:`
+  <p>Compra informada, sin sorpresas.</p>
+  <h4>Prueba gratis antes de pagar</h4><p>El Episodio 1 completo es gratuito y no requiere registro. Puedes vivir la experiencia interactiva y comprobar el formato antes de comprar, para decidir con total conocimiento.</p>
+  <h4>Ventas finales</h4><p>Por tratarse de un producto digital de acceso inmediato e ilimitado de por vida, todas las compras son finales y no admiten reembolso una vez realizada la transacción. Al completar el pago aceptas esta condición.</p>
+  <h4>Acceso</h4><p>Tras el pago obtienes acceso completo y permanente a las 6 temporadas y a todas las actualizaciones futuras, sin cuotas adicionales.</p>`}
 };
 function openLegal(k){
   const l=LEGAL[k];if(!l)return;
