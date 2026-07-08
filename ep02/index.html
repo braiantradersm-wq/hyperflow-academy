@@ -93,9 +93,21 @@
   /* bottom run */
   .bottom{flex:none;border-top:1px solid var(--line);background:rgba(9,11,22,.72);backdrop-filter:blur(8px);padding:10px 14px calc(10px + env(safe-area-inset-bottom))}
   .bottomrow{max-width:440px;margin:0 auto}
-  .runbtn{width:100%;display:flex;align-items:center;justify-content:center;gap:9px;padding:14px;border-radius:13px;background:linear-gradient(135deg,var(--green),#2fae67);color:#04120a;font-weight:800;font-size:15px;box-shadow:0 10px 24px -12px var(--green);transition:.16s}
-  .runbtn:hover:not(:disabled){transform:translateY(-1px)} .runbtn:disabled{opacity:.4;filter:grayscale(.4);cursor:not-allowed}
-  .runbtn small{font-size:10px;font-weight:600;opacity:.75;margin-left:2px}
+  .runhint{display:flex;align-items:center;justify-content:center;gap:7px;font-size:11.5px;color:var(--muted-2);margin-bottom:9px;transition:.25s}
+  .runhint .dots{display:inline-flex;gap:4px}
+  .runhint .dot{width:8px;height:8px;border-radius:50%;background:var(--ink-4);border:1px solid var(--line-2);transition:.25s}
+  .runhint .dot.on{background:var(--green);border-color:var(--green);box-shadow:0 0 7px var(--green)}
+  .runhint.ok{color:var(--green);font-weight:600}
+  .runbtn{position:relative;width:100%;display:flex;align-items:center;justify-content:center;gap:9px;padding:15px;border-radius:13px;background:linear-gradient(135deg,var(--green),#2fae67);color:#04120a;font-weight:800;font-size:15.5px;box-shadow:0 10px 24px -12px var(--green);transition:.18s;overflow:hidden}
+  .runbtn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 16px 32px -12px var(--green)}
+  .runbtn:active:not(:disabled){transform:translateY(0) scale(.99)}
+  .runbtn:disabled{background:var(--ink-3);color:var(--muted-2);box-shadow:none;cursor:not-allowed}
+  .runbtn.ready{animation:runpulse 1.9s ease-in-out infinite}
+  @keyframes runpulse{0%,100%{box-shadow:0 10px 24px -12px var(--green)}50%{box-shadow:0 14px 30px -8px var(--green),0 0 0 4px rgba(63,208,127,.22)}}
+  .runbtn .sheen{position:absolute;top:0;left:-60%;width:45%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);transform:skewX(-18deg);pointer-events:none;opacity:0}
+  .runbtn.ready .sheen{animation:sheen 2.4s ease-in-out infinite}
+  @keyframes sheen{0%{left:-60%;opacity:0}20%{opacity:1}45%{left:120%;opacity:0}100%{left:120%;opacity:0}}
+  .runbtn small{font-size:10px;font-weight:700;opacity:.7;margin-left:3px;letter-spacing:.04em}
 
   /* picker (bottom-sheet) */
   .sheet{position:fixed;inset:0;z-index:60;display:none;align-items:flex-end;justify-content:center;background:rgba(4,5,12,.72);backdrop-filter:blur(5px)}
@@ -190,7 +202,8 @@
   </div>
 
   <div class="bottom"><div class="bottomrow">
-    <button class="runbtn" id="runbtn" onclick="runFlow()" disabled>▶ Ejecutar<small>AUTOMATIZACIÓN</small></button>
+    <div class="runhint" id="runhint"><span id="runhintTxt">Coloca las 3 piezas para ejecutar</span><span class="dots"><span class="dot" id="dot0"></span><span class="dot" id="dot1"></span><span class="dot" id="dot2"></span></span></div>
+    <button class="runbtn" id="runbtn" onclick="runFlow()" disabled><span class="sheen"></span><span id="runlbl">🔒 Completa los pasos</span></button>
   </div></div>
 </div>
 
@@ -314,7 +327,17 @@ function renderFlow(){
   });
   f.innerHTML=h; refreshRun();
 }
-function refreshRun(){ $('#runbtn').disabled = slots.some(s=>!s); }
+function refreshRun(){
+  const filled=slots.filter(Boolean).length, ready=filled===3;
+  const btn=$('#runbtn'), lbl=$('#runlbl'), hint=$('#runhint'), htx=$('#runhintTxt');
+  for(let i=0;i<3;i++){ const d=$('#dot'+i); if(d)d.classList.toggle('on', !!slots[i]); }
+  if(done){ btn.disabled=true; btn.classList.remove('ready'); if(lbl)lbl.innerHTML='✅ Automatización en marcha'; if(hint)hint.style.display='none'; return; }
+  if(hint)hint.style.display='';
+  btn.disabled=!ready; btn.classList.toggle('ready',ready);
+  if(lbl)lbl.innerHTML = ready ? '▶ Ejecutar <small>AUTOMATIZACIÓN</small>' : ('🔒 Faltan '+(3-filled)+' pieza'+((3-filled)===1?'':'s'));
+  if(htx)htx.textContent = ready ? '¡Todo listo! Pulsa para ejecutar' : ('Coloca las 3 piezas · '+filled+'/3');
+  if(hint)hint.classList.toggle('ok',ready);
+}
 
 function openSheet(i){ if(done)return; pickTarget=i; $('#sheetTitle').textContent=STEPS[i].hint.replace(/^Paso \d+ · /,'');
   const box=$('#pieces');
@@ -361,7 +384,8 @@ function runFlow(){
   });
 }
 function animateRun(cb){
-  $('#runbtn').disabled=true; setMonitor('busy','Procesando facturas…');
+  { const btn=$('#runbtn'), lbl=$('#runlbl'), hint=$('#runhint'); btn.disabled=true; btn.classList.remove('ready'); if(lbl)lbl.innerHTML='⏳ Ejecutando…'; if(hint)hint.style.display='none'; }
+  setMonitor('busy','Procesando facturas…');
   const pb=$('#procbar'), pf=$('#procfill'); pb.classList.add('on'); pf.style.width='0%';
   let step=0;
   (function light(){
@@ -372,7 +396,7 @@ function animateRun(cb){
   })();
 }
 function winLevel(){
-  done=true; if(clkInt)clearInterval(clkInt); stress=0; paintStress();
+  done=true; refreshRun(); if(clkInt)clearInterval(clkInt); stress=0; paintStress();
   document.querySelectorAll('.slot').forEach(s=>s.classList.add('filled'));
   setMonitor('good','¡Facturas procesándose solas! ✨');
   logC('✅ <b>¡FLUJO EJECUTADO!</b> Recibir → Leer con IA → Guardar. Las 400 facturas se procesan solas.','ok');
