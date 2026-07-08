@@ -413,6 +413,44 @@
   .cadd input{flex:1;padding:13px 15px;background:var(--ink-2);border:1px solid var(--line-2);border-radius:11px;color:var(--text);font-size:14px}
   .cadd input:focus{outline:none;border-color:var(--indigo)}
   .cItem{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .cempty{color:var(--muted);font-size:13.5px;padding:14px 16px;background:var(--ink-2);border:1px dashed var(--line-2);border-radius:11px}
+  /* Botón de menú principal (flotante, campus) */
+  #fab{position:fixed;right:18px;bottom:18px;z-index:120;display:none}
+  #fab.show{display:block}
+  .fab-btn{width:56px;height:56px;border-radius:50%;background:linear-gradient(160deg,var(--indigo),var(--indigo-2));color:#fff;font-size:22px;border:none;box-shadow:0 10px 30px rgba(102,116,255,.45);cursor:pointer;display:grid;place-items:center;transition:.2s}
+  .fab-btn:hover{transform:translateY(-2px)}
+  .fab-btn.open{transform:rotate(90deg)}
+  .fab-menu{position:absolute;right:0;bottom:68px;width:250px;background:var(--ink-3);border:1px solid var(--line-2);border-radius:16px;padding:8px;box-shadow:0 20px 50px rgba(0,0,0,.5);opacity:0;transform:translateY(12px) scale(.96);pointer-events:none;transition:.18s}
+  .fab-menu.open{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+  .fab-menu .fab-h{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2);padding:8px 12px 6px}
+  .fab-item{width:100%;display:flex;align-items:center;gap:12px;padding:12px 12px;border-radius:11px;background:transparent;border:none;color:var(--text);font-size:14px;font-weight:600;text-align:left;cursor:pointer;transition:.13s}
+  .fab-item:hover{background:var(--ink-4)}
+  .fab-item .fi{font-size:17px;width:22px;text-align:center;flex:none}
+  .fab-item.danger{color:var(--red)}
+  .fab-back{position:fixed;inset:0;background:rgba(6,7,16,.4);z-index:119;opacity:0;pointer-events:none;transition:.18s}
+  .fab-back.open{opacity:1;pointer-events:auto}
+  /* Drawer selector de episodios (todo el panel a mano, ideal móvil) */
+  #epDrawer{position:fixed;inset:0;z-index:130;display:none}
+  #epDrawer.open{display:block}
+  .epd-back{position:absolute;inset:0;background:rgba(6,7,16,.62);opacity:0;transition:.22s}
+  #epDrawer.open .epd-back{opacity:1}
+  .epd-panel{position:absolute;top:0;right:0;height:100%;width:min(390px,90vw);background:var(--ink-2);border-left:1px solid var(--line-2);box-shadow:-20px 0 60px rgba(0,0,0,.5);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .24s cubic-bezier(.22,.61,.36,1)}
+  #epDrawer.open .epd-panel{transform:translateX(0)}
+  .epd-head{display:flex;align-items:center;justify-content:space-between;padding:18px 18px 14px;border-bottom:1px solid var(--line)}
+  .epd-head h3{font-family:var(--font-serif);font-size:18px}
+  .epd-head .epd-x{width:34px;height:34px;border-radius:9px;background:var(--ink-4);border:1px solid var(--line-2);color:var(--text);font-size:17px;cursor:pointer}
+  .epd-prog{padding:10px 18px;border-bottom:1px solid var(--line);font-size:12px;color:var(--muted);font-family:var(--font-mono)}
+  .epd-list{overflow-y:auto;padding:8px 0 24px;flex:1}
+  .epd-season{padding:16px 18px 7px;font-family:var(--font-mono);font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--amber);display:flex;justify-content:space-between}
+  .epd-ep{width:100%;display:flex;gap:12px;align-items:center;padding:12px 18px;text-align:left;background:transparent;border:none;color:var(--muted);font-size:13.5px;cursor:pointer;transition:.13s;border-left:2px solid transparent}
+  .epd-ep:hover:not(.locked){background:var(--ink-3);color:var(--text)}
+  .epd-ep.current{background:var(--ink-3);color:var(--text);border-left-color:var(--indigo)}
+  .epd-ep.locked{opacity:.5;cursor:not-allowed}
+  .epd-ep .en{font-family:var(--font-mono);font-size:11px;color:var(--muted-2);width:26px;flex:none}
+  .epd-ep .et{flex:1;line-height:1.3}
+  .epd-ep .es{width:20px;height:20px;flex:none;border-radius:50%;border:1.5px solid var(--line-2);display:grid;place-items:center;font-size:11px}
+  .epd-ep.done .es{background:var(--green);border-color:var(--green);color:#04120a}
+  .epd-ep.done .et .redo{font-size:10.5px;color:var(--green);font-family:var(--font-mono);margin-left:6px}
   .cAv{width:40px;height:40px;flex:none;border-radius:50%;display:grid;place-items:center;font-family:var(--font-display);font-weight:700;font-size:15px;color:#0E1020}
   .cBody b{font-size:14px;display:block;margin-bottom:2px}
   .cBody .cmeta{font-family:var(--font-mono);font-size:11px;color:var(--muted-2);margin-bottom:6px}
@@ -777,7 +815,7 @@
             <li><span class="tick">✓</span> Las 6 temporadas · 22 episodios</li>
             <li><span class="tick">✓</span> Experiencias interactivas tipo juego (aprendes haciendo)</li>
             <li><span class="tick">✓</span> Gamificación: XP, niveles, logros y ruta guiada</li>
-            <li><span class="tick">✓</span> Retos, comentarios y material descargable</li>
+            <li><span class="tick">✓</span> Retos, cuaderno de notas y material descargable</li>
             <li><span class="tick">✓</span> Certificado de finalización</li>
             <li><span class="tick">✓</span> Actualizaciones de por vida incluidas</li>
           </ul>
@@ -1708,15 +1746,6 @@ const LEVELS=[
  {min:0,t:"Recluta"},{min:400,t:"Operador"},{min:800,t:"Constructor"},{min:1200,t:"Estratega"},
  {min:1600,t:"Arquitecto"},{min:2000,t:"Maestro de la Automatización"}];
 const XP_PER=100;
-// comentarios demo por episodio (prueba social)
-const CNAMES=["Lucía M.","Diego R.","Sofía P.","Martín G.","Valentina C.","Andrés T.","Camila V.","Joaquín S."];
-const CTEXTS=[
- "Este episodio me voló la cabeza. Lo apliqué el mismo día en un flujo real.",
- "El formato de serie engancha muchísimo, terminé la temporada sin darme cuenta.",
- "La misión final me costó pero valió cada minuto. Ya quiero el próximo episodio.",
- "Nunca un curso me había mantenido tan enganchado. Se siente como Netflix pero aprendes.",
- "El reto me hizo repasar y de verdad se fija el concepto. Genial la gamificación.",
- "Me encantó la parte práctica, la narrativa hace que todo tenga sentido."];
 function seasonOf(n){return SEASONS.find(s=>s.eps.includes(n));}
 function epInSeason(n){const s=seasonOf(n);return s?s.eps.indexOf(n)+1:n;}
 function pad2(x){return String(x).padStart(2,'0');}
@@ -1956,13 +1985,73 @@ function openCampus(){
   window.scrollTo(0,0);
   renderSide();
   loadModule(currentModule);
+  buildMainMenu(); document.getElementById('fab')?.classList.add('show');
 }
 function showLanding(){
   vpStop();
   document.getElementById('landing').classList.remove('hidden');
   document.getElementById('campus').classList.remove('active');
+  document.getElementById('fab')?.classList.remove('show'); closeMainMenu();
   window.scrollTo(0,0);
 }
+/* ===== Menú principal (botón flotante) ===== */
+function buildMainMenu(){
+  if(document.getElementById('fab')) return;
+  const fab=document.createElement('div'); fab.id='fab';
+  fab.innerHTML=`
+    <div class="fab-menu" id="fabMenu">
+      <div class="fab-h">Menú principal</div>
+      <button class="fab-item" onclick="mm(()=>epGo(frontierEp()))"><span class="fi">▶</span> Continuar donde iba</button>
+      <button class="fab-item" onclick="mm(()=>openEpDrawer())"><span class="fi">📺</span> Elegir episodio</button>
+      <button class="fab-item" onclick="mm(()=>openVault())"><span class="fi">🗃️</span> Bóveda del Acelerador</button>
+      <button class="fab-item" onclick="mm(()=>showCertificate())"><span class="fi">🎓</span> Mi certificado</button>
+      <button class="fab-item" onclick="mm(()=>showLanding())"><span class="fi">🏠</span> Página de inicio</button>
+      <button class="fab-item danger" onclick="mm(()=>{if(confirm('¿Reiniciar tu progreso y volver al Episodio 1?'))resetProgress();})"><span class="fi">↻</span> Reiniciar progreso</button>
+    </div>
+    <button class="fab-btn" id="fabBtn" aria-label="Menú principal" onclick="toggleMainMenu()">☰</button>`;
+  const back=document.createElement('div'); back.className='fab-back'; back.id='fabBack'; back.onclick=closeMainMenu;
+  document.body.appendChild(back); document.body.appendChild(fab);
+}
+/* ===== Drawer selector de episodios ===== */
+function buildEpDrawer(){
+  if(document.getElementById('epDrawer')) return;
+  const d=document.createElement('div'); d.id='epDrawer';
+  d.innerHTML=`<div class="epd-back" onclick="closeEpDrawer()"></div>
+    <div class="epd-panel" role="dialog" aria-label="Episodios">
+      <div class="epd-head"><h3>📺 Episodios</h3><button class="epd-x" onclick="closeEpDrawer()" aria-label="Cerrar">✕</button></div>
+      <div class="epd-prog" id="epdProg"></div>
+      <div class="epd-list" id="epdList"></div>
+    </div>`;
+  document.body.appendChild(d);
+}
+function renderEpDrawer(){
+  const prog=document.getElementById('epdProg'); if(prog) prog.textContent=`Tu avance: ${progress.done.length}/${COURSE.length} episodios completados`;
+  const el=document.getElementById('epdList'); if(!el)return;
+  el.innerHTML=SEASONS.map(s=>{
+    const sdone=s.eps.filter(n=>progress.done.includes(n)).length;
+    return `<div class="epd-season"><span>T${s.n} · ${s.title}</span><span>${sdone}/${s.eps.length}</span></div>`+
+    s.eps.map(n=>{ const m=COURSE.find(x=>x.n===n); const done=progress.done.includes(n); const acc=hasAccess(n);
+      const mark = done?'✓':(acc?'▸':'🔒');
+      return `<button class="epd-ep ${done?'done':''} ${acc?'':'locked'} ${n===currentModule?'current':''}" ${acc?`onclick="epGo(${n})"`:'disabled'}>
+        <span class="en">EP${pad2(epInSeason(n))}</span>
+        <span class="et">${m.title}${done?'<span class="redo">↻ rehacer</span>':''}</span>
+        <span class="es">${mark}</span></button>`;
+    }).join('');
+  }).join('');
+}
+function openEpDrawer(){ buildEpDrawer(); renderEpDrawer(); requestAnimationFrame(()=>document.getElementById('epDrawer')?.classList.add('open')); }
+function closeEpDrawer(){ document.getElementById('epDrawer')?.classList.remove('open'); }
+function epGo(n){
+  if(!hasAccess(n)){ if(typeof showToast==='function') showToast('🔒','Episodio bloqueado','Completá el episodio anterior para desbloquearlo'); return; }
+  closeEpDrawer(); closeMainMenu();
+  document.getElementById('certView')?.classList.remove('active');
+  const mn=document.querySelector('.main'); if(mn)mn.style.display='';
+  currentModule=n; loadModule(n); window.scrollTo(0,0);
+}
+function toggleMainMenu(){ const m=document.getElementById('fabMenu'); if(!m)return; m.classList.contains('open')?closeMainMenu():openMainMenu(); }
+function openMainMenu(){ document.getElementById('fabMenu')?.classList.add('open'); document.getElementById('fabBtn')?.classList.add('open'); document.getElementById('fabBack')?.classList.add('open'); }
+function closeMainMenu(){ document.getElementById('fabMenu')?.classList.remove('open'); document.getElementById('fabBtn')?.classList.remove('open'); document.getElementById('fabBack')?.classList.remove('open'); }
+function mm(fn){ closeMainMenu(); try{fn();}catch(e){} }
 function renderSide(){
   const el=document.getElementById('sideList');
   el.innerHTML=SEASONS.map(s=>{
@@ -2183,22 +2272,28 @@ function commentHTML(name,meta,text){
   return `<div class="cItem"><div class="cAv" style="background:${avatarColor(name)}">${initials}</div>
     <div class="cBody"><b>${name}</b><div class="cmeta">${meta}</div><p>${text}</p></div></div>`;
 }
+/* Cuaderno de notas personal por episodio (real, guardado en tu navegador) */
+function loadNotes(){try{return JSON.parse(localStorage.getItem('hyperflow_notes'))||{}}catch(e){return{}}}
+function saveNotes(o){try{localStorage.setItem('hyperflow_notes',JSON.stringify(o))}catch(e){}}
 function renderComments(n){
-  const count=12+(n*7)%40,items=[];
-  for(let i=0;i<3;i++){items.push({name:CNAMES[(n*3+i)%CNAMES.length],text:CTEXTS[(n*2+i)%CTEXTS.length],days:((n+i)%9)+1});}
+  const all=loadNotes(), mine=all[n]||[];
+  const list = mine.length ? mine.map(t=>commentHTML(progress.name||'Tú','tu nota',t)).join('')
+    : `<div class="cempty">Aún no tienes notas en este episodio. Escribe las ideas clave que quieras recordar y aplicar.</div>`;
   return `<div class="comments">
-    <h3>Comentarios <span style="color:var(--amber)">${count}</span></h3>
-    <div class="csub">// La comunidad de esta temporada. Comparte tu avance y aprende de otros.</div>
+    <h3>Mis notas del episodio</h3>
+    <div class="csub">// Tu cuaderno privado: se guarda en tu navegador, solo lo ves tú.</div>
     <div class="cadd">
-      <input id="cInput" placeholder="Escribe un comentario en este episodio..." onkeydown="if(event.key==='Enter')addComment()">
-      <button class="btn btn-primary" onclick="addComment()">Publicar</button>
+      <input id="cInput" placeholder="Escribe una idea que quieras recordar…" onkeydown="if(event.key==='Enter')addComment()">
+      <button class="btn btn-primary" onclick="addComment()">Guardar nota</button>
     </div>
-    <div id="cList">${items.map(c=>commentHTML(c.name,'hace '+c.days+' día'+(c.days>1?'s':''),c.text)).join('')}</div>
+    <div id="cList">${list}</div>
   </div>`;
 }
 function addComment(){
   const inp=document.getElementById('cInput');if(!inp)return;const v=inp.value.trim();if(!v)return;
-  document.getElementById('cList').insertAdjacentHTML('afterbegin',commentHTML(progress.name||'Tú','ahora',v));
+  const all=loadNotes(); (all[currentModule]=all[currentModule]||[]).unshift(v); saveNotes(all);
+  const list=document.getElementById('cList'); const empty=list.querySelector('.cempty'); if(empty)empty.remove();
+  list.insertAdjacentHTML('afterbegin',commentHTML(progress.name||'Tú','tu nota',v));
   inp.value='';
 }
 function showToast(icon,title,sub){
