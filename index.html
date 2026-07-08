@@ -862,11 +862,17 @@
   #vaultView .vchip{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.04em;color:var(--indigo-2);background:var(--indigo-dim);border:1px solid rgba(139,123,255,.3);border-radius:6px;padding:3px 7px;align-self:flex-start}
   #vaultView .vsolve{color:var(--muted);font-size:13px;line-height:1.5}
   #vaultView .vsaves{font-size:11px;color:var(--green);background:var(--green-dim);border-radius:7px;padding:4px 9px;align-self:flex-start;font-weight:600}
-  #vaultView .vbtns{display:flex;gap:8px;margin-top:auto;padding-top:4px}
-  #vaultView .vbtn{flex:1;justify-content:center;display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:10px;border-radius:10px;border:1px solid var(--line-2);transition:.15s}
+  #vaultView .vbtns{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:4px}
+  #vaultView .vbtn{flex:1 1 78px;justify-content:center;display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:10px 8px;border-radius:10px;border:1px solid var(--line-2);transition:.15s;white-space:nowrap}
   #vaultView .vbtn.copy{background:linear-gradient(135deg,var(--indigo),var(--indigo-2));color:#fff;border:0}
   #vaultView .vbtn:hover{transform:translateY(-1px)}
   #vaultView .vbtn.copied{background:var(--green);color:#04120a}
+  #vaultView .vbtn.dl{color:var(--amber)}
+  #vaultView .vbtn.dl:hover{border-color:var(--amber)}
+  #vaultView .vtools{display:flex;justify-content:flex-end;margin:14px 0 2px}
+  #vaultView .vdlall{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--amber);background:var(--amber-dim);border:1px solid rgba(255,180,84,.35);border-radius:10px;padding:9px 14px;transition:.15s}
+  #vaultView .vdlall:hover{transform:translateY(-1px);border-color:var(--amber)}
+  #vaultView .vdlall.busy{opacity:.6;pointer-events:none}
   #vaultView .vsteps{display:none;font-size:12.5px;color:var(--muted);border-top:1px dashed var(--line-2);margin-top:2px;padding-top:10px}
   #vaultView .vsteps.open{display:block}
   #vaultView .vsteps ol{margin:6px 0 0;padding-left:18px} #vaultView .vsteps li{margin-bottom:5px}
@@ -2586,7 +2592,7 @@ function renderVault(){
     {k:'flow',label:'⚙️ Workflows n8n / Make (importables)'},
     {k:'code',label:'🐍 Scripts y plantillas'}
   ];
-  let h='<div id="vaultView"><div class="vault-wrap"><div class="vtop"><div><h2>🔓 Bóveda del Acelerador</h2><p>20 automatizaciones listas para copiar y pegar. Cópiala, sigue los 3 pasos y en marcha. Cada una te ahorra horas.</p></div><div class="vkpi">20 activos<br>desbloqueados</div></div>';
+  let h='<div id="vaultView"><div class="vault-wrap"><div class="vtop"><div><h2>🔓 Bóveda del Acelerador</h2><p>20 automatizaciones listas para copiar y pegar. Cópiala o descárgala, sigue los 3 pasos y en marcha. Cada una te ahorra horas.</p></div><div class="vkpi">20 activos<br>desbloqueados</div></div><div class="vtools"><button class="vdlall" id="dlAllBtn" onclick="downloadAllVault()">⬇ Descargar todo (.zip)</button></div>';
   groups.forEach(g=>{
     const items=VAULT.filter(v=>v.cat===g.k);
     h+='<div class="vgroup">'+g.label+' · '+items.length+'</div><div class="vgrid">';
@@ -2596,7 +2602,8 @@ function renderVault(){
        +'<div class="vsolve">'+v.solves+'</div>'
        +'<span class="vsaves">⏱ Ahorra '+v.saves+'</span>'
        +'<div class="vbtns"><button class="vbtn copy" onclick="copyVault(\''+v.id+'\',this)">📋 Copiar</button>'
-       +'<button class="vbtn" onclick="toggleSteps(\''+v.id+'\')">▸ Instalar</button></div>'
+       +'<button class="vbtn dl" onclick="downloadVault(\''+v.id+'\')">⬇ Descargar</button>'
+       +'<button class="vbtn" onclick="toggleSteps(\''+v.id+'\')">▸ Guía</button></div>'
        +'<div class="vsteps" id="st-'+v.id+'"><b>Cómo usarlo</b><ol>'+v.steps.map(s=>'<li>'+s+'</li>').join('')+'</ol></div></div>';
     });
     h+='</div>';
@@ -2625,6 +2632,63 @@ function copyVault(id,btn){
 }
 function vaultFallbackCopy(txt,cb){ const ta=document.createElement('textarea'); ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.focus(); ta.select(); try{document.execCommand('copy');}catch(e){} document.body.removeChild(ta); if(cb)cb(); }
 function openVaultCheckout(){ openCheckout('unico'); const cb=document.getElementById('coBump'); if(cb){cb.checked=true; toggleBump();} }
+
+/* ===== Descarga de activos (archivo real, no PDF) ===== */
+const VFILE={
+ 'va-1':'auditor-de-procesos.md','va-2':'generador-de-sop.md','va-3':'clasificador-de-mensajes.md','va-4':'secuencia-de-cobranza.md',
+ 'va-5':'modelador-bpmn.md','va-6':'extractor-de-datos-idp.md','va-7':'agente-atencion-cliente.md','va-8':'generador-de-prompts.md',
+ 'va-9':'n8n-facturas-email-ia-sheets.json','va-10':'n8n-lead-ia-sheet-slack.json','va-11':'n8n-drive-resumen-email.json',
+ 'va-12':'make-bot-telegram-faq.json','va-13':'make-rss-resumen-publicar.json','va-14':'n8n-plantilla-integracion.json',
+ 'va-15':'scraper-de-precios.py','va-16':'pdf-a-excel.py','va-17':'organizar-gmail.gs',
+ 'va-18':'calculadora-roi.txt','va-19':'matriz-priorizacion.txt','va-20':'patron-excepciones.txt'
+};
+function downloadBlob(blob,filename){
+  const url=URL.createObjectURL(blob), a=document.createElement('a');
+  a.href=url; a.download=filename; document.body.appendChild(a); a.click();
+  setTimeout(()=>{URL.revokeObjectURL(url); if(a.parentNode)a.parentNode.removeChild(a);},120);
+}
+function downloadVault(id){
+  const src=document.getElementById(id); if(!src)return;
+  downloadBlob(new Blob([src.textContent],{type:'text/plain;charset=utf-8'}), VFILE[id]||(id+'.txt'));
+}
+function downloadAllVault(){
+  const btn=document.getElementById('dlAllBtn'); if(btn){btn.classList.add('busy'); btn.textContent='⏳ Empaquetando…';}
+  try{
+    const files=VAULT.map(v=>({name:VFILE[v.id]||(v.id+'.txt'), content:document.getElementById(v.id).textContent}));
+    const readme='BÓVEDA DEL ACELERADOR · 20 automatizaciones\nHyperflow Academy\n\n'
+      +'Cada archivo es una automatización lista para usar:\n'
+      +'· .md  = prompt para pegar en ChatGPT o Claude\n'
+      +'· .json (n8n) = importar en n8n: Workflows > Import from File\n'
+      +'· .json (make) = importar en Make: Crear escenario > Import Blueprint\n'
+      +'· .py  = script de Python (ver requisitos en las primeras líneas)\n'
+      +'· .gs  = Google Apps Script (script.google.com)\n'
+      +'· .txt = plantilla o guía paso a paso\n';
+    files.unshift({name:'LEEME.txt', content:readme});
+    downloadBlob(makeZipBlob(files),'boveda-acelerador.zip');
+  }catch(e){ alert('No se pudo generar el .zip. Usa el botón Descargar de cada tarjeta.'); }
+  if(btn){setTimeout(()=>{btn.classList.remove('busy'); btn.textContent='⬇ Descargar todo (.zip)';},600);}
+}
+/* ZIP (método store, sin compresión) — cero dependencias */
+let _CRC=null;
+function crcTable(){ if(_CRC)return _CRC; const t=new Uint32Array(256); for(let n=0;n<256;n++){ let c=n; for(let k=0;k<8;k++){ c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1);} t[n]=c>>>0; } _CRC=t; return t; }
+function crc32(bytes){ const t=crcTable(); let c=0xFFFFFFFF; for(let i=0;i<bytes.length;i++){ c=(c>>>8)^t[(c^bytes[i])&0xFF]; } return (c^0xFFFFFFFF)>>>0; }
+function makeZipBlob(files){
+  const enc=new TextEncoder(), parts=[], central=[]; let offset=0;
+  const push=a=>{ parts.push(a); offset+=a.length; };
+  const b16=n=>{n=n>>>0;return [n&255,(n>>>8)&255];};
+  const b32=n=>{n=n>>>0;return [n&255,(n>>>8)&255,(n>>>16)&255,(n>>>24)&255];};
+  files.forEach(f=>{
+    const name=enc.encode(f.name), data=enc.encode(f.content), crc=crc32(data), lo=offset;
+    push(Uint8Array.from([0x50,0x4b,0x03,0x04, 20,0, 0,0, 0,0, 0,0,0,0].concat(b32(crc),b32(data.length),b32(data.length),b16(name.length),[0,0])));
+    push(name); push(data);
+    central.push(Uint8Array.from([0x50,0x4b,0x01,0x02, 20,0, 20,0, 0,0, 0,0, 0,0,0,0].concat(b32(crc),b32(data.length),b32(data.length),b16(name.length),[0,0, 0,0, 0,0, 0,0],b32(0),b32(lo))));
+    central.push(name);
+  });
+  const cdStart=offset; central.forEach(push); const cdSize=offset-cdStart;
+  push(Uint8Array.from([0x50,0x4b,0x05,0x06, 0,0, 0,0].concat(b16(files.length),b16(files.length),b32(cdSize),b32(cdStart),[0,0])));
+  const total=new Uint8Array(offset); let p=0; parts.forEach(a=>{ total.set(a,p); p+=a.length; });
+  return new Blob([total],{type:'application/zip'});
+}
 
 /* =================================================================
    CHECKOUT
