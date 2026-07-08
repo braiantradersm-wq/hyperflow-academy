@@ -292,10 +292,32 @@ let medals=[];
 
 /* audio */
 let AC=null;
-function tone(f,t,d){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type=t||'triangle';o.frequency.value=f;g.gain.setValueAtTime(0,AC.currentTime);g.gain.linearRampToValueAtTime(.09,AC.currentTime+.02);g.gain.exponentialRampToValueAtTime(.0008,AC.currentTime+(d||.4));o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+(d||.4)+.05);}catch(e){}}
-function ding(f){tone(f||880,'triangle',.45);}
-function buzz(){tone(150,'square',.24);}
-function chord(){ding(660);setTimeout(()=>ding(880),90);setTimeout(()=>ding(1175),180);}
+/* tono suave de simulador: siempre sine + lowpass, envolvente amable (nada de 8-bit) */
+function tone(f,type,d){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();
+  const t=AC.currentTime, out=AC.createGain(); out.connect(AC.destination);
+  out.gain.setValueAtTime(.0001,t); out.gain.linearRampToValueAtTime(.05,t+.015); out.gain.exponentialRampToValueAtTime(.0004,t+(d||.4));
+  const lp=AC.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=2600; lp.connect(out);
+  const o=AC.createOscillator(); o.type='sine'; o.frequency.value=f; o.connect(lp);
+  o.start(t); o.stop(t+(d||.4)+.05);
+}catch(e){}}
+/* campana/marimba suave (premium) */
+function bell(freq,dur,vol){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();
+  const t=AC.currentTime, out=AC.createGain(); out.connect(AC.destination);
+  out.gain.setValueAtTime(.0001,t); out.gain.linearRampToValueAtTime(vol||.13,t+.012); out.gain.exponentialRampToValueAtTime(.0004,t+(dur||.5));
+  const lp=AC.createBiquadFilter(); lp.type='lowpass'; lp.frequency.setValueAtTime(3000,t); lp.frequency.exponentialRampToValueAtTime(1100,t+(dur||.5)); lp.connect(out);
+  const o=AC.createOscillator(); o.type='sine'; o.frequency.value=freq; o.connect(lp);
+  const oh=AC.createOscillator(); oh.type='sine'; oh.frequency.value=freq*2.01; const hg=AC.createGain(); hg.gain.value=.22; oh.connect(hg); hg.connect(lp);
+  o.start(t); oh.start(t); o.stop(t+(dur||.5)+.05); oh.stop(t+(dur||.5)+.05);
+}catch(e){}}
+function ding(f){ bell(f||880,.5,.13); }
+function buzz(){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();
+  const t=AC.currentTime, out=AC.createGain(); out.connect(AC.destination);
+  out.gain.setValueAtTime(.0001,t); out.gain.linearRampToValueAtTime(.11,t+.015); out.gain.exponentialRampToValueAtTime(.0004,t+.38);
+  const lp=AC.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=680; lp.connect(out);
+  const o=AC.createOscillator(); o.type='sine'; o.frequency.setValueAtTime(207.65,t); o.frequency.exponentialRampToValueAtTime(155.56,t+.32); o.connect(lp);
+  o.start(t); o.stop(t+.42);
+}catch(e){}}
+function chord(){bell(523.25,.55,.12);setTimeout(()=>bell(659.25,.55,.12),100);setTimeout(()=>bell(783.99,.7,.13),200);}
 
 /* toast + jit + medals */
 let tt;function toast(m,ic){$('#toastI').textContent=ic||'⚡';$('#toastM').textContent=m;const t=$('#toast');t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2100);}
@@ -562,15 +584,21 @@ function setMonitor(state,txt){ const m=$('#monitor'); m.className='monitor '+(s
 /* ===== motor cinemático auto-play ===== */
 function P(t){return t.replaceAll('[N]','<span class="nm">'+NAME+'</span>');}
 let cineT=[], cineActive=false, cineDone=null, padN=null;
-function startPad(){ try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended')AC.resume();
-  const g=AC.createGain(); g.gain.setValueAtTime(0,AC.currentTime); g.gain.linearRampToValueAtTime(.05,AC.currentTime+2.4); g.connect(AC.destination);
-  const f=AC.createBiquadFilter(); f.type='lowpass'; f.frequency.value=520; f.connect(g);
-  const o1=AC.createOscillator(); o1.type='sine'; o1.frequency.value=110; o1.connect(f);
-  const o2=AC.createOscillator(); o2.type='sine'; o2.frequency.value=164.81; o2.connect(f);
-  const o3=AC.createOscillator(); o3.type='triangle'; o3.frequency.value=55; const g3=AC.createGain(); g3.gain.value=.5; o3.connect(g3); g3.connect(f);
-  o1.start();o2.start();o3.start(); padN={g,f,o1,o2,o3}; }catch(e){} }
-function stopPad(){ if(!padN)return; try{ padN.g.gain.linearRampToValueAtTime(0,AC.currentTime+1.1); const p=padN; setTimeout(()=>{try{p.o1.stop();p.o2.stop();p.o3.stop();}catch(e){}},1200);}catch(e){} padN=null; }
-function setMood(m){ document.body.dataset.mood=m||''; if(padN){try{const map={calm:560,tense:820,dark:360};padN.f.frequency.linearRampToValueAtTime(map[m]||560,AC.currentTime+1.3);}catch(e){}} }
+function setPadVol(v){ if(padN){try{padN.master.gain.linearRampToValueAtTime(v,AC.currentTime+1.4);}catch(e){}} }
+function startPad(){ if(padN){ setPadVol(.04); return; } try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended')AC.resume();
+  const t=AC.currentTime;
+  const master=AC.createGain(); master.gain.setValueAtTime(.0001,t); master.gain.linearRampToValueAtTime(.04,t+2.8); master.connect(AC.destination);
+  const lp=AC.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=950; lp.Q.value=.3; lp.connect(master);
+  const base=[130.81,164.81,196.00];  // Do mayor cálido, registro medio (sin sub-bajo que retumbe)
+  const oscs=base.map(fr=>{ const o=AC.createOscillator(); o.type='sine'; o.frequency.value=fr; const vg=AC.createGain(); vg.gain.value=.32; o.connect(vg); vg.connect(lp); o.start(t); return o; });
+  const lfo=AC.createOscillator(); lfo.type='sine'; lfo.frequency.value=0.1; const lfoG=AC.createGain(); lfoG.gain.value=.012; lfo.connect(lfoG); lfoG.connect(master.gain); lfo.start(t);
+  padN={master,lp,oscs,lfo}; }catch(e){} }
+function stopPad(){ if(!padN)return; try{ const t=AC.currentTime; padN.master.gain.linearRampToValueAtTime(0,t+1.1); const p=padN; setTimeout(()=>{try{p.oscs.forEach(o=>o.stop());p.lfo.stop();}catch(e){}},1300);}catch(e){} padN=null; }
+function setMood(m){ document.body.dataset.mood=m||''; if(!padN)return;
+  const cfg={ calm:{f:950,ch:[130.81,164.81,196.00]}, tense:{f:1200,ch:[130.81,155.56,196.00]}, dark:{f:620,ch:[98.00,116.54,146.83]}, hope:{f:1350,ch:[146.83,185.00,220.00]} };
+  const g=cfg[m]||cfg.calm; const t=AC.currentTime+1.5;
+  try{ padN.lp.frequency.linearRampToValueAtTime(g.f,t); padN.oscs.forEach((o,i)=>o.frequency.linearRampToValueAtTime(g.ch[i]||g.ch[0],t)); }catch(e){}
+}
 let cineIdx=0, cineScenes=[];
 function cinematic(scenes,cb){
   cineActive=true; cineDone=cb; cineScenes=scenes; cineIdx=0;

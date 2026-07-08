@@ -214,7 +214,7 @@ function updateChip(){ $('#rankchip').textContent=rankName(xp)+' · '+xp+' XP'; 
 function addXP(n,msg){ xp+=n; updateChip(); if(msg)toast('+'+n+' XP · '+msg); }
 let tt; function toast(m){const t=$('#toast');t.innerHTML='<span class="ti">⚡</span><span><b>'+m+'</b></span>';t.classList.add('show');ding(880);clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2100);}
 let medals=[];
-function chord(){ding(660);setTimeout(()=>ding(880),90);setTimeout(()=>ding(1175),180);}
+function chord(){bell(523.25,.55,.12);setTimeout(()=>bell(659.25,.55,.12),100);setTimeout(()=>bell(783.99,.7,.13),200);}
 function unlockMedal(m){ if(!m||medals.find(x=>x.name===m.name))return; medals.push(m);
   const t=$('#toast'); t.innerHTML='<span class="ti">'+m.ic+'</span><span><b>¡Medalla desbloqueada!</b> <span style="color:var(--muted);font-size:12px">'+m.name+'</span></span>';
   t.classList.add('show'); chord(); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('show'),2800);
@@ -222,29 +222,46 @@ function unlockMedal(m){ if(!m||medals.find(x=>x.name===m.name))return; medals.p
 function reward(b){ if(b.xp&&!b._done){ b._done=true; xp+=b.xp; updateChip(); } if(b.medal){ unlockMedal(b.medal); } else if(b.xpmsg){ toast('+'+(b.xp||0)+' XP · '+b.xpmsg); } }
 
 let AC=null;
-function ding(f){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(0,AC.currentTime);g.gain.linearRampToValueAtTime(.1,AC.currentTime+.02);g.gain.exponentialRampToValueAtTime(.0008,AC.currentTime+.5);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+.55);}catch(e){}}
-function buzz(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type='square';o.frequency.value=150;g.gain.setValueAtTime(0,AC.currentTime);g.gain.linearRampToValueAtTime(.05,AC.currentTime+.02);g.gain.exponentialRampToValueAtTime(.0008,AC.currentTime+.26);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+.28);}catch(e){}}
+/* campana/marimba suave: fundamental + armónico de octava, ataque suave y decaída natural (sonido premium, no 8-bit) */
+function bell(freq,dur,vol){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();
+  const t=AC.currentTime, out=AC.createGain(); out.connect(AC.destination);
+  out.gain.setValueAtTime(.0001,t); out.gain.linearRampToValueAtTime(vol||.13,t+.012); out.gain.exponentialRampToValueAtTime(.0004,t+(dur||.5));
+  const lp=AC.createBiquadFilter(); lp.type='lowpass'; lp.frequency.setValueAtTime(3000,t); lp.frequency.exponentialRampToValueAtTime(1100,t+(dur||.5)); lp.connect(out);
+  const o=AC.createOscillator(); o.type='sine'; o.frequency.value=freq; o.connect(lp);
+  const oh=AC.createOscillator(); oh.type='sine'; oh.frequency.value=freq*2.01; const hg=AC.createGain(); hg.gain.value=.22; oh.connect(hg); hg.connect(lp);
+  o.start(t); oh.start(t); o.stop(t+(dur||.5)+.05); oh.stop(t+(dur||.5)+.05);
+}catch(e){}}
+function ding(f){ bell(f||880,.5,.13); }
+/* "no" suave: tono sine que desciende, sin aspereza */
+function buzz(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();
+  const t=AC.currentTime, out=AC.createGain(); out.connect(AC.destination);
+  out.gain.setValueAtTime(.0001,t); out.gain.linearRampToValueAtTime(.11,t+.015); out.gain.exponentialRampToValueAtTime(.0004,t+.38);
+  const lp=AC.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=680; lp.connect(out);
+  const o=AC.createOscillator(); o.type='sine'; o.frequency.setValueAtTime(207.65,t); o.frequency.exponentialRampToValueAtTime(155.56,t+.32); o.connect(lp);
+  o.start(t); o.stop(t+.42);
+}catch(e){}}
 
 /* ===== motor cinemático auto-play ===== */
 let cineT=[], cineActive=false, cineDone=null, padN=null;
-function setPadVol(v){ if(padN){try{padN.g.gain.linearRampToValueAtTime(v,AC.currentTime+1.2);}catch(e){}} }
-function startPad(){ if(padN){ setPadVol(.05); return; } try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended')AC.resume();
-  const g=AC.createGain(); g.gain.setValueAtTime(0,AC.currentTime); g.gain.linearRampToValueAtTime(.05,AC.currentTime+2.4); g.connect(AC.destination);
-  const f=AC.createBiquadFilter(); f.type='lowpass'; f.frequency.value=520; f.connect(g);
-  const o1=AC.createOscillator(); o1.type='sine'; o1.frequency.value=110; o1.connect(f);
-  const o2=AC.createOscillator(); o2.type='sine'; o2.frequency.value=164.81; o2.connect(f);
-  const o3=AC.createOscillator(); o3.type='triangle'; o3.frequency.value=55; const g3=AC.createGain(); g3.gain.value=.5; o3.connect(g3); g3.connect(f);
-  o1.start();o2.start();o3.start(); padN={g,f,o1,o2,o3}; }catch(e){} }
-function stopPad(){ if(!padN)return; try{ padN.g.gain.linearRampToValueAtTime(0,AC.currentTime+1.1); const p=padN; setTimeout(()=>{try{p.o1.stop();p.o2.stop();p.o3.stop();}catch(e){}},1200);}catch(e){} padN=null; }
+function setPadVol(v){ if(padN){try{padN.master.gain.linearRampToValueAtTime(v,AC.currentTime+1.4);}catch(e){}} }
+function startPad(){ if(padN){ setPadVol(.04); return; } try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended')AC.resume();
+  const t=AC.currentTime;
+  const master=AC.createGain(); master.gain.setValueAtTime(.0001,t); master.gain.linearRampToValueAtTime(.04,t+2.8); master.connect(AC.destination);
+  const lp=AC.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=950; lp.Q.value=.3; lp.connect(master);
+  const base=[130.81,164.81,196.00];  // Do mayor cálido (C3-E3-G3), registro medio: nada de sub-bajo que retumbe
+  const oscs=base.map(fr=>{ const o=AC.createOscillator(); o.type='sine'; o.frequency.value=fr; const vg=AC.createGain(); vg.gain.value=.32; o.connect(vg); vg.connect(lp); o.start(t); return o; });
+  // "respiración" lenta: evita el drone estático que se oía como zumbido
+  const lfo=AC.createOscillator(); lfo.type='sine'; lfo.frequency.value=0.1; const lfoG=AC.createGain(); lfoG.gain.value=.012; lfo.connect(lfoG); lfoG.connect(master.gain); lfo.start(t);
+  padN={master,lp,oscs,lfo}; }catch(e){} }
+function stopPad(){ if(!padN)return; try{ const t=AC.currentTime; padN.master.gain.linearRampToValueAtTime(0,t+1.1); const p=padN; setTimeout(()=>{try{p.oscs.forEach(o=>o.stop());p.lfo.stop();}catch(e){}},1300);}catch(e){} padN=null; }
 function setMood(m){ document.body.dataset.mood=(m==='hope'?'':m)||''; if(!padN)return;
-  // cada emoción tiene su color: notas + brillo del filtro
-  const cfg={ calm:{f:560,a:110,b:164.81,c:55},      // A2+E3 consonante, sereno
-              tense:{f:860,a:116.54,b:174.61,c:58.27}, // más brillante e inquieto
-              dark:{f:320,a:82.41,b:110,c:41.2},       // grave, apagado, ominoso
-              hope:{f:680,a:130.81,b:196,c:65.41} };   // C3+G3 mayor, luminoso
-  const g=cfg[m]||cfg.calm; const t=AC.currentTime+1.3;
-  try{ padN.f.frequency.linearRampToValueAtTime(g.f,t); padN.o1.frequency.linearRampToValueAtTime(g.a,t);
-    padN.o2.frequency.linearRampToValueAtTime(g.b,t); if(padN.o3)padN.o3.frequency.linearRampToValueAtTime(g.c,t); }catch(e){}
+  // cada emoción = acorde cálido distinto + brillo del filtro
+  const cfg={ calm:{f:950, ch:[130.81,164.81,196.00]},   // Do mayor, sereno
+              tense:{f:1200,ch:[130.81,155.56,196.00]},   // Do menor, más brillante e inquieto
+              dark:{f:620, ch:[98.00,116.54,146.83]},     // Sol menor grave, apagado
+              hope:{f:1350,ch:[146.83,185.00,220.00]} };  // Re mayor luminoso
+  const g=cfg[m]||cfg.calm; const t=AC.currentTime+1.5;
+  try{ padN.lp.frequency.linearRampToValueAtTime(g.f,t); padN.oscs.forEach((o,i)=>o.frequency.linearRampToValueAtTime(g.ch[i]||g.ch[0],t)); }catch(e){}
 }
 let sectionMood='calm';
 function applyMood(){ if(!cineActive) setMood(proyecto<35?'dark':sectionMood); }
