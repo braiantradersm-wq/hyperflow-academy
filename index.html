@@ -574,9 +574,8 @@
 
 <!-- ============ ANNOUNCEMENT BAR ============ -->
 <div class="annbar" id="annbar">
-  🔥 <b>Oferta de lanzamiento −50%</b> · termina en
-  <span class="cd" id="cdTop"><span>00</span>:<span>00</span>:<span>00</span></span>
-  · <a href="#precios" onclick="showLanding()">Asegurar mi plaza →</a>
+  🚀 <b>Precio de lanzamiento</b> · acceso completo de por vida con un pago único
+  · <a href="#precios" onclick="showLanding()">Ver el programa →</a>
 </div>
 
 <!-- ============ NAV ============ -->
@@ -602,22 +601,22 @@
     <canvas id="net"></canvas>
     <div class="hero-glow"></div>
     <div class="wrap hero-in">
-      <div class="badge"><span class="dot"></span> Una serie en 6 temporadas · 22 episodios · No es un curso, es una jornada</div>
-      <h1>No vas a <span style="text-decoration:line-through;opacity:.5">ver un curso</span>. Vas a <span class="g">vivir la serie</span> que te convierte en Arquitecto de Hiperautomatización</h1>
-      <p class="lead">Olvida los módulos que se ven en piloto automático. Aquí eres el protagonista de una historia en 6 temporadas: cada episodio es una misión con narrativa, decisiones y gamificación. Aprendes IA generativa, agentes, RPA y automatización empresarial mientras avanzas en la trama. El final: tú, dominando el arsenal completo.</p>
+      <div class="badge"><span class="dot"></span> Sin humo · sin gurús · sin promesas de hacerte rico en una semana</div>
+      <h1>Acá no te vendemos humo. Te volvemos <span class="g">Arquitecto de Hiperautomatización</span> — de verdad, construyendo cada automatización con tus propias manos.</h1>
+      <p class="lead">Nada de mirar videos en piloto automático. Acá aprendés <b>haciendo</b>: cada episodio te pone a construir agentes de IA, RPA y automatizaciones reales, con retos que resolvés vos mismo. Está diseñado para que salgas <b>sabiendo hacerlo</b>, no solo habiéndolo visto. Un pago único, acceso de por vida, y los módulos se van abriendo a tu ritmo a medida que avanzás.</p>
       <div class="hero-cta">
-        <button class="btn btn-amber" onclick="openCheckout()">Empezar la Temporada 1 →</button>
-        <button class="btn btn-ghost" onclick="openCampus()">▶ Ver el tráiler ▸</button>
+        <button class="btn btn-amber" onclick="openCheckout('unico')">Obtener acceso completo →</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('precios')?.scrollIntoView({behavior:'smooth'})">Ver el programa y el precio ▸</button>
       </div>
       <div class="hero-note">
-        <span><span class="tick">✓</span> Acceso de por vida</span>
-        <span><span class="tick">✓</span> Gamificación + XP</span>
-        <span><span class="tick">✓</span> Acceso de por vida</span>
+        <span><span class="tick">✓</span> Pago único, acceso de por vida</span>
+        <span><span class="tick">✓</span> Se desbloquea a tu ritmo</span>
+        <span><span class="tick">✓</span> Aprendés haciendo, no mirando</span>
       </div>
       <div class="stats">
         <div class="stat"><b>6</b><span>Temporadas con trama</span></div>
         <div class="stat"><b>22</b><span>Episodios con misión</span></div>
-        <div class="stat"><b>66</b><span>Retos de evaluación</span></div>
+        <div class="stat"><b>22</b><span>Retos interactivos</span></div>
         <div class="stat"><b>∞</b><span>XP, niveles y logros</span></div>
       </div>
     </div>
@@ -744,12 +743,12 @@
   <section class="blk" style="background:var(--ink-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
     <div class="wrap">
       <div class="sec-head">
-        <div class="eyebrow">Lo que dicen los alumnos</div>
-        <h2>Resultados, no promesas</h2>
-        <p>Historias de personas que dejaron de consumir cursos y empezaron a construir automatizaciones que generan valor.</p>
+        <div class="eyebrow">Lo que te llevás</div>
+        <h2>Competencias reales, no promesas</h2>
+        <p>Esto es lo que vas a saber hacer al terminar cada tramo del programa. Lo construís vos mismo en los retos, no lo mirás en un video.</p>
       </div>
       <div class="grid-3" id="testiList"></div>
-      <p class="player-note" style="margin-top:20px;text-align:center">// Testimonios de muestra para tu lanzamiento. Reemplázalos por reseñas reales de tus alumnos.</p>
+      <p class="player-note" style="margin-top:20px;text-align:center">// Cuando tengas alumnos, aquí van sus reseñas reales.</p>
     </div>
   </section>
 
@@ -771,9 +770,9 @@
           <span class="flag">Acceso completo</span>
           <h3>Hyperflow Academy</h3>
           <p class="sub">Todo el programa, para siempre, con un único pago.</p>
-          <div class="amt"><b>$89.99</b><s>$199</s></div>
+          <div class="amt"><b>$89.99</b></div>
           <div class="pay">pago único · acceso de por vida · sin suscripción</div>
-          <div class="cd-mini" id="cdPrice">⏳ Precio de lanzamiento termina en <span id="cdInline">—</span></div>
+          <div class="cd-mini">🚀 Precio de lanzamiento · subirá cuando el programa salga de su etapa inicial</div>
           <ul>
             <li><span class="tick">✓</span> Las 6 temporadas · 22 episodios</li>
             <li><span class="tick">✓</span> Experiencias interactivas tipo juego (aprendes haciendo)</li>
@@ -782,11 +781,12 @@
             <li><span class="tick">✓</span> Certificado de finalización</li>
             <li><span class="tick">✓</span> Actualizaciones de por vida incluidas</li>
           </ul>
-          <div class="valuerow"><span>Valor real</span><b><s style="color:var(--muted-2)">$199</s></b></div>
-          <div class="valuerow"><span>Hoy pagas (único)</span><b style="color:var(--amber)">$89.99</b></div>
+          <div class="valuerow"><span>Incluye</span><b>22 episodios + retos + material</b></div>
+          <div class="valuerow"><span>Pago único</span><b style="color:var(--amber)">$89.99</b></div>
           <div class="micro">≈ lo que gastas en café en un mes. Solo que esto no se acaba: es para toda la vida.</div>
           <button class="btn btn-primary" onclick="openCheckout('unico')">Obtener acceso completo →</button>
-          <div class="pay" style="margin-top:12px">Lo importante es lo que te llevas. El pago es lo de menos: <b>una sola vez</b> y empiezas probando el Episodio 1 gratis, sin registrarte.</div>
+          <div class="micro" style="margin-top:10px;color:var(--green)">🛡️ Garantía de 7 días: si no te convence, te devolvemos el 100%.</div>
+          <div class="pay" style="margin-top:12px">Lo importante es lo que te llevas. El pago es <b>una sola vez</b> y el curso es tuyo para siempre: entrás, empezás por el Episodio 1 y cada módulo se abre al superar el anterior.</div>
         </div>
       </div>
     </div>
@@ -1611,8 +1611,8 @@ const COURSE = [
    {q:"¿Para qué sirve el enfoque 'human-in-the-loop'?",o:["Para eliminar humanos","Para que una persona valide o corrija los casos donde el modelo tiene baja confianza","Para ir más lento a propósito","Para entrenar internet"],a:1,e:"Human-in-the-loop combina automatización y criterio humano en los casos dudosos, elevando la precisión sin frenar el volumen."},
    {q:"¿Qué es el nivel de 'confianza' (confidence) en extracción documental?",o:["La velocidad del OCR","Una puntuación de qué tan seguro está el modelo del dato extraído","El precio","El idioma del documento"],a:1,e:"El confidence indica la certeza del modelo; por debajo de un umbral, el ítem se deriva a revisión humana."}]},
 
- {n:17,title:"Integración de sistemas: APIs, webhooks y conectores empresariales",tag:"Integración",dur:"2h 20m",level:"Avanzado",propuesto:true,
-  desc:"El pegamento de toda automatización: consumir y exponer APIs, autenticación y sincronización entre sistemas. (Módulo propuesto — completa el salto entre visión artificial y agentes conversacionales).",
+ {n:17,title:"Integración de sistemas: APIs, webhooks y conectores empresariales",tag:"Integración",dur:"2h 20m",level:"Avanzado",
+  desc:"El pegamento de toda automatización: consumir y exponer APIs, autenticación y sincronización entre sistemas. Conecta la visión artificial con los agentes conversacionales.",
   obj:["Consumir APIs REST con autenticación segura","Diseñar y recibir webhooks para eventos en tiempo real","Manejar OAuth2, tokens y claves de API","Sincronizar datos entre sistemas de forma fiable"],
   lessons:[
    {t:"APIs REST: métodos, endpoints y payloads",d:"24m",desc:"GET/POST/PUT/DELETE, headers, JSON y códigos de estado."},
@@ -1857,15 +1857,15 @@ function avatarColor(name){const c=['#FFB454','#6674FF','#3FD07F','#8B7BFF','#FF
 
 const FAQ=[
  {q:"¿Necesito saber programar para hacer este curso?",a:"No. Empezamos desde los fundamentos y gran parte del programa es no-code/low-code (n8n, Make, Power Platform). En los módulos con código, usamos IA (Claude) como copiloto, así que avanzas aunque no seas desarrollador."},
- {q:"¿Cuánto tiempo tengo para completarlo?",a:"El acceso es de por vida en los planes Self-paced y Pro. Avanzas a tu ritmo y conservas todas las actualizaciones futuras del programa sin coste adicional."},
- {q:"¿El certificado tiene validez?",a:"Emitimos un certificado de finalización verificable al completar los 22 módulos y sus evaluaciones. Acredita las competencias trabajadas; no es un título oficial universitario, sino una certificación de programa profesional."},
+ {q:"¿Cómo funciona el acceso?",a:"Se paga una vez para entrar. Empiezas por el Episodio 1 y cada módulo siguiente se desbloquea cuando superas el reto del anterior, para que avances con base sólida y a tu ritmo. El acceso es de por vida e incluye las actualizaciones futuras sin coste adicional."},
+ {q:"¿El certificado tiene validez?",a:"Al completar los 22 módulos generas un certificado de finalización descargable, con un código único ligado a tu nombre. Acredita las competencias trabajadas en el programa; no es un título oficial universitario, sino una certificación de programa profesional."},
  {q:"¿Qué herramientas necesito y tienen coste?",a:"La mayoría ofrece planes gratuitos suficientes para aprender (n8n, Make, Power Platform, UiPath Community). Te indicamos en cada módulo qué usar y cómo empezar sin gastar."},
- {q:"¿Puedo probar antes de pagar?",a:"Sí. El Episodio 1 completo es gratis y sin registro: entra, vívelo y comprueba el formato interactivo tú mismo. Así decides con conocimiento de causa. Por ser contenido digital de acceso inmediato y de por vida, la compra es final y no admite reembolso: por eso te dejamos probar antes."},
- {q:"¿Incluye soporte o es solo grabado?",a:"Self-paced es autoguiado con evaluaciones. El plan Pro añade mentorías grupales en vivo, comunidad privada y revisión de tu proyecto final."},
- {q:"No tengo mucho tiempo, ¿podré con esto?",a:"Sí. Está en formato serie por episodios cortos: avanzas 15-25 minutos cuando puedas, con XP y progreso que te mantienen enganchado. Muchos alumnos completan una temporada por semana."},
+ {q:"¿Y si pago y no me convence?",a:"Tienes 7 días de garantía: entras pagando, pero si dentro de la primera semana sientes que no es para ti, te devolvemos el 100% sin interrogatorios. En esta página ya tienes el temario completo y el formato explicado, así que compras informado y encima con red de seguridad."},
+ {q:"¿Incluye soporte en vivo o es autoguiado?",a:"Es un programa autoguiado (self-paced): avanzas por tu cuenta con clases, retos interactivos y evaluaciones que te dan feedback inmediato. No incluye mentorías en vivo; está diseñado para que puedas aprender solo, a tu ritmo, sin depender de horarios."},
+ {q:"No tengo mucho tiempo, ¿podré con esto?",a:"Sí. Está en formato serie por episodios cortos: avanzas 15-25 minutos cuando puedas, con XP y progreso que te mantienen enganchado. Como el acceso es de por vida, no hay reloj en contra."},
  {q:"¿Esto no lo hace gratis la IA por sí sola?",a:"La IA es la herramienta; el valor está en el criterio para detectar oportunidades, diseñar la solución y ponerla en producción sin que se rompa. Eso es lo que se paga y lo que enseña esta serie."},
- {q:"¿Me servirá para conseguir clientes o un mejor puesto?",a:"El programa está orientado a resultados: aprendes a vender e implementar automatización. Incluimos plantilla de propuesta comercial y un proyecto final para tu portafolio. No garantizamos ingresos, pero te damos las habilidades y las herramientas."},
- {q:"¿Puedo pagar en cuotas?",a:"Sí, el plan Pro puede pagarse en 3 cuotas. Al integrar tu pasarela (Stripe) defines las opciones de pago único o en cuotas."}
+ {q:"¿Me servirá para conseguir clientes o un mejor puesto?",a:"El programa te enseña a detectar, diseñar e implementar automatizaciones, que es la competencia que se cobra. Te llevas material descargable de cada módulo y, si sumas el Pack Acelerador, 20 automatizaciones listas para usar. No garantizamos ingresos ni empleo: te damos las habilidades y las herramientas; el resultado depende de cómo las apliques."},
+ {q:"¿Cómo se paga?",a:"Un pago único mediante Stripe, con tarjeta. No es una suscripción: pagas una vez y accedes de por vida."}
 ];
 
 /* =================================================================
@@ -1930,7 +1930,7 @@ const SIM_STUDENT=_P.has('alumno')||_P.has('student')||_P.has('curso'); // ?alum
 if(SIM_STUDENT) progress.enrolled=true;                            // ya pagó
 if(_P.has('preview')||_P.has('user')) progress.enrolled=false;     // ?preview=1 -> vista de venta (sin comprar)
 if(_P.has('reset')){progress.done=[];progress.name='';saveProgress(progress);} // ?reset=1 -> reiniciar progreso
-const FREE_EPS=[1];                                                // EP01 = muestra gratis (para quien NO compró)
+const FREE_EPS=[];                                                 // Sin muestra gratis: se paga antes de entrar; luego desbloqueo progresivo
 /* Desbloqueo:
    - No comprado -> solo episodios de muestra (EP01).
    - Comprado    -> progresivo: EP01 abierto; cada siguiente se abre al aprobar el reto del anterior. */
@@ -2071,10 +2071,9 @@ function renderLocked(n){
         <ul class="obj">${m.obj.slice(0,3).map(o=>`<li>${tickSvg}${o}</li>`).join('')}</ul>
       </div>
       <div class="locked-cta">
-        <button class="btn btn-amber" onclick="openCheckout('pro')">🔓 Desbloquear el curso completo →</button>
-        <button class="btn btn-ghost" onclick="loadModule(1)">▶ Ver el episodio gratis (EP01)</button>
+        <button class="btn btn-amber" onclick="openCheckout('unico')">🔓 Obtener acceso al curso completo →</button>
       </div>
-      <p class="locked-foot">Un solo pago de $89.99 · Acceso de por vida · Sin suscripción</p>
+      <p class="locked-foot">Un solo pago de $89.99 · Acceso de por vida · Sin suscripción · Empiezas por el Episodio 1</p>
     </div>`;
   }
   main.innerHTML=head+body;
@@ -3001,19 +3000,19 @@ function showCertificate(){
       <div class="sig">
         <div><b>Hyperflow Academy</b>Entidad formadora</div>
         <div><b>2026</b>Año de emisión</div>
-        <div><b>HF-${1000+done}-CERT</b>Código verificable</div>
+        <div><b id="certCode">${certCode(name)}</b>Código verificable</div>
       </div>
     </div>
     <div style="text-align:center;margin-top:24px">
       <input id="certInput" placeholder="Escribe tu nombre para el certificado" value="${progress.name||''}"
         style="padding:13px 16px;background:var(--ink-3);border:1px solid var(--line-2);border-radius:11px;color:var(--text);width:320px;max-width:100%;font-size:14px"
         oninput="updateCertName(this.value)">
-      <div style="margin-top:16px"><button class="btn btn-amber" onclick="printCert()">📥 Descargar / imprimir certificado</button></div>
+      <div style="margin-top:16px"><button class="btn btn-amber" onclick="downloadCert()">📥 Descargar certificado (PNG)</button></div>
       <p class="muted" style="font-size:12px;margin-top:12px">🎓 ¡Felicidades! Has completado el programa completo.</p>
     </div>`;
   window.scrollTo(0,0);
 }
-function updateCertName(v){progress.name=v;saveProgress(progress);const n=document.getElementById('certName');if(n)n.textContent=v||'Nombre del Alumno';}
+function updateCertName(v){progress.name=v;saveProgress(progress);const n=document.getElementById('certName');if(n)n.textContent=v||'Nombre del Alumno';const c=document.getElementById('certCode');if(c)c.textContent=certCode((v||'').trim()||'Nombre del Alumno');}
 
 /* =================================================================
    BÓVEDA DEL ACELERADOR (order-bump $27) — 20 automatizaciones copy-paste
@@ -3233,22 +3232,22 @@ function initNet(){
   resize();draw();window.addEventListener('resize',resize);
 }
 
-/* ---- TESTIMONIOS ---- */
+/* ---- LO QUE VAS A LOGRAR (resultados reales, sin testimonios fingidos) ---- */
 const TESTI=[
- {n:'Mariana Ríos',r:'Analista de procesos',t:'Entré sin saber programar y salí montando agentes con n8n para mi empresa. El formato de serie hace que no puedas parar.',a:'#FFB454'},
- {n:'Sebastián Cortés',r:'Consultor freelance',t:'Cerré mi primer proyecto de automatización de 3.000 dólares aplicando lo del episodio de levantamiento de procesos. Se pagó solo el curso.',a:'#6674FF'},
- {n:'Daniela Ferreira',r:'Ops manager',t:'La gamificación me mantuvo enganchada hasta el final. Nunca había terminado un curso online completo. Aquí terminé las 6 temporadas.',a:'#3FD07F'},
- {n:'Andrés Molina',r:'Emprendedor',t:'Los guiones son oro. Descargué los apuntes de cada episodio y armé mi propio manual de automatización para el equipo.',a:'#8B7BFF'},
- {n:'Lucía Herrera',r:'Marketing',t:'Automaticé el reporte semanal que me robaba 6 horas. Ahora corre solo. Esto no es teoría, es dinero y tiempo de vuelta.',a:'#FF9A3D'},
- {n:'Tomás Aguirre',r:'Dev junior',t:'El módulo de vibe coding con Claude me cambió la forma de trabajar. Construyo el doble en la mitad de tiempo.',a:'#5AC8FA'}
+ {ic:'🤖',r:'Al terminar la Temporada 1',t:'Montás tu primer agente funcional con n8n y con Make, sin saber programar. Sale de tus propias manos en los retos interactivos.',a:'#FFB454'},
+ {ic:'🔎',r:'Levantamiento de procesos',t:'Sabés detectar qué tarea de tu día conviene automatizar y cuál no — el criterio que cobra un consultor.',a:'#6674FF'},
+ {ic:'⚡',r:'Vibe coding con Claude',t:'Dirigís a la IA para que te construya herramientas a medida. Producís el doble sin escribir código desde cero.',a:'#8B7BFF'},
+ {ic:'🗃️',r:'Bóveda del Acelerador',t:'Te llevás 20 automatizaciones copy-paste listas para instalar: prompts, flujos de n8n/Make y scripts. Aplicables el mismo día.',a:'#3FD07F'},
+ {ic:'⏱️',r:'Ahorro de tiempo real',t:'El objetivo del curso: que ese reporte o esa tarea repetitiva que te roba horas pase a correr sola.',a:'#FF9A3D'},
+ {ic:'🏛️',r:'Al completar las 6 temporadas',t:'Dominás IA generativa, agentes, RPA e integración empresarial de punta a punta. De novato a Arquitecto de Hiperautomatización.',a:'#5AC8FA'}
 ];
 function renderTesti(){
   const el=document.getElementById('testiList');if(!el)return;
   el.innerHTML=TESTI.map(t=>`<div class="testi">
-    <div class="stars">★★★★★</div>
-    <p>“${t.t}”</p>
-    <div class="who"><div class="av" style="background:${t.a}">${t.n.split(' ').map(w=>w[0]).join('')}</div>
-      <div><b>${t.n}</b><span>${t.r}</span></div></div>
+    <div class="stars" style="font-size:22px">${t.ic}</div>
+    <p>${t.t}</p>
+    <div class="who"><div class="av" style="background:${t.a};font-size:11px">✓</div>
+      <div><b>${t.r}</b><span>lo que te llevás</span></div></div>
   </div>`).join('');
 }
 /* ---- LEGAL ---- */
@@ -3266,10 +3265,10 @@ const LEGAL={
   <h4>3. Pagos</h4><p>Los pagos se procesan mediante Stripe; no almacenamos datos de tu tarjeta en nuestros servidores.</p>
   <h4>4. Tus derechos</h4><p>Puedes solicitar acceso, rectificación o eliminación de tus datos escribiendo al correo de contacto.</p>`},
  reembolso:{title:'Política de compra',body:`
-  <p>Compra informada, sin sorpresas.</p>
-  <h4>Prueba gratis antes de pagar</h4><p>El Episodio 1 completo es gratuito y no requiere registro. Puedes vivir la experiencia interactiva y comprobar el formato antes de comprar, para decidir con total conocimiento.</p>
-  <h4>Ventas finales</h4><p>Por tratarse de un producto digital de acceso inmediato e ilimitado de por vida, todas las compras son finales y no admiten reembolso una vez realizada la transacción. Al completar el pago aceptas esta condición.</p>
-  <h4>Acceso</h4><p>Tras el pago obtienes acceso completo y permanente a las 6 temporadas y a todas las actualizaciones futuras, sin cuotas adicionales.</p>`}
+  <p>Compra informada, sin sorpresas y sin letra chica.</p>
+  <h4>Garantía de satisfacción de 7 días</h4><p>Entras al curso pagando, pero si dentro de los primeros 7 días sientes que no es para ti, escríbenos y te devolvemos el 100% de tu dinero. Sin interrogatorios. Queremos que te quedes porque el curso te sirve, no porque no puedas salir.</p>
+  <h4>Acceso</h4><p>El pago es único: obtienes acceso completo y permanente a las 6 temporadas y a todas las actualizaciones futuras, sin suscripción ni cuotas adicionales. Empiezas por el Episodio 1 y cada módulo se desbloquea al superar el anterior.</p>
+  <h4>Contenido digital</h4><p>Es un producto formativo digital de acceso inmediato. Los resultados dependen de la aplicación de cada alumno; no se garantizan ingresos ni resultados económicos específicos.</p>`}
 };
 function openLegal(k){
   const l=LEGAL[k];if(!l)return;
@@ -3280,7 +3279,58 @@ function openLegal(k){
 function closeLegal(){document.getElementById('legalModal').classList.remove('show');}
 document.getElementById('legalModal').addEventListener('click',e=>{if(e.target.id==='legalModal')closeLegal();});
 /* ---- CERTIFICADO: imprimir/guardar PDF ---- */
-function printCert(){window.print();}
+/* Código verificable determinista: mismo nombre → mismo código (checksum base36) */
+function certCode(name){
+  const s=(name||'').trim().toLowerCase().replace(/\s+/g,' ');
+  let h=2166136261>>>0;
+  for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619)>>>0; }
+  const core=h.toString(36).toUpperCase().padStart(6,'0').slice(0,6);
+  let chk=0; for(let i=0;i<core.length;i++) chk=(chk+core.charCodeAt(i))%36;
+  const ck=chk.toString(36).toUpperCase();
+  return `HF-${core}-${ck}`;
+}
+/* Certificado como PNG descargable (Canvas) — luxe, fiable en móvil */
+function downloadCert(){
+  const name=(progress.name||'').trim()||'Nombre del Alumno';
+  const code=certCode(name);
+  const d=new Date(), meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const fecha=`${d.getDate()} de ${meses[d.getMonth()]} de ${d.getFullYear()}`;
+  const W=1400,H=990,cv=document.createElement('canvas');cv.width=W;cv.height=H;const x=cv.getContext('2d');
+  // fondo
+  const g=x.createLinearGradient(0,0,W,H);g.addColorStop(0,'#0E1020');g.addColorStop(1,'#16182E');x.fillStyle=g;x.fillRect(0,0,W,H);
+  // marco dorado
+  x.strokeStyle='#FFB454';x.lineWidth=3;x.strokeRect(38,38,W-76,H-76);
+  x.strokeStyle='rgba(255,180,84,.35)';x.lineWidth=1;x.strokeRect(52,52,W-104,H-104);
+  const cx=W/2;x.textAlign='center';
+  // marca
+  x.fillStyle='#8B7BFF';x.font='700 26px Georgia, serif';x.fillText('HYPERFLOW · ACADEMY',cx,140);
+  x.fillStyle='#FFB454';x.font='600 20px Georgia, serif';x.fillText('CERTIFICADO DE FINALIZACIÓN',cx,190);
+  x.strokeStyle='#FFB454';x.lineWidth=2;x.beginPath();x.moveTo(cx-70,212);x.lineTo(cx+70,212);x.stroke();
+  // cuerpo
+  x.fillStyle='#9BA0C4';x.font='400 22px Georgia, serif';x.fillText('Se certifica que',cx,300);
+  x.fillStyle='#E9EAF6';x.font='700 66px Georgia, serif';x.fillText(name,cx,378);
+  x.strokeStyle='rgba(139,123,255,.5)';x.lineWidth=1;x.beginPath();x.moveTo(cx-320,404);x.lineTo(cx+320,404);x.stroke();
+  x.fillStyle='#9BA0C4';x.font='400 22px Georgia, serif';
+  const linea=['ha completado el programa "Hiperautomatización con IA + RPA":','las 6 temporadas y los 22 episodios de la serie, dominando agentes de','IA generativa, RPA, orquestación empresarial y automatización de','procesos de extremo a extremo.'];
+  linea.forEach((l,i)=>x.fillText(l,cx,470+i*40));
+  x.fillStyle='#3FD07F';x.font='700 24px Georgia, serif';x.fillText('Arquitecto de Hiperautomatización',cx,660);
+  // pie
+  x.textAlign='center';x.font='700 20px Georgia, serif';x.fillStyle='#E9EAF6';
+  const y1=800;
+  x.fillText('Hyperflow Academy',cx-380,y1);x.fillText(fecha,cx,y1);x.fillText(code,cx+380,y1);
+  x.fillStyle='#6E739A';x.font='400 15px Georgia, serif';
+  x.fillText('Entidad formadora',cx-380,y1+28);x.fillText('Fecha de emisión',cx,y1+28);x.fillText('Código verificable',cx+380,y1+28);
+  x.fillStyle='#6E739A';x.font='400 13px Georgia, serif';
+  x.fillText('Certificación de programa profesional · no constituye un título oficial universitario · verifica el código en hyperflow-academy',cx,H-58);
+  // descargar
+  try{
+    const url=cv.toDataURL('image/png');const a=document.createElement('a');
+    a.href=url;a.download=`Certificado-Hyperflow-${name.replace(/\s+/g,'_')}.png`;
+    document.body.appendChild(a);a.click();a.remove();
+    if(typeof showToast==='function') showToast('🎓','Certificado descargado',code);
+  }catch(e){ window.print(); }
+}
+function printCert(){ downloadCert(); }
 
 /* ---- OUTCOMES / TRANSFORMACIÓN ---- */
 const OUTCOMES=[
