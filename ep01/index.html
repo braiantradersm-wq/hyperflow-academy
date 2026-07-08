@@ -227,7 +227,8 @@ function buzz(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)(
 
 /* ===== motor cinemático auto-play ===== */
 let cineT=[], cineActive=false, cineDone=null, padN=null;
-function startPad(){ try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended')AC.resume();
+function setPadVol(v){ if(padN){try{padN.g.gain.linearRampToValueAtTime(v,AC.currentTime+1.2);}catch(e){}} }
+function startPad(){ if(padN){ setPadVol(.05); return; } try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended')AC.resume();
   const g=AC.createGain(); g.gain.setValueAtTime(0,AC.currentTime); g.gain.linearRampToValueAtTime(.05,AC.currentTime+2.4); g.connect(AC.destination);
   const f=AC.createBiquadFilter(); f.type='lowpass'; f.frequency.value=520; f.connect(g);
   const o1=AC.createOscillator(); o1.type='sine'; o1.frequency.value=110; o1.connect(f);
@@ -235,7 +236,18 @@ function startPad(){ try{ AC=AC||new (window.AudioContext||window.webkitAudioCon
   const o3=AC.createOscillator(); o3.type='triangle'; o3.frequency.value=55; const g3=AC.createGain(); g3.gain.value=.5; o3.connect(g3); g3.connect(f);
   o1.start();o2.start();o3.start(); padN={g,f,o1,o2,o3}; }catch(e){} }
 function stopPad(){ if(!padN)return; try{ padN.g.gain.linearRampToValueAtTime(0,AC.currentTime+1.1); const p=padN; setTimeout(()=>{try{p.o1.stop();p.o2.stop();p.o3.stop();}catch(e){}},1200);}catch(e){} padN=null; }
-function setMood(m){ document.body.dataset.mood=m||''; if(padN){try{const map={calm:560,tense:820,dark:360};padN.f.frequency.linearRampToValueAtTime(map[m]||560,AC.currentTime+1.3);}catch(e){}} }
+function setMood(m){ document.body.dataset.mood=(m==='hope'?'':m)||''; if(!padN)return;
+  // cada emoción tiene su color: notas + brillo del filtro
+  const cfg={ calm:{f:560,a:110,b:164.81,c:55},      // A2+E3 consonante, sereno
+              tense:{f:860,a:116.54,b:174.61,c:58.27}, // más brillante e inquieto
+              dark:{f:320,a:82.41,b:110,c:41.2},       // grave, apagado, ominoso
+              hope:{f:680,a:130.81,b:196,c:65.41} };   // C3+G3 mayor, luminoso
+  const g=cfg[m]||cfg.calm; const t=AC.currentTime+1.3;
+  try{ padN.f.frequency.linearRampToValueAtTime(g.f,t); padN.o1.frequency.linearRampToValueAtTime(g.a,t);
+    padN.o2.frequency.linearRampToValueAtTime(g.b,t); if(padN.o3)padN.o3.frequency.linearRampToValueAtTime(g.c,t); }catch(e){}
+}
+let sectionMood='calm';
+function applyMood(){ if(!cineActive) setMood(proyecto<35?'dark':sectionMood); }
 let cineIdx=0, cineScenes=[];
 function cinematic(scenes,cb){
   cineActive=true; cineDone=cb; cineScenes=scenes; cineIdx=0;
@@ -255,9 +267,14 @@ function cinePlay(){
   cineT.push(setTimeout(cineAdvance,dur));
 }
 function cineAdvance(){ if(!cineActive)return; cineT.forEach(clearTimeout); cineT=[]; $('#cine').classList.remove('show'); cineT.push(setTimeout(()=>{ cineIdx++; cinePlay(); },450)); }
-function endCine(){ if(!cineActive)return; cineActive=false; cineT.forEach(clearTimeout); cineT=[]; stopPad(); setMood('');
+function endCine(){ if(!cineActive)return; cineActive=false; cineT.forEach(clearTimeout); cineT=[]; setPadVol(.024); setMood('calm');
   const el=$('#cine'); el.onclick=null; const cb=cineDone; cineDone=null; if(cb)cb(); el.classList.remove('on','show'); }
 function skipCine(){ endCine(); }
+
+/* ===== continuar / navegación (detecta si está embebido en el curso) ===== */
+const EMBED = (function(){try{return window.self!==window.top;}catch(e){return true;}})();
+function goNext(){ if(EMBED){ try{parent.postMessage({type:'hf-next',from:'ep01'},'*');}catch(e){} } else { location.href='../ep02/'; } }
+function goMap(){ if(EMBED){ try{parent.postMessage({type:'hf-close'},'*');}catch(e){} } else { location.href='../juego/'; } }
 
 function openDeep(){$('#deep').classList.add('show');}
 function closeDeep(){$('#deep').classList.remove('show');}
@@ -273,6 +290,7 @@ function paintHud(){
   $('#pFill').style.width=proyecto+'%'; $('#pFill').style.background=col(proyecto);
   $('#cFill').style.width=cred+'%'; $('#cFill').style.background=col(cred);
   document.body.classList.toggle('danger', proyecto<35);
+  applyMood();   // la música se tensa con el peligro, respetando el mood de la sección
 }
 function applyDelta(d){
   if(d.p){ proyecto=Math.max(0,Math.min(100,proyecto+d.p)); flash('barP'); }
@@ -282,6 +300,8 @@ function applyDelta(d){
 function flash(id){const el=$('#'+id);el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash');}
 
 /* ===== GUION ===== */
+/* música por sección, acorde a la sensación de cada momento */
+const MOODS=['tense','tense','dark','calm','hope','tense','calm','calm','dark','dark','tense','hope','calm'];
 const BEATS=[
  {type:'narr',k:'Nordex · Día 1',t:"Primer día, [N]. Te contrataron para arreglar lo que nadie pudo: el departamento de facturación se ahoga. 400 facturas al día, a mano. Errores. Retrasos."},
  {type:'inner',t:"(Y el dato que no me dijeron en la entrevista: si en dos semanas no hay resultados, hay despidos. Yo soy el nombre nuevo en la lista.)"},
@@ -316,6 +336,7 @@ const BEATS=[
 /* ===== MOTOR ===== */
 function renderProg(){}
 function nameGate(){
+  stopPad(); document.body.dataset.mood='';
   proyecto=55;cred=50;xp=0;beat=0;updateChip();$('#hud').classList.add('hidden');document.body.classList.remove('danger');
   $('#stage').innerHTML=`<div class="namebox scene">
     <div class="k">Antes de empezar</div>
@@ -329,6 +350,7 @@ function nameGate(){
   setTimeout(()=>{const el=$('#nameInput');if(el)el.focus();},200);
 }
 function startStory(){ const v=$('#nameInput').value.trim(); if(!v)return; NAME=v; try{localStorage.setItem('hyperflow_name',NAME);}catch(e){}
+  $('#stage').innerHTML='';   // limpiar el namebox para que no se transparente bajo la intro
   const intro=[
     {k:'Nordex · Día 1', t:BEATS[0].t, mood:'tense'},
     {t:BEATS[1].t, mood:'tense'},
@@ -339,6 +361,7 @@ function startStory(){ const v=$('#nameInput').value.trim(); if(!v)return; NAME=
 
 function renderBeat(){
   const b=BEATS[beat], st=$('#stage');
+  sectionMood=MOODS[beat]||'calm'; startPad(); setPadVol(.028); applyMood();
   if(b.d) applyDelta(b.d);
   if(b.type==='narr'||b.type==='inner'){
     const cls=b.type==='inner'?'inner':(b.guide?'guide':'');
@@ -411,6 +434,7 @@ function calcRoi(){
 }
 
 function renderEnd(){
+  stopPad(); document.body.dataset.mood='';
   try{localStorage.setItem('hyperflow_ep01_done','1');localStorage.setItem('hyperflow_xp',String(xp));}catch(e){}
   document.body.classList.remove('danger');
   let tier,seal,ek,h,txt;
@@ -429,9 +453,9 @@ function renderEnd(){
     ${medals.length?`<div class="medalrow">${medals.map(m=>`<span class="medalpill" title="${m.name}">${m.ic} ${m.name}</span>`).join('')}</div>`:''}
     <p>${txt}</p>
     <div class="cta">
-      <button class="btn btn-primary" onclick="location.href='../juego/'">Volver al mapa →</button>
-      <button class="btn btn-ghost" onclick="openDeep()">📚 Profundizar</button></div>
-    <div class="cta"><button class="btn btn-ghost" onclick="nameGate()">↺ Vivir otra vez</button></div></div>`;
+      <button class="btn btn-primary" onclick="goNext()">Continuar →</button>
+      <button class="btn btn-ghost" onclick="goMap()">${EMBED?'← Volver al curso':'🗺️ Ver el mapa'}</button></div>
+    <div class="cta"><button class="btn btn-ghost" onclick="openDeep()">📚 Profundizar</button><button class="btn btn-ghost" onclick="nameGate()">↺ Vivir otra vez</button></div></div>`;
   ding(tier==='low'?300:1046);
 }
 

@@ -258,7 +258,8 @@
   <div class="medalrow" id="winMedals"></div>
   <div class="pill-info" id="winUnlock" style="color:var(--amber);border-color:rgba(255,180,84,.3);background:var(--amber-dim)"></div>
   <div class="cta">
-    <button class="btn btn-primary" onclick="location.href='../juego/'">Volver al mapa →</button>
+    <button class="btn btn-primary" onclick="goNext()">Siguiente →</button>
+    <button class="btn btn-ghost" id="winMapBtn" onclick="goMap()">🗺️ Ver el mapa</button>
     <button class="btn btn-ghost" onclick="restartLevel()">↺ Rehacer</button>
   </div>
 </div></div>
@@ -532,6 +533,7 @@ function winLevel(){
   $('#winH').textContent='Tu primer bot vive, '+NAME;
   $('#winP').innerHTML='TecnoSur recibe sus facturas a tiempo. El CEO, en el pasillo, se traga sus palabras. Ya no <span class="hl">imitas clics</span>: <b>orquestas máquinas</b>.';
   $('#winUnlock').innerHTML='🎁 <b>Nueva herramienta desbloqueada:</b> 📄 Lector de PDF — te espera en el próximo nivel.';
+  const wb=$('#winMapBtn'); if(wb)wb.textContent=EMBED?'← Volver al curso':'🗺️ Ver el mapa';
   setTimeout(()=>{$('#win').classList.add('show');},700);
 }
 
@@ -591,6 +593,11 @@ function cineAdvance(){ if(!cineActive)return; cineT.forEach(clearTimeout); cine
 function endCine(){ if(!cineActive)return; cineActive=false; cineT.forEach(clearTimeout); cineT=[]; stopPad(); setMood('');
   const el=$('#cine'); el.onclick=null; const cb=cineDone; cineDone=null; if(cb)cb(); el.classList.remove('on','show'); }
 function skipCine(){ endCine(); }
+
+/* ===== continuar / navegación (detecta si está embebido en el curso) ===== */
+const EMBED = (function(){try{return window.self!==window.top;}catch(e){return true;}})();
+function goNext(){ if(EMBED){ try{parent.postMessage({type:'hf-next',from:'ep02'},'*');}catch(e){} } else { location.href='../juego/'; } }
+function goMap(){ if(EMBED){ try{parent.postMessage({type:'hf-close'},'*');}catch(e){} } else { location.href='../juego/'; } }
 
 /* ===== nav ===== */
 function enterApp(){ $('#intro').classList.add('hide');

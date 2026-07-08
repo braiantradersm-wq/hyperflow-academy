@@ -510,7 +510,7 @@
   }
 
   /* ===== intro cinemática de episodio (auto-play, estilo videojuego) ===== */
-  .cine{position:fixed;inset:0;z-index:1200;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:26px;opacity:0;pointer-events:none;transition:opacity .8s;background:radial-gradient(120% 90% at 50% 35%,rgba(16,18,42,.9),rgba(8,9,20,.98))}
+  .cine{position:fixed;inset:0;z-index:1200;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:26px;opacity:0;pointer-events:none;transition:opacity .8s;background:radial-gradient(120% 90% at 50% 35%,#181c38,#070812)}
   .cine.on{opacity:1;pointer-events:auto}
   .cine .cbar{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,var(--indigo),var(--amber));box-shadow:0 0 8px var(--indigo)}
   .cine .cscene{max-width:720px}
@@ -521,7 +521,7 @@
   .cine.show .ctext{opacity:1;transform:translateY(0) scale(1.04)}
   .cine .skip{position:fixed;bottom:20px;right:18px;font-family:var(--font-mono);font-size:11px;color:var(--muted-2);background:rgba(22,24,46,.8);border:1px solid var(--line-2);padding:7px 12px;border-radius:9px;opacity:.7;transition:.2s;cursor:pointer}
   .cine .skip:hover{opacity:1;color:var(--text);border-color:var(--indigo)}
-  body[data-cmood=calm] .cine{background:radial-gradient(120% 90% at 50% 35%,rgba(18,22,50,.9),rgba(8,9,20,.98))}
+  body[data-cmood=calm] .cine{background:radial-gradient(120% 90% at 50% 35%,#1a1f42,#070812)}
   .cine .chint{margin-top:26px;font-family:var(--font-mono);font-size:12px;color:var(--muted-2);opacity:0;transition:opacity .8s .6s}
   .cine.show .chint{opacity:.8;animation:chintb 1.8s 1.4s infinite}
   @keyframes chintb{0%,100%{opacity:.4}50%{opacity:.85}}
@@ -1252,6 +1252,12 @@ function closeGame(){
   const gs=document.getElementById('guideStatus'); if(gs)gs.style.display='';
 }
 function scrollToPlayer(){ const p=document.querySelector('.vplayer'); if(p)p.scrollIntoView({behavior:'smooth',block:'center'}); }
+/* el juego embebido avisa cuándo el alumno terminó o quiere volver */
+window.addEventListener('message',function(e){
+  if(!e.data||typeof e.data!=='object')return;
+  if(e.data.type==='hf-next'){ closeGame(); setTimeout(goQuiz,380); }      // terminó el juego → al reto para desbloquear
+  else if(e.data.type==='hf-close'){ closeGame(); }                        // solo volver al curso
+});
 function goQuiz(){ switchTab('quiz'); const q=document.getElementById('panel-quiz'); if(q)q.scrollIntoView({behavior:'smooth',block:'start'}); }
 function renderGuide(n){
   const game=GAME[n];
