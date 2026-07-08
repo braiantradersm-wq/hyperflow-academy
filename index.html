@@ -1756,16 +1756,21 @@ window.addEventListener('message',function(e){
   else if(e.data.type==='hf-close'){ closeGame(); }                        // solo volver al curso
 });
 function goQuiz(){ switchTab('quiz'); const q=document.getElementById('panel-quiz'); if(q)q.scrollIntoView({behavior:'smooth',block:'start'}); }
+function goReto(){ switchTab('reto'); const p=document.getElementById('panel-reto'); if(p)p.scrollIntoView({behavior:'smooth',block:'start'}); }
 function renderGuide(n){
   const game=GAME[n];
   const steps = game ? [
     {ic:'🎮',k:'Paso 1 · empieza aquí',t:'Vive el episodio',d:(n===1?'Entra a la historia y tú tomas las decisiones. Aprendes jugando.':'Construye tu primer bot arrastrando y conectando piezas.'),btn:'▶ Empezar la experiencia',act:`openGame(${n})`,big:true},
     {ic:'🎬',k:'Paso 2 · opcional',t:'Profundiza con la clase',d:'Video y clase narrada, más abajo. Solo si quieres ir aún más a fondo.',btn:'Ver la clase ↓',act:'scrollToPlayer()'},
     {ic:'🏆',k:'Paso 3',t:'Supera el reto',d:'Responde el cuestionario para desbloquear el siguiente episodio.',btn:'Ir al reto →',act:'goQuiz()'}
+  ] : (hasReto(n) ? [
+    {ic:'🎮',k:'Paso 1 · empieza jugando',t:'Reto interactivo',d:'Aprende haciendo en 1 minuto: arma o clasifica con tus manos y compruébalo. Aquí se aprende de verdad, no mirando.',btn:'🎮 Jugar el reto',act:'goReto()',big:true},
+    {ic:'🎬',k:'Paso 2 · profundiza',t:'Mira la clase',d:'¿Quieres ir más a fondo? Elige Video o Clase narrada por IA, aquí abajo.',btn:'Ver la clase ↓',act:'scrollToPlayer()'},
+    {ic:'🏆',k:'Paso 3',t:'Supera el cuestionario',d:'Responde para desbloquear el siguiente episodio.',btn:'Ir al cuestionario →',act:'goQuiz()'}
   ] : [
     {ic:'🎬',k:'Paso 1 · empieza aquí',t:'Mira la clase',d:'Elige Video o Clase narrada por IA, justo aquí abajo.',btn:'Ver la clase ↓',act:'scrollToPlayer()',big:true},
-    {ic:'🏆',k:'Paso 2',t:'Supera el reto',d:'Responde el cuestionario para desbloquear el siguiente episodio.',btn:'Ir al reto →',act:'goQuiz()'}
-  ];
+    {ic:'🏆',k:'Paso 2',t:'Supera el cuestionario',d:'Responde el cuestionario para desbloquear el siguiente episodio.',btn:'Ir al cuestionario →',act:'goQuiz()'}
+  ]);
   return `<div class="guide">
     <div class="guide-h">🧭 Cómo estudiar este episodio — sigue los pasos en orden</div>
     <div class="guide-steps">
