@@ -333,7 +333,9 @@ const Sound={
     o.connect(g); g.connect(this.master); o.start(); o.stop(t+1.15);
   },
   duck(on){ if(!this.ctx)return; this.padGain.gain.linearRampToValueAtTime(on?0.025:0.05,this.ctx.currentTime+0.4); },
-  setMuted(m){ this.muted=m; if(this.master)this.master.gain.linearRampToValueAtTime(m?0:0.5,this.ctx.currentTime+0.2); }
+  setMuted(m){ this.muted=m; if(this.master)this.master.gain.linearRampToValueAtTime(m?0:0.5,this.ctx.currentTime+0.2); },
+  suspend(){ if(this.ctx && this.ctx.state==='running'){ try{this.ctx.suspend();}catch(e){} } },
+  resume(){ if(this.ctx && this.ctx.state==='suspended'){ try{this.ctx.resume();}catch(e){} } }
 };
 
 /* ===================== RENDER DE ESCENA ===================== */
@@ -470,7 +472,8 @@ function startFilm(){ if(started)return; started=true;
   setPP(true); enterScene(0); loop();
 }
 function togglePlay(){ if(!started){startFilm();return;} if(awaitingDecision)return;
-  if(audio.paused){audio.play();setPP(true);}else{audio.pause();setPP(false);} }
+  if(audio.paused){audio.play();Sound.resume();setPP(true);}
+  else{audio.pause();Sound.suspend();setPP(false);} }
 function setPP(on){$('#ppIcon').innerHTML=on?'<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>':'<path d="M8 5v14l11-7z"/>';}
 function toggleMute(){const m=!audio.muted; audio.muted=m; Sound.setMuted(m); $('#btnMute').style.opacity=m?.5:1;}
 function restart(){ $('#outro').classList.remove('show'); $('#decision').classList.remove('show'); awaitingDecision=false;
