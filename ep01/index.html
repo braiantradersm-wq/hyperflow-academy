@@ -269,7 +269,7 @@ function nameGate(){
     <div class="np">Se usa solo aquí, en tu dispositivo. Nada se envía.</div></div>`;
   setTimeout(()=>{const el=$('#nameInput');if(el)el.focus();},200);
 }
-function startStory(){ const v=$('#nameInput').value.trim(); if(!v)return; NAME=v; beat=0; $('#hud').classList.remove('hidden'); paintHud(); renderBeat(); }
+function startStory(){ const v=$('#nameInput').value.trim(); if(!v)return; NAME=v; try{localStorage.setItem('hyperflow_name',NAME);}catch(e){} beat=0; $('#hud').classList.remove('hidden'); paintHud(); renderBeat(); }
 
 function renderBeat(){
   const b=BEATS[beat], st=$('#stage');
@@ -345,7 +345,7 @@ function calcRoi(){
 }
 
 function renderEnd(){
-  try{localStorage.setItem('hyperflow_ep01_done','1');}catch(e){}
+  try{localStorage.setItem('hyperflow_ep01_done','1');localStorage.setItem('hyperflow_xp',String(xp));}catch(e){}
   document.body.classList.remove('danger');
   let tier,seal,ek,h,txt;
   if(proyecto>=80){ tier='win';ek='Final · Triunfo';h='Salvaste Nordex, '+NAME;
