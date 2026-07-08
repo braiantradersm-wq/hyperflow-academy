@@ -266,7 +266,7 @@ const SCENES=[
 
 /* ===================== AUDIO NARRACIÓN ===================== */
 const audio=new Audio(); audio.preload='auto';
-let idx=0, started=false, awaitingDecision=false;
+let idx=0, started=false, awaitingDecision=false, advanced=false;
 const $=s=>document.querySelector(s);
 const stage=$('#stage'), sline=$('#sline'), aurora=$('#aurora'), topfill=$('#topfill'), sceneLabel=$('#sceneLabel'), dotsEl=$('#dots');
 SCENES.forEach((_,i)=>{const d=document.createElement('div');d.className='dot';d.id='dot'+i;dotsEl.appendChild(d);});
@@ -370,7 +370,7 @@ function wrapTitleWords(){
   walk(ttl);
 }
 function enterScene(i){
-  idx=i; const s=SCENES[i];
+  idx=i; advanced=false; const s=SCENES[i];
   document.documentElement.style.setProperty('--acc',ACC[s.acc]);
   aurora.style.background=AUR[s.acc];
   Sound.chord(CH[s.chord]); Sound.whoosh();
@@ -404,13 +404,23 @@ function updateSubs(){if(!audio.duration||!subWords.length)return;
   subWords.forEach((w,i)=>w.classList.toggle('said',i<n));}
 
 /* ===================== FLUJO ===================== */
-audio.addEventListener('ended',()=>{
+function tryAdvance(){
+  if(advanced||awaitingDecision)return;
   const s=SCENES[idx];
+  advanced=true;
   if(s.interactive){ openDecision(); return; }
-  if(idx<SCENES.length-1){ stage.classList.add('out'); setTimeout(()=>enterScene(idx+1),650); }
+  if(idx<SCENES.length-1){ stage.classList.add('out'); setTimeout(()=>enterScene(idx+1),600); }
   else endFilm();
+}
+audio.addEventListener('ended',tryAdvance);
+audio.addEventListener('timeupdate',()=>{
+  if(audio.duration){
+    topfill.style.width=(((idx+Math.min(1,audio.currentTime/audio.duration))/SCENES.length)*100)+'%';
+    if(audio.currentTime>=audio.duration-0.3) tryAdvance();   // watchdog: avanza aunque 'ended' no dispare
+  }
 });
-audio.addEventListener('timeupdate',()=>{if(audio.duration){topfill.style.width=(((idx+audio.currentTime/audio.duration)/SCENES.length)*100)+'%';}});
+audio.addEventListener('stalled',()=>{ if(!audio.paused && !awaitingDecision){ try{audio.play();}catch(e){} } });
+audio.addEventListener('error',()=>{ tryAdvance(); });        // si un clip falla, no se queda clavado
 function loop(){updateSubs();requestAnimationFrame(loop);}
 
 function openDecision(){ awaitingDecision=true; Sound.duck(true); $('#decision').classList.add('show'); }
