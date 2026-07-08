@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0E1020">
+<title>EP01 “El Origen” · Lección interactiva — Hyperflow Academy</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%8E%AC%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --ink:#0E1020;--ink-2:#16182E;--ink-3:#1E2140;--ink-4:#262A52;
+    --line:rgba(255,255,255,.09);--line-2:rgba(255,255,255,.16);
+    --text:#EEF0FB;--muted:#9BA0C4;--muted-2:#6E739A;
+    --indigo:#6674FF;--indigo-2:#8B7BFF;--amber:#FFB454;--green:#3FD07F;--red:#FF6B7A;
+    --serif:"Georgia","Times New Roman",serif;
+    --disp:"Segoe UI Variable Display","Segoe UI",system-ui,-apple-system,sans-serif;
+    --mono:ui-monospace,"Cascadia Code","Consolas",monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--ink);color:var(--text);font-family:var(--disp);-webkit-font-smoothing:antialiased;line-height:1.5;overflow-x:hidden}
+  .wrap{max-width:760px;margin:0 auto;padding:0 18px}
+  h1,h2,h3{line-height:1.15;text-wrap:balance}
+  .serif{font-family:var(--serif);font-style:italic}
+  .g{background:linear-gradient(115deg,var(--indigo-2),var(--amber));-webkit-background-clip:text;background-clip:text;color:transparent}
+  button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 24px;border-radius:13px;font-weight:600;font-size:15px;transition:.16s;width:100%}
+  .btn-primary{background:linear-gradient(135deg,var(--indigo),var(--indigo-2));color:#fff;box-shadow:0 12px 30px -12px var(--indigo)}
+  .btn-amber{background:linear-gradient(135deg,var(--amber),#FF9A3D);color:#241503}
+  .btn-ghost{background:var(--ink-3);border:1px solid var(--line-2);color:var(--text)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .btn:not(:disabled):hover{transform:translateY(-2px)}
+
+  /* header */
+  header{position:sticky;top:0;z-index:20;background:rgba(14,16,32,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .hin{display:flex;align-items:center;gap:12px;height:56px}
+  .brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
+  .brand .lg{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--indigo),var(--indigo-2));display:grid;place-items:center}
+  .brand .lg svg{width:15px;height:15px}
+  .xp{margin-left:auto;display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:12px;color:var(--amber);
+    background:var(--amber-dim,rgba(255,180,84,.12));border:1px solid rgba(255,180,84,.3);padding:5px 10px;border-radius:9px}
+  .steps{display:flex;gap:5px;padding:0 0 10px}
+  .steps .sd{flex:1;height:4px;border-radius:99px;background:var(--ink-4);overflow:hidden}
+  .steps .sd i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--indigo),var(--green));transition:width .4s}
+  .steps .sd.done i{width:100%} .steps .sd.cur i{width:50%}
+
+  /* step shell */
+  .step{display:none;padding:30px 0 60px;animation:fade .35s}
+  .step.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--indigo-2);margin-bottom:12px}
+  .step h2{font-size:clamp(24px,5.5vw,34px);letter-spacing:-.01em;margin-bottom:12px}
+  .step .intro{color:var(--muted);font-size:16px;margin-bottom:24px}
+  .taskcard{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:22px;margin-bottom:16px}
+
+  /* gancho */
+  .hook{background:radial-gradient(120% 90% at 50% 0%,rgba(102,116,255,.14),transparent 60%),var(--ink-2);
+    border:1px solid var(--line-2);border-radius:20px;padding:34px 26px;text-align:center}
+  .hook .k{font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:14px}
+  .hook h1{font-family:var(--serif);font-style:italic;font-size:clamp(28px,7vw,50px);margin-bottom:16px}
+  .hook p{color:var(--muted);max-width:520px;margin:0 auto 26px}
+  .hook .mini{font-family:var(--mono);font-size:12px;color:var(--muted-2);margin-top:18px}
+  .pill{display:inline-flex;align-items:center;gap:7px;background:var(--ink-3);border:1px solid var(--line-2);border-radius:99px;padding:7px 14px;font-size:12.5px;color:var(--muted);margin:4px}
+
+  /* clasificador */
+  .qcard{background:var(--ink-2);border:1px solid var(--line);border-radius:15px;padding:18px;margin-bottom:12px;transition:.2s}
+  .qcard .qt{font-weight:600;font-size:15.5px;margin-bottom:4px}
+  .qcard .qd{font-size:13.5px;color:var(--muted);margin-bottom:14px}
+  .qchoices{display:flex;gap:10px}
+  .qchoices button{flex:1;padding:12px;border-radius:11px;background:var(--ink-3);border:1px solid var(--line-2);font-weight:600;font-size:13.5px;transition:.15s}
+  .qchoices button:hover{border-color:var(--indigo)}
+  .qcard.answered .qchoices button{pointer-events:none;opacity:.5}
+  .qcard.answered .qchoices button.picked{opacity:1}
+  .qcard.ok{border-color:var(--green)} .qcard.ok .picked{background:var(--green-dim,rgba(63,208,127,.16));border-color:var(--green);color:#fff;opacity:1}
+  .qcard.bad{border-color:var(--red)} .qcard.bad .picked{background:rgba(255,107,122,.14);border-color:var(--red);color:#fff;opacity:1}
+  .qfb{font-size:13px;color:var(--muted);margin-top:12px;padding-top:12px;border-top:1px solid var(--line);display:none}
+  .qcard.answered .qfb{display:block}
+  .qfb b{color:var(--text)}
+
+  /* ROI calc */
+  .slider{margin-bottom:18px}
+  .slider label{display:flex;justify-content:space-between;font-size:13.5px;color:var(--muted);margin-bottom:8px}
+  .slider label b{color:var(--text);font-family:var(--mono)}
+  input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:99px;background:var(--ink-4);outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--indigo),var(--indigo-2));cursor:pointer;box-shadow:0 4px 12px -3px var(--indigo)}
+  input[type=range]::-moz-range-thumb{width:22px;height:22px;border:0;border-radius:50%;background:var(--indigo);cursor:pointer}
+  .roiout{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
+  .roibox{background:var(--ink-3);border:1px solid var(--line);border-radius:13px;padding:16px;text-align:center}
+  .roibox b{font-size:clamp(22px,5vw,30px);display:block;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .roibox.h b{color:var(--amber)} .roibox.e b{color:var(--green)}
+  .roibox span{font-size:11.5px;color:var(--muted);font-family:var(--mono)}
+  .verdict{border-radius:13px;padding:15px 18px;font-size:14px;font-weight:600;text-align:center;transition:.3s}
+  .verdict.win{background:var(--green-dim,rgba(63,208,127,.14));border:1px solid var(--green);color:var(--green)}
+  .verdict.mid{background:var(--ink-3);border:1px solid var(--line-2);color:var(--muted)}
+
+  /* escenario */
+  .opt{display:block;width:100%;text-align:left;background:var(--ink-2);border:1px solid var(--line-2);border-radius:14px;padding:18px;margin-bottom:12px;transition:.15s}
+  .opt:hover{border-color:var(--indigo);transform:translateY(-2px)}
+  .opt .ol{font-family:var(--mono);font-size:11px;color:var(--muted-2);margin-bottom:6px}
+  .opt b{font-size:15px}
+  .opt.chosen.good{border-color:var(--green);background:var(--green-dim,rgba(63,208,127,.1))}
+  .opt.chosen.poor{border-color:var(--red);background:rgba(255,107,122,.1)}
+  .consequence{background:var(--ink-2);border:1px solid var(--line-2);border-radius:14px;padding:20px;margin-top:8px;display:none}
+  .consequence.show{display:block;animation:fade .3s}
+  .consequence .ct{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px}
+  .consequence.good .ct{color:var(--green)} .consequence.poor .ct{color:var(--red)}
+
+  /* quiz final */
+  .q{background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:14px}
+  .q .qq{font-weight:600;font-size:15px;margin-bottom:14px}
+  .opt2{display:flex;gap:11px;align-items:flex-start;padding:12px 14px;border:1px solid var(--line-2);border-radius:11px;margin-bottom:9px;cursor:pointer;transition:.15s;font-size:14px}
+  .opt2:hover{border-color:var(--indigo)}
+  .opt2 input{margin-top:3px;accent-color:var(--indigo)}
+  .opt2.correct{border-color:var(--green);background:var(--green-dim,rgba(63,208,127,.14))}
+  .opt2.wrong{border-color:var(--red);background:rgba(255,107,122,.12)}
+  .opt2 .ex{display:none;font-size:12.5px;color:var(--muted);margin-top:6px;width:100%}
+  .opt2.reveal .ex{display:block}
+
+  /* completion */
+  .done-hero{text-align:center;padding:20px 0}
+  .done-seal{width:90px;height:90px;margin:0 auto 20px;border-radius:50%;background:var(--green-dim,rgba(63,208,127,.14));border:2px solid var(--green);display:grid;place-items:center;animation:pop .5s}
+  @keyframes pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+  .done-seal svg{width:44px;height:44px;stroke:var(--green);stroke-width:2.4}
+  .xpwin{font-family:var(--mono);font-size:15px;color:var(--amber);margin:10px 0 4px}
+  .unlock{background:linear-gradient(120deg,var(--ink-3),var(--ink-2));border:1px solid var(--line-2);border-radius:16px;padding:22px;margin:22px 0;text-align:left;display:flex;gap:16px;align-items:center}
+  .unlock .u-ic{width:44px;height:44px;flex:none;border-radius:11px;background:var(--indigo-dim,rgba(102,116,255,.16));display:grid;place-items:center;font-size:22px}
+  .unlock .u-t .cn{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
+  .unlock .u-t .cc{font-family:var(--serif);font-style:italic;font-size:20px;color:var(--indigo-2)}
+  .extra{margin-top:18px;padding:16px;border:1px dashed var(--line-2);border-radius:13px;text-align:center}
+  .extra .xk{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2);margin-bottom:8px}
+  .extra a{color:#FF6B7A;font-size:13.5px;text-decoration:none;font-weight:600}
+  .extra a:hover{text-decoration:underline}
+
+  .stepnav{margin-top:24px}
+  .hint{font-size:12.5px;color:var(--muted-2);text-align:center;margin-top:12px;font-family:var(--mono)}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(100px);background:var(--ink-3);border:1px solid var(--amber);
+    border-radius:13px;padding:12px 20px;display:flex;gap:10px;align-items:center;z-index:50;opacity:0;transition:.35s;box-shadow:0 20px 50px -20px #000;max-width:90vw}
+  .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+  .toast b{font-size:14px} .toast .ti{font-size:20px}
+  @media(max-width:520px){ .roiout{grid-template-columns:1fr} .qchoices{flex-direction:column} }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="hin">
+      <span class="brand"><span class="lg"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="3.2" fill="#fff" stroke="none"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></span>Hyperflow · EP01</span>
+      <span class="xp">⚡ <span id="xp">0</span> XP</span>
+    </div>
+    <div class="steps" id="steps"></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- STEP 0 · GANCHO -->
+  <section class="step on" id="s0">
+    <div class="hook">
+      <div class="k">Temporada 1 · Episodio 01</div>
+      <h1>Hoy no vas a <span class="g">ver</span> una clase.<br>Vas a <span class="g">resolverla</span>.</h1>
+      <p>Marta procesa 400 facturas al día, a mano. Ocho horas de su talento, tiradas. En los próximos minutos vas a aprender a decidir qué se automatiza y qué no —haciéndolo tú, no mirándolo—. Al final, pensarás como un consultor que cobra miles por esto.</p>
+      <div>
+        <span class="pill">🧠 3 retos prácticos</span>
+        <span class="pill">🎯 1 desafío final</span>
+        <span class="pill">⚡ +120 XP</span>
+      </div>
+      <div class="mini">🎬 ¿Prefieres el gancho en modo cine primero? <a href="../pilot2/" style="color:var(--indigo-2)">Ver el film ▸</a> (opcional)</div>
+    </div>
+    <div class="stepnav"><button class="btn btn-primary" onclick="go(1)">Empezar a resolver →</button></div>
+  </section>
+
+  <!-- STEP 1 · CLASIFICADOR -->
+  <section class="step" id="s1">
+    <div class="eyebrow">Reto 1 de 3 · Clasifica</div>
+    <h2>¿Esto se <span class="g">automatiza</span>… o lo hace un humano?</h2>
+    <p class="intro">La regla de oro: se automatiza lo <b>repetitivo, de alto volumen y basado en reglas</b>. Lo creativo, único o sensible, lo hace una persona. Decide en cada caso.</p>
+    <div id="cards"></div>
+    <div class="stepnav"><button class="btn btn-primary" id="s1btn" disabled onclick="go(2)">Continuar →</button></div>
+    <div class="hint" id="s1hint">Clasifica los 5 procesos para continuar</div>
+  </section>
+
+  <!-- STEP 2 · ROI -->
+  <section class="step" id="s2">
+    <div class="eyebrow">Reto 2 de 3 · Calcula</div>
+    <h2>¿Cuánto vale <span class="g">automatizar a Marta</span>?</h2>
+    <p class="intro">El ROI no es magia: es volumen × frecuencia. Mueve los controles y observa. Tu objetivo: encontrar un ahorro que <b>supere 20.000 € al año</b> — el punto donde “se paga solo”.</p>
+    <div class="taskcard">
+      <div class="slider"><label>Facturas por día <b><span id="v1">120</span></b></label><input type="range" id="r1" min="10" max="1000" step="10" value="120" oninput="calcRoi()"></div>
+      <div class="slider"><label>Minutos por factura (a mano) <b><span id="v2">2</span> min</b></label><input type="range" id="r2" min="1" max="15" step="1" value="2" oninput="calcRoi()"></div>
+      <div class="slider"><label>Coste por hora del empleado <b>€<span id="v3">15</span></b></label><input type="range" id="r3" min="10" max="60" step="1" value="15" oninput="calcRoi()"></div>
+      <div class="roiout">
+        <div class="roibox h"><b id="oH">0</b><span>horas/mes ahorradas</span></div>
+        <div class="roibox e"><b id="oE">0 €</b><span>ahorro al año</span></div>
+      </div>
+      <div class="verdict mid" id="verdict">Mueve los controles…</div>
+    </div>
+    <div class="stepnav"><button class="btn btn-primary" id="s2btn" disabled onclick="go(3)">Continuar →</button></div>
+    <div class="hint" id="s2hint">Supera 20.000 €/año para desbloquear</div>
+  </section>
+
+  <!-- STEP 3 · ESCENARIO -->
+  <section class="step" id="s3">
+    <div class="eyebrow">Reto 3 de 3 · Decide</div>
+    <h2>Eres el <span class="g">consultor</span>. ¿Qué recomiendas?</h2>
+    <p class="intro">La dirección quiere resultados. Tienes recursos para <b>un</b> proyecto este trimestre. Elige con criterio de ROI, no de lucimiento.</p>
+    <div class="taskcard" style="padding:20px">
+      <p style="color:var(--muted);font-size:14px;margin-bottom:16px">📋 Sobre la mesa: un informe anual vistoso para el CEO (1 vez al año), y el cuello de botella de facturación (400 facturas/día, todo el año).</p>
+      <button class="opt" data-k="poor" onclick="scenario(this)"><div class="ol">Opción A</div><b>Automatizar el informe del CEO — es lo más visible</b></button>
+      <button class="opt" data-k="good" onclick="scenario(this)"><div class="ol">Opción B</div><b>Automatizar la carga de facturas — alto volumen, todo el año</b></button>
+      <button class="opt" data-k="poor" onclick="scenario(this)"><div class="ol">Opción C</div><b>Hacer los dos a la vez para quedar bien con todos</b></button>
+      <div class="consequence" id="cons"></div>
+    </div>
+    <div class="stepnav"><button class="btn btn-primary" id="s3btn" disabled onclick="go(4)">Ir al desafío final →</button></div>
+  </section>
+
+  <!-- STEP 4 · DESAFÍO FINAL -->
+  <section class="step" id="s4">
+    <div class="eyebrow">Desafío final · Demuestra lo que aprendiste</div>
+    <h2>Supera el reto y <span class="g">desbloquea</span> el EP02</h2>
+    <p class="intro">Tres preguntas. Necesitas 2 de 3 para aprobar. Sin trampa: aquí se ve si de verdad lo pillaste.</p>
+    <div id="quiz"></div>
+    <div class="stepnav"><button class="btn btn-amber" id="gradeBtn" onclick="grade()">Corregir desafío</button></div>
+    <div class="hint" id="s4hint"></div>
+  </section>
+
+  <!-- STEP 5 · COMPLETION -->
+  <section class="step" id="s5">
+    <div class="done-hero">
+      <div class="done-seal"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <div class="eyebrow" style="color:var(--green)">Episodio 01 superado</div>
+      <h2>Pensaste como un <span class="g">consultor</span></h2>
+      <div class="xpwin">⚡ +<span id="xpFinal">120</span> XP ganados</div>
+      <p style="color:var(--muted);max-width:520px;margin:8px auto 0">Ya no solo sabes qué es la hiperautomatización: sabes <b>decidir</b> qué automatizar y por qué. Esa es la habilidad que se paga.</p>
+      <div class="unlock">
+        <div class="u-ic">🔓</div>
+        <div class="u-t"><div class="cn">Desbloqueado · Próximo episodio</div><div class="cc">“La Mente” — dentro de la IA generativa</div></div>
+      </div>
+      <button class="btn btn-primary" onclick="location.href='../?alumno=1'">Continuar tu historia →</button>
+      <div class="extra">
+        <div class="xk">¿Quieres profundizar? (opcional)</div>
+        <a href="https://www.youtube.com/watch?v=UjBJJuxo5C4" target="_blank">▸ Masterclass externa en video ↗</a>
+      </div>
+      <button class="btn btn-ghost" style="margin-top:14px" onclick="restart()">↺ Repetir la lección</button>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast"><span class="ti">⚡</span><span><b id="toastMsg"></b></span></div>
+
+<script>
+/* ============ ESTADO ============ */
+const NSTEPS=6; let step=0, xp=0;
+const XP_R1=30, XP_R2=25, XP_R3=25, XP_QUIZ=40;
+const $=s=>document.querySelector(s);
+
+/* pasos superiores */
+const stepsEl=$('#steps');
+for(let i=0;i<NSTEPS;i++){const d=document.createElement('div');d.className='sd';d.id='sd'+i;d.innerHTML='<i></i>';stepsEl.appendChild(d);}
+function paintSteps(){for(let i=0;i<NSTEPS;i++){const d=$('#sd'+i);d.className='sd'+(i<step?' done':(i===step?' cur':''));}}
+function go(n){ $('#s'+step).classList.remove('on'); step=n; $('#s'+step).classList.add('on'); paintSteps(); window.scrollTo({top:0,behavior:'smooth'}); if(n===5)finish(); }
+function addXP(n,msg){ xp+=n; $('#xp').textContent=xp; if(msg)toast('+'+n+' XP · '+msg); }
+function toast(m){const t=$('#toast');$('#toastMsg').textContent=m;t.classList.add('show');ding(880);setTimeout(()=>t.classList.remove('show'),2200);}
+paintSteps();
+
+/* SFX ligero */
+let AC=null;
+function ding(f){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(0,AC.currentTime);g.gain.linearRampToValueAtTime(.12,AC.currentTime+.02);g.gain.exponentialRampToValueAtTime(.0008,AC.currentTime+.5);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+.55);}catch(e){}}
+function buzz(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type='square';o.frequency.value=150;g.gain.setValueAtTime(0,AC.currentTime);g.gain.linearRampToValueAtTime(.07,AC.currentTime+.02);g.gain.exponentialRampToValueAtTime(.0008,AC.currentTime+.28);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+.3);}catch(e){}}
+
+/* ============ RETO 1 · CLASIFICADOR ============ */
+const PROCS=[
+ {t:"Copiar 400 facturas del correo al sistema, cada día",d:"Mismo formato, todos los días.",auto:true,why:"Alto volumen + reglas claras + datos estructurados = candidato perfecto."},
+ {t:"Redactar la estrategia de la empresa para el próximo año",d:"Documento único, creativo.",auto:false,why:"Es juicio, creatividad y contexto. Eso es territorio humano."},
+ {t:"Responder 200 veces al día “¿dónde está mi pedido?”",d:"La misma consulta, una y otra vez.",auto:true,why:"Repetitivo y con reglas: ideal para un agente conversacional."},
+ {t:"Negociar el sueldo de un nuevo directivo",d:"Conversación sensible y única.",auto:false,why:"Relacional, delicado y no repetible. Lo hace una persona."},
+ {t:"Extraer datos de 1.000 PDFs con el mismo formato",d:"Volumen alto, estructura fija.",auto:true,why:"Con procesamiento inteligente de documentos, se automatiza y escala."}
+];
+let r1answered=0;
+function renderCards(){
+  const c=$('#cards'); c.innerHTML=PROCS.map((p,i)=>`
+    <div class="qcard" id="qc${i}">
+      <div class="qt">${p.t}</div><div class="qd">${p.d}</div>
+      <div class="qchoices">
+        <button data-v="auto" onclick="answerCard(${i},true,this)">🤖 Automatizar</button>
+        <button data-v="human" onclick="answerCard(${i},false,this)">🧑 Humano</button>
+      </div>
+      <div class="qfb" id="fb${i}"></div>
+    </div>`).join('');
+}
+function answerCard(i,choseAuto,btn){
+  const p=PROCS[i], card=$('#qc'+i); if(card.classList.contains('answered'))return;
+  card.classList.add('answered'); btn.classList.add('picked');
+  const ok=(choseAuto===p.auto);
+  card.classList.add(ok?'ok':'bad');
+  $('#fb'+i).innerHTML=(ok?'<b>✓ Correcto.</b> ':'<b>✗ Piénsalo.</b> ')+p.why;
+  ok?ding(760):buzz();
+  r1answered++;
+  if(r1answered===PROCS.length){ $('#s1btn').disabled=false; $('#s1hint').textContent='¡Listo! Continúa cuando quieras'; addXP(XP_R1,'Clasificación dominada'); }
+}
+
+/* ============ RETO 2 · ROI ============ */
+let roiWon=false;
+function calcRoi(){
+  const fd=+$('#r1').value, mi=+$('#r2').value, ch=+$('#r3').value;
+  $('#v1').textContent=fd; $('#v2').textContent=mi; $('#v3').textContent=ch;
+  const hMonth=fd*mi*20/60;                 // 20 días laborables
+  const eurYear=Math.round(hMonth*12*ch);
+  $('#oH').textContent=Math.round(hMonth);
+  $('#oE').textContent=eurYear.toLocaleString('es-ES')+' €';
+  const v=$('#verdict');
+  if(eurYear>=20000){ v.className='verdict win'; v.textContent='✅ Se paga solo. Con este volumen, el proyecto se justifica en semanas.';
+    if(!roiWon){roiWon=true;$('#s2btn').disabled=false;$('#s2hint').textContent='¡Objetivo logrado!';addXP(XP_R2,'Aprendiste a calcular ROI');} }
+  else { v.className='verdict mid'; v.textContent='Aún no llega a los 20.000 €/año. Sube el volumen o la frecuencia…'; }
+}
+
+/* ============ RETO 3 · ESCENARIO ============ */
+let r3done=false;
+const CONS={
+ good:{cls:'good',t:'Decisión de consultor',m:'Recuperaste cientos de horas al mes desde la primera semana. El proyecto se pagó solo y liberaste a Marta para tareas de valor. <b>Eso es priorizar por ROI.</b>'},
+ poor:{cls:'poor',t:'Aprendizaje',m:'Impresiona, pero el retorno es bajo o los recursos se dispersan. La dirección aplaude una vez… y el problema real sigue ahí. <b>El dinero está en el proceso repetitivo y de alto volumen.</b>'}
+};
+function scenario(btn){
+  if(r3done && btn.dataset.k==='good')return;
+  const k=btn.dataset.k, c=CONS[k];
+  document.querySelectorAll('#s3 .opt').forEach(o=>o.classList.remove('chosen','good','poor'));
+  btn.classList.add('chosen',k);
+  const box=$('#cons'); box.className='consequence show '+c.cls;
+  box.innerHTML=`<div class="ct">${c.t}</div><div style="font-size:14px;color:var(--muted)">${c.m}</div>`;
+  if(k==='good'){ if(!r3done){r3done=true;$('#s3btn').disabled=false;addXP(XP_R3,'Criterio de priorización');} ding(980); }
+  else { buzz(); }
+}
+
+/* ============ DESAFÍO FINAL · QUIZ ============ */
+const QUIZ=[
+ {q:"¿Qué distingue a la hiperautomatización del RPA tradicional?",o:["Solo usa bots de escritorio","Orquesta RPA + IA + reglas + analítica para procesos completos","Elimina a las personas","Se limita a un solo sistema"],a:1,e:"Orquesta varias tecnologías para cubrir el proceso de extremo a extremo."},
+ {q:"¿Cuál es el mejor primer proceso para automatizar?",o:["El más complejo y vistoso","Alto volumen, repetitivo y basado en reglas","El que pida el CEO","El que use la IA más nueva"],a:1,e:"Volumen + repetición + reglas = ROI rápido y seguro."},
+ {q:"Al sumar IA a un robot clásico, este empieza a…",o:["Ir más lento","Leer, entender y decidir","Necesitar más clics","Romperse siempre"],a:1,e:"La IA le da lectura, comprensión y decisión: un “empleado digital”."}
+];
+let graded=false;
+function renderQuiz(){
+  $('#quiz').innerHTML=QUIZ.map((q,i)=>`<div class="q"><div class="qq">${i+1}. ${q.q}</div>
+    ${q.o.map((o,oi)=>`<label class="opt2" id="o${i}_${oi}"><input type="radio" name="q${i}" value="${oi}"><span>${o}<span class="ex">${q.e}</span></span></label>`).join('')}</div>`).join('');
+}
+function grade(){
+  if(graded)return;
+  let correct=0;
+  QUIZ.forEach((q,i)=>{
+    const sel=document.querySelector(`input[name="q${i}"]:checked`);
+    document.getElementById(`o${i}_${q.a}`).classList.add('correct','reveal');
+    if(sel){const v=+sel.value; if(v===q.a)correct++; else document.getElementById(`o${i}_${v}`).classList.add('wrong','reveal');}
+  });
+  const pass=correct>=2;
+  $('#s4hint').innerHTML=(pass?'<span style="color:var(--green)">✓ ':'<span style="color:var(--red)">✗ ')+correct+' de 3 correctas'+(pass?' · ¡Aprobado!':' · necesitas 2. Repasa y reintenta.')+'</span>';
+  if(pass){ graded=true; $('#gradeBtn').textContent='¡Aprobado! Ver resultado →'; $('#gradeBtn').onclick=()=>go(5); addXP(XP_QUIZ,'Desafío superado'); ding(1046); }
+  else { buzz(); }
+}
+
+/* ============ COMPLETION ============ */
+function finish(){ $('#xpFinal').textContent=xp; try{localStorage.setItem('hyperflow_ep01_done','1');}catch(e){} }
+function restart(){ xp=0;$('#xp').textContent=0;r1answered=0;roiWon=false;r3done=false;graded=false;
+  renderCards();renderQuiz();calcRoi();
+  $('#s1btn').disabled=true;$('#s2btn').disabled=true;$('#s3btn').disabled=true;
+  $('#gradeBtn').textContent='Corregir desafío';$('#gradeBtn').onclick=grade;$('#s4hint').textContent='';
+  document.querySelectorAll('.consequence').forEach(c=>c.className='consequence');
+  go(0); }
+
+/* init */
+renderCards(); renderQuiz(); calcRoi();
+</script>
+</body>
+</html>
