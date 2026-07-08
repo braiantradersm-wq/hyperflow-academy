@@ -151,6 +151,22 @@
   .jit .jh{display:flex;gap:7px;align-items:center;font-size:12px;font-weight:700;color:var(--indigo-2);margin-bottom:5px}
   .jit p{font-size:12.5px;color:var(--text);line-height:1.5}
 
+  /* ===== intro cinemática (auto-play) ===== */
+  .cine{position:fixed;inset:0;z-index:46;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:26px;opacity:0;pointer-events:none;transition:opacity .8s;background:radial-gradient(120% 90% at 50% 35%,rgba(12,15,33,.85),rgba(5,6,13,.97))}
+  .cine.on{opacity:1;pointer-events:auto}
+  .cine .cbar{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,var(--indigo),var(--amber));box-shadow:0 0 8px var(--indigo)}
+  .cine .cscene{max-width:680px}
+  .cine .ck{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--amber);margin-bottom:20px;opacity:0;transform:translateY(8px);transition:opacity .7s,transform .7s}
+  .cine .ctext{font-family:var(--serif);font-style:italic;font-size:clamp(20px,4.6vw,33px);line-height:1.5;color:#fff;opacity:0;transform:translateY(20px) scale(.985);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform 6.5s linear}
+  .cine .ctext .nm{background:linear-gradient(115deg,var(--indigo-2),var(--amber));-webkit-background-clip:text;background-clip:text;color:transparent;font-style:normal}
+  .cine .ctext .hl{color:var(--amber);font-style:normal}
+  .cine.show .ck{opacity:1;transform:none}
+  .cine.show .ctext{opacity:1;transform:translateY(0) scale(1.045)}
+  .cine .skip{position:fixed;bottom:18px;right:16px;font-family:var(--mono);font-size:11px;color:var(--muted-2);background:rgba(15,17,32,.7);border:1px solid var(--line);padding:6px 11px;border-radius:9px;opacity:.65;transition:.2s}
+  .cine .skip:hover{opacity:1;color:var(--text);border-color:var(--indigo)}
+  body[data-mood=dark] .cine{background:radial-gradient(120% 100% at 50% 40%,rgba(30,10,18,.74),rgba(5,4,8,.97))}
+  body[data-mood=tense] .cine{background:radial-gradient(120% 90% at 50% 35%,rgba(14,16,40,.84),rgba(5,6,13,.97))}
+
   @media(max-width:720px){
     .mid{flex-direction:column}
     .tray{width:100%;border-right:0;border-bottom:1px solid var(--line);display:flex;gap:8px;overflow-x:auto;padding:9px}
@@ -258,6 +274,7 @@
   </div>
 </div></div>
 
+<div class="cine" id="cine"><div class="cbar" id="cineBar"></div><div class="cscene" id="cineBody"></div><button class="skip" onclick="skipCine()">saltar intro ⏭</button></div>
 <div class="jit" id="jit"><div class="jh"><span>💡</span><span id="jitT">Pieza nueva</span></div><p id="jitP"></p></div>
 <div class="toast" id="toast"><span style="font-size:17px" id="toastI">⚡</span><span><b id="toastM"></b></span></div>
 
@@ -537,8 +554,47 @@ function startClock(){ if(clkInt)clearInterval(clkInt); clock=120; clkInt=setInt
 function setMonitor(state,txt){ const m=$('#monitor'); m.className='monitor '+(state||''); $('#mstat').className='mstat '+(state==='bad'?'bad':state==='good'?'good':''); $('#mstat').textContent=txt||'';
   $('#avatar').textContent = state==='good'?'🤖':state==='bad'?'🤖':state==='busy'?'⚙️':'🧑‍💼'; }
 
+/* ===== motor cinemático auto-play ===== */
+function P(t){return t.replaceAll('[N]','<span class="nm">'+NAME+'</span>');}
+let cineT=[], cineActive=false, cineDone=null, padN=null;
+function startPad(){ try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended')AC.resume();
+  const g=AC.createGain(); g.gain.setValueAtTime(0,AC.currentTime); g.gain.linearRampToValueAtTime(.05,AC.currentTime+2.4); g.connect(AC.destination);
+  const f=AC.createBiquadFilter(); f.type='lowpass'; f.frequency.value=520; f.connect(g);
+  const o1=AC.createOscillator(); o1.type='sine'; o1.frequency.value=110; o1.connect(f);
+  const o2=AC.createOscillator(); o2.type='sine'; o2.frequency.value=164.81; o2.connect(f);
+  const o3=AC.createOscillator(); o3.type='triangle'; o3.frequency.value=55; const g3=AC.createGain(); g3.gain.value=.5; o3.connect(g3); g3.connect(f);
+  o1.start();o2.start();o3.start(); padN={g,f,o1,o2,o3}; }catch(e){} }
+function stopPad(){ if(!padN)return; try{ padN.g.gain.linearRampToValueAtTime(0,AC.currentTime+1.1); const p=padN; setTimeout(()=>{try{p.o1.stop();p.o2.stop();p.o3.stop();}catch(e){}},1200);}catch(e){} padN=null; }
+function setMood(m){ document.body.dataset.mood=m||''; if(padN){try{const map={calm:560,tense:820,dark:360};padN.f.frequency.linearRampToValueAtTime(map[m]||560,AC.currentTime+1.3);}catch(e){}} }
+function cinematic(scenes,cb){
+  cineActive=true; cineDone=cb; const el=$('#cine'); el.classList.add('on'); startPad();
+  let i=0;
+  (function play(){
+    if(!cineActive)return;
+    if(i>=scenes.length){ endCine(); return; }
+    const s=scenes[i]; setMood(s.mood);
+    $('#cineBody').innerHTML=`${s.k?`<div class="ck">${s.k}</div>`:''}<div class="ctext">${P(s.t)}</div>`;
+    el.classList.remove('show'); void el.offsetWidth; el.classList.add('show'); ding(s.mood==='dark'?300:s.mood==='tense'?440:560);
+    const words=s.t.replace(/<[^>]+>/g,'').split(/\s+/).length;
+    const dur=s.ms||Math.max(3400,Math.min(7200,words*360));
+    const bar=$('#cineBar'); bar.style.transition='none'; bar.style.width='0'; void bar.offsetWidth; bar.style.transition='width '+dur+'ms linear'; bar.style.width='100%';
+    cineT.push(setTimeout(()=>{ el.classList.remove('show'); cineT.push(setTimeout(()=>{ i++; play(); },700)); }, dur));
+  })();
+}
+function endCine(){ if(!cineActive)return; cineActive=false; cineT.forEach(clearTimeout); cineT=[]; stopPad(); setMood('');
+  const cb=cineDone; cineDone=null; if(cb)cb(); $('#cine').classList.remove('on','show'); }
+function skipCine(){ endCine(); }
+
 /* ===== nav ===== */
-function enterApp(){ $('#intro').classList.add('hide'); const a=$('#app'); a.classList.add('on'); startClock(); try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();}catch(e){} }
+function enterApp(){ $('#intro').classList.add('hide');
+  const scenes=[
+    {k:'Nordex · Semana 2', t:"Ya sabes QUÉ automatizar, [N]. Ahora viene lo difícil: el <span class='hl'>cómo</span>.", mood:'tense'},
+    {t:"Nada de código. Vas a construir tu primer bot con tus manos: arrastrando piezas y uniéndolas, como quien <span class='hl'>enchufa cables</span>.", mood:'calm'},
+    {t:"La misión: que las facturas de TecnoSur se procesen solas. Si te equivocas, el bot te lo dirá — y aprenderás por qué.", mood:'tense'}
+  ];
+  cinematic(scenes, launchEditor);
+}
+function launchEditor(){ const a=$('#app'); a.classList.add('on'); startClock(); try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();}catch(e){} }
 function restartLevel(){ $('#win').classList.remove('show'); placed=[];edges=[];uidc=0;done=false;errHist={};stress=0;paintStress(); canvas().querySelectorAll('.node').forEach(n=>n.remove()); redraw(); $('#ghost').style.display='grid'; setMonitor('','Esperando tu bot…'); refreshRun(); $('#clock').classList.remove('warn'); startClock(); logC('› Nivel reiniciado.','inf'); }
 function openDeep(){$('#deep').classList.add('show');} function closeDeep(){$('#deep').classList.remove('show');}
 

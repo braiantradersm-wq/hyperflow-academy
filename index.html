@@ -508,7 +508,23 @@
     .lead{padding:28px 20px}
     .annbar{font-size:12px}
   }
+
+  /* ===== intro cinemática de episodio (auto-play, estilo videojuego) ===== */
+  .cine{position:fixed;inset:0;z-index:1200;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:26px;opacity:0;pointer-events:none;transition:opacity .8s;background:radial-gradient(120% 90% at 50% 35%,rgba(16,18,42,.9),rgba(8,9,20,.98))}
+  .cine.on{opacity:1;pointer-events:auto}
+  .cine .cbar{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,var(--indigo),var(--amber));box-shadow:0 0 8px var(--indigo)}
+  .cine .cscene{max-width:720px}
+  .cine .ck{font-family:var(--font-mono);font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--amber);margin-bottom:22px;opacity:0;transform:translateY(8px);transition:opacity .7s,transform .7s}
+  .cine .ctext{font-family:var(--font-serif);font-style:italic;font-size:clamp(22px,4.8vw,38px);line-height:1.42;color:#fff;opacity:0;transform:translateY(20px) scale(.985);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform 6.5s linear}
+  .cine .ctext .hl{color:var(--amber);font-style:normal}
+  .cine.show .ck{opacity:1;transform:none}
+  .cine.show .ctext{opacity:1;transform:translateY(0) scale(1.04)}
+  .cine .skip{position:fixed;bottom:20px;right:18px;font-family:var(--font-mono);font-size:11px;color:var(--muted-2);background:rgba(22,24,46,.8);border:1px solid var(--line-2);padding:7px 12px;border-radius:9px;opacity:.7;transition:.2s;cursor:pointer}
+  .cine .skip:hover{opacity:1;color:var(--text);border-color:var(--indigo)}
+  body[data-cmood=calm] .cine{background:radial-gradient(120% 90% at 50% 35%,rgba(18,22,50,.9),rgba(8,9,20,.98))}
 </style>
+
+<div class="cine" id="cine"><div class="cbar" id="cineBar"></div><div class="cscene" id="cineBody"></div><button class="skip" onclick="skipCine()">saltar intro ⏭</button></div>
 
 <!-- ============ ANNOUNCEMENT BAR ============ -->
 <div class="annbar" id="annbar">
@@ -1190,6 +1206,48 @@ const CTEXTS=[
 function seasonOf(n){return SEASONS.find(s=>s.eps.includes(n));}
 function epInSeason(n){const s=seasonOf(n);return s?s.eps.indexOf(n)+1:n;}
 function pad2(x){return String(x).padStart(2,'0');}
+
+/* ===== intro cinemática de episodio (auto-play) ===== */
+let cAC=null, cPad=null, cineT=[], cineActive=false, cineDone=null;
+const cineSeen=new Set();
+function cDing(f){try{cAC=cAC||new (window.AudioContext||window.webkitAudioContext)();if(cAC.state==='suspended')cAC.resume();const o=cAC.createOscillator(),g=cAC.createGain();o.type='triangle';o.frequency.value=f||520;g.gain.setValueAtTime(0,cAC.currentTime);g.gain.linearRampToValueAtTime(.07,cAC.currentTime+.02);g.gain.exponentialRampToValueAtTime(.0008,cAC.currentTime+.5);o.connect(g);g.connect(cAC.destination);o.start();o.stop(cAC.currentTime+.55);}catch(e){}}
+function cStartPad(){try{cAC=cAC||new (window.AudioContext||window.webkitAudioContext)();if(cAC.state==='suspended')cAC.resume();
+  const g=cAC.createGain();g.gain.setValueAtTime(0,cAC.currentTime);g.gain.linearRampToValueAtTime(.045,cAC.currentTime+2.4);g.connect(cAC.destination);
+  const f=cAC.createBiquadFilter();f.type='lowpass';f.frequency.value=560;f.connect(g);
+  const o1=cAC.createOscillator();o1.type='sine';o1.frequency.value=110;o1.connect(f);
+  const o2=cAC.createOscillator();o2.type='sine';o2.frequency.value=164.81;o2.connect(f);
+  const o3=cAC.createOscillator();o3.type='triangle';o3.frequency.value=55;const g3=cAC.createGain();g3.gain.value=.5;o3.connect(g3);g3.connect(f);
+  o1.start();o2.start();o3.start();cPad={g,o1,o2,o3};}catch(e){}}
+function cStopPad(){if(!cPad)return;try{cPad.g.gain.linearRampToValueAtTime(0,cAC.currentTime+1.1);const p=cPad;setTimeout(()=>{try{p.o1.stop();p.o2.stop();p.o3.stop();}catch(e){}},1200);}catch(e){}cPad=null;}
+function cinematic(scenes,cb){
+  cineActive=true;cineDone=cb;const el=document.getElementById('cine');el.classList.add('on');cStartPad();
+  let i=0;
+  (function play(){
+    if(!cineActive)return;
+    if(i>=scenes.length){endCine();return;}
+    const s=scenes[i];document.body.dataset.cmood=s.mood||'';
+    document.getElementById('cineBody').innerHTML=`${s.k?`<div class="ck">${s.k}</div>`:''}<div class="ctext">${s.t}</div>`;
+    el.classList.remove('show');void el.offsetWidth;el.classList.add('show');cDing(s.mood==='calm'?560:440);
+    const words=s.t.replace(/<[^>]+>/g,'').split(/\s+/).length;
+    const dur=s.ms||Math.max(3400,Math.min(7200,words*360));
+    const bar=document.getElementById('cineBar');bar.style.transition='none';bar.style.width='0';void bar.offsetWidth;bar.style.transition='width '+dur+'ms linear';bar.style.width='100%';
+    cineT.push(setTimeout(()=>{el.classList.remove('show');cineT.push(setTimeout(()=>{i++;play();},700));},dur));
+  })();
+}
+function endCine(){if(!cineActive)return;cineActive=false;cineT.forEach(clearTimeout);cineT=[];cStopPad();document.body.dataset.cmood='';
+  const cb=cineDone;cineDone=null;if(cb)cb();document.getElementById('cine').classList.remove('on','show');}
+function skipCine(){endCine();}
+function maybeIntro(n){
+  if(cineSeen.has(n))return; cineSeen.add(n);
+  if(typeof vpStop==='function')vpStop();
+  const s=seasonOf(n), sc=SCRIPTS[n], m=COURSE.find(x=>x.n===n);
+  const hook = (sc&&sc[0]&&sc[0].s)? sc[0].s : (m?m.title:'');
+  const scenes=[
+    {k:`Temporada ${s.n} · Episodio ${pad2(epInSeason(n))}`, t:`“${CODE[n]}”`, mood:'tense', ms:3200},
+    {t:hook, mood:'calm'}
+  ];
+  cinematic(scenes, ()=>{});
+}
 function levelInfo(){
   const xp=progress.done.length*XP_PER;
   let cur=LEVELS[0],idx=0;
@@ -1373,6 +1431,7 @@ function loadModule(n){
   vpInit(m);
   if(window.innerWidth<=960){const el=document.getElementById('lessonMain');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}
   else window.scrollTo(0,0);
+  maybeIntro(n);
 }
 function renderLocked(n){
   const m=COURSE.find(x=>x.n===n);const s=seasonOf(n);
