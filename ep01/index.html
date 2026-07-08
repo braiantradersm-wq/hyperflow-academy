@@ -231,7 +231,8 @@ function bell(freq,dur,vol){try{AC=AC||new (window.AudioContext||window.webkitAu
   const oh=AC.createOscillator(); oh.type='sine'; oh.frequency.value=freq*2.01; const hg=AC.createGain(); hg.gain.value=.22; oh.connect(hg); hg.connect(lp);
   o.start(t); oh.start(t); o.stop(t+(dur||.5)+.05); oh.stop(t+(dur||.5)+.05);
 }catch(e){}}
-function ding(f){ bell(f||880,.5,.13); }
+function ding(f){ bell(f||880,.45,.07); }
+function tick(f){ bell(f||660,.34,.045); }
 /* "no" suave: tono sine que desciende, sin aspereza */
 function buzz(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();
   const t=AC.currentTime, out=AC.createGain(); out.connect(AC.destination);
@@ -244,18 +245,22 @@ function buzz(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)(
 /* ===== motor cinemático auto-play ===== */
 let cineT=[], cineActive=false, cineDone=null, padN=null;
 /* MÚSICA de fondo = melodía de campanas arpegiadas (no un drone/zumbido) */
-let musicOn=false, musicTimer=null, musicStep=0, musicMood='calm', musicVol=.09;
-const MUSIC={
-  calm: [261.63,329.63,392.00,523.25,392.00,329.63,293.66,349.23],  // Do mayor, fluido y sereno
-  hope: [293.66,369.99,440.00,587.33,440.00,369.99,329.63,440.00],  // Re mayor, luminoso
-  tense:[261.63,311.13,392.00,466.16,392.00,311.13,293.66,311.13],  // Do menor, inquieto
-  dark: [196.00,233.08,293.66,349.23,293.66,233.08,220.00,196.00]   // Sol menor grave, sombrío
+let musicOn=false, musicTimer=null, melIdx=2, musicMood='calm', musicVol=.08;
+/* escalas pentatónicas por mood: recorrido aleatorio = melodía que nunca es igual pero siempre agradable */
+const SCALES={
+  calm: [261.63,293.66,329.63,392.00,440.00,523.25],  // Do mayor pentatónica
+  hope: [293.66,329.63,369.99,440.00,493.88,587.33],  // Re mayor, luminoso
+  tense:[261.63,311.13,349.23,392.00,466.16,523.25],  // Do menor, inquieto
+  dark: [196.00,233.08,261.63,293.66,349.23,392.00]   // Sol menor grave, sombrío
 };
-function setPadVol(v){ musicVol=Math.max(.05,Math.min(.12,(v||.035)*2.6)); }
-function startPad(){ if(musicOn)return; musicOn=true; musicStep=0; try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();}catch(e){} loopMusic(); }
-function loopMusic(){ if(!musicOn)return; const seq=MUSIC[musicMood]||MUSIC.calm; const f=seq[musicStep%seq.length];
-  bell(f,1.7,musicVol); if(musicStep%seq.length===0) bell(f/2,2.6,musicVol*.55);   // bajo suave al inicio de cada frase
-  musicStep++; musicTimer=setTimeout(loopMusic,700); }
+function setPadVol(v){ musicVol=Math.max(.04,Math.min(.1,(v||.03)*2.6)); }
+function startPad(){ if(musicOn)return; musicOn=true; try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();}catch(e){} loopMusic(); }
+function loopMusic(){ if(!musicOn)return; const sc=SCALES[musicMood]||SCALES.calm;
+  melIdx += (Math.random()<.5?-1:1)*(Math.random()<.72?1:2);
+  if(melIdx<0)melIdx=1; if(melIdx>sc.length-1)melIdx=sc.length-2;
+  bell(sc[melIdx],1.7,musicVol*(0.8+Math.random()*0.4));
+  if(Math.random()<.24) bell(sc[0]/2,2.6,musicVol*.5);   // bajo suave ocasional
+  musicTimer=setTimeout(loopMusic,600+Math.random()*260); }
 function stopPad(){ musicOn=false; if(musicTimer){clearTimeout(musicTimer);musicTimer=null;} }
 function setMood(m){ document.body.dataset.mood=(m==='hope'?'':m)||''; musicMood=m||'calm'; }
 let sectionMood='calm';
