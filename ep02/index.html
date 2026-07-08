@@ -584,21 +584,21 @@ function setMonitor(state,txt){ const m=$('#monitor'); m.className='monitor '+(s
 /* ===== motor cinemático auto-play ===== */
 function P(t){return t.replaceAll('[N]','<span class="nm">'+NAME+'</span>');}
 let cineT=[], cineActive=false, cineDone=null, padN=null;
-function setPadVol(v){ if(padN){try{padN.master.gain.linearRampToValueAtTime(v,AC.currentTime+1.4);}catch(e){}} }
-function startPad(){ if(padN){ setPadVol(.04); return; } try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended')AC.resume();
-  const t=AC.currentTime;
-  const master=AC.createGain(); master.gain.setValueAtTime(.0001,t); master.gain.linearRampToValueAtTime(.04,t+2.8); master.connect(AC.destination);
-  const lp=AC.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=950; lp.Q.value=.3; lp.connect(master);
-  const base=[130.81,164.81,196.00];  // Do mayor cálido, registro medio (sin sub-bajo que retumbe)
-  const oscs=base.map(fr=>{ const o=AC.createOscillator(); o.type='sine'; o.frequency.value=fr; const vg=AC.createGain(); vg.gain.value=.32; o.connect(vg); vg.connect(lp); o.start(t); return o; });
-  const lfo=AC.createOscillator(); lfo.type='sine'; lfo.frequency.value=0.1; const lfoG=AC.createGain(); lfoG.gain.value=.012; lfo.connect(lfoG); lfoG.connect(master.gain); lfo.start(t);
-  padN={master,lp,oscs,lfo}; }catch(e){} }
-function stopPad(){ if(!padN)return; try{ const t=AC.currentTime; padN.master.gain.linearRampToValueAtTime(0,t+1.1); const p=padN; setTimeout(()=>{try{p.oscs.forEach(o=>o.stop());p.lfo.stop();}catch(e){}},1300);}catch(e){} padN=null; }
-function setMood(m){ document.body.dataset.mood=m||''; if(!padN)return;
-  const cfg={ calm:{f:950,ch:[130.81,164.81,196.00]}, tense:{f:1200,ch:[130.81,155.56,196.00]}, dark:{f:620,ch:[98.00,116.54,146.83]}, hope:{f:1350,ch:[146.83,185.00,220.00]} };
-  const g=cfg[m]||cfg.calm; const t=AC.currentTime+1.5;
-  try{ padN.lp.frequency.linearRampToValueAtTime(g.f,t); padN.oscs.forEach((o,i)=>o.frequency.linearRampToValueAtTime(g.ch[i]||g.ch[0],t)); }catch(e){}
-}
+/* MÚSICA de fondo = melodía de campanas arpegiadas (no un drone/zumbido) */
+let musicOn=false, musicTimer=null, musicStep=0, musicMood='calm', musicVol=.09;
+const MUSIC={
+  calm: [261.63,329.63,392.00,523.25,392.00,329.63,293.66,349.23],
+  hope: [293.66,369.99,440.00,587.33,440.00,369.99,329.63,440.00],
+  tense:[261.63,311.13,392.00,466.16,392.00,311.13,293.66,311.13],
+  dark: [196.00,233.08,293.66,349.23,293.66,233.08,220.00,196.00]
+};
+function setPadVol(v){ musicVol=Math.max(.05,Math.min(.12,(v||.035)*2.6)); }
+function startPad(){ if(musicOn)return; musicOn=true; musicStep=0; try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();}catch(e){} loopMusic(); }
+function loopMusic(){ if(!musicOn)return; const seq=MUSIC[musicMood]||MUSIC.calm; const f=seq[musicStep%seq.length];
+  bell(f,1.7,musicVol); if(musicStep%seq.length===0) bell(f/2,2.6,musicVol*.55);
+  musicStep++; musicTimer=setTimeout(loopMusic,700); }
+function stopPad(){ musicOn=false; if(musicTimer){clearTimeout(musicTimer);musicTimer=null;} }
+function setMood(m){ document.body.dataset.mood=m||''; musicMood=m||'calm'; }
 let cineIdx=0, cineScenes=[];
 function cinematic(scenes,cb){
   cineActive=true; cineDone=cb; cineScenes=scenes; cineIdx=0;

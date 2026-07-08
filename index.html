@@ -1208,17 +1208,22 @@ function cDing(f){try{cAC=cAC||new (window.AudioContext||window.webkitAudioConte
   const oh=cAC.createOscillator(); oh.type='sine'; oh.frequency.value=(f||880)*2.01; const hg=cAC.createGain(); hg.gain.value=.22; oh.connect(hg); hg.connect(lp);
   o.start(t); oh.start(t); o.stop(t+.6); oh.stop(t+.6);
 }catch(e){}}
-function cSetPadVol(v){ if(cPad){try{cPad.master.gain.linearRampToValueAtTime(v,cAC.currentTime+1.4);}catch(e){}} }
-function cStartPad(){ if(cPad){cSetPadVol(.04);return;} try{cAC=cAC||new (window.AudioContext||window.webkitAudioContext)();if(cAC.state==='suspended')cAC.resume();
-  const t=cAC.currentTime;
-  const master=cAC.createGain();master.gain.setValueAtTime(.0001,t);master.gain.linearRampToValueAtTime(.04,t+2.8);master.connect(cAC.destination);
-  const lp=cAC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=950;lp.Q.value=.3;lp.connect(master);
-  const base=[130.81,164.81,196.00];  // Do mayor cálido, registro medio (sin sub-bajo)
-  const oscs=base.map(fr=>{const o=cAC.createOscillator();o.type='sine';o.frequency.value=fr;const vg=cAC.createGain();vg.gain.value=.32;o.connect(vg);vg.connect(lp);o.start(t);return o;});
-  const lfo=cAC.createOscillator();lfo.type='sine';lfo.frequency.value=0.1;const lfoG=cAC.createGain();lfoG.gain.value=.012;lfo.connect(lfoG);lfoG.connect(master.gain);lfo.start(t);
-  cPad={master,lp,oscs,lfo};}catch(e){}}
-function cSetMood(m){ if(!cPad)return; const cfg={calm:{f:950,ch:[130.81,164.81,196.00]},tense:{f:1200,ch:[130.81,155.56,196.00]},dark:{f:620,ch:[98,116.54,146.83]},hope:{f:1350,ch:[146.83,185,220]}}; const g=cfg[m]||cfg.calm; const t=cAC.currentTime+1.5; try{cPad.lp.frequency.linearRampToValueAtTime(g.f,t);cPad.oscs.forEach((o,i)=>o.frequency.linearRampToValueAtTime(g.ch[i]||g.ch[0],t));}catch(e){}}
-function cStopPad(){if(!cPad)return;try{const t=cAC.currentTime;cPad.master.gain.linearRampToValueAtTime(0,t+1.1);const p=cPad;setTimeout(()=>{try{p.oscs.forEach(o=>o.stop());p.lfo.stop();}catch(e){}},1300);}catch(e){}cPad=null;}
+function cBell(freq,dur,vol){try{cAC=cAC||new (window.AudioContext||window.webkitAudioContext)();if(cAC.state==='suspended')cAC.resume();
+  const t=cAC.currentTime, out=cAC.createGain(); out.connect(cAC.destination);
+  out.gain.setValueAtTime(.0001,t); out.gain.linearRampToValueAtTime(vol||.1,t+.012); out.gain.exponentialRampToValueAtTime(.0004,t+(dur||.5));
+  const lp=cAC.createBiquadFilter(); lp.type='lowpass'; lp.frequency.setValueAtTime(3000,t); lp.frequency.exponentialRampToValueAtTime(1100,t+(dur||.5)); lp.connect(out);
+  const o=cAC.createOscillator(); o.type='sine'; o.frequency.value=freq; o.connect(lp);
+  const oh=cAC.createOscillator(); oh.type='sine'; oh.frequency.value=freq*2.01; const hg=cAC.createGain(); hg.gain.value=.22; oh.connect(hg); hg.connect(lp);
+  o.start(t); oh.start(t); o.stop(t+(dur||.5)+.05); oh.stop(t+(dur||.5)+.05);
+}catch(e){}}
+/* MÚSICA de fondo = melodía de campanas arpegiadas (no un drone/zumbido) */
+let cMusicOn=false,cMusicTimer=null,cStep=0,cMood='calm',cVol=.09;
+const CMUSIC={ calm:[261.63,329.63,392.00,523.25,392.00,329.63,293.66,349.23], hope:[293.66,369.99,440.00,587.33,440.00,369.99,329.63,440.00], tense:[261.63,311.13,392.00,466.16,392.00,311.13,293.66,311.13], dark:[196.00,233.08,293.66,349.23,293.66,233.08,220.00,196.00] };
+function cSetPadVol(v){ cVol=Math.max(.05,Math.min(.12,(v||.035)*2.6)); }
+function cStartPad(){ if(cMusicOn)return; cMusicOn=true; cStep=0; try{cAC=cAC||new (window.AudioContext||window.webkitAudioContext)();if(cAC.state==='suspended')cAC.resume();}catch(e){} cLoop(); }
+function cLoop(){ if(!cMusicOn)return; const seq=CMUSIC[cMood]||CMUSIC.calm; const f=seq[cStep%seq.length]; cBell(f,1.7,cVol); if(cStep%seq.length===0)cBell(f/2,2.6,cVol*.55); cStep++; cMusicTimer=setTimeout(cLoop,700); }
+function cSetMood(m){ cMood=m||'calm'; }
+function cStopPad(){ cMusicOn=false; if(cMusicTimer){clearTimeout(cMusicTimer);cMusicTimer=null;} }
 let cineIdx=0, cineScenes=[];
 function cinematic(scenes,cb){
   cineActive=true;cineDone=cb;cineScenes=scenes;cineIdx=0;
