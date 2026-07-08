@@ -912,7 +912,11 @@
   .rbucket:hover{border-color:var(--indigo)}
   .rbh{font-size:12.5px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
   .rbitems{display:flex;flex-direction:column;gap:6px}
-  .rchip{font-size:12px;background:var(--green-dim);border:1px solid rgba(63,208,127,.3);border-radius:8px;padding:6px 9px;cursor:pointer}
+  .rchip{font-size:12px;background:var(--ink-4);border:1px solid var(--line-2);border-radius:8px;padding:6px 9px;cursor:pointer;transition:.15s}
+  .rchip.ok{background:var(--green-dim);border-color:rgba(63,208,127,.4)}
+  .rchip.bad{background:var(--red-dim);border-color:var(--red);color:#fff}
+  .rslot.bad{border-color:var(--red)!important;background:rgba(255,107,122,.07)}
+  .rslot.bad .rnum{background:var(--red);color:#fff}
   .reto-fb{display:none;font-size:13px;line-height:1.5;border-radius:11px;padding:11px 13px;margin:12px 0}
   .reto-fb.show{display:block} .reto-fb.ok{background:var(--green-dim);border:1px solid rgba(63,208,127,.35);color:var(--text)} .reto-fb.bad{background:var(--amber-dim);border:1px solid rgba(255,180,84,.3);color:var(--text)}
   .reto-check{width:100%;padding:14px;border-radius:12px;background:var(--ink-3);color:var(--muted-2);font-weight:800;font-size:15px;border:1px solid var(--line-2);cursor:not-allowed;transition:.16s}
@@ -2235,7 +2239,8 @@ function retoBody(n){
   if(c.type==='sequence'){
     h+='<div class="reto-slots">';
     c.slots.forEach((s,i)=>{ const pid=st.placed[i], p=pid?c.pieces.find(x=>x.id===pid):null;
-      h+=`<button class="rslot${p?' filled':''}${st.sel===i?' sel':''}" onclick="retoSelSlot(${n},${i})"><span class="rnum">${p?'✓':(i+1)}</span><span class="rbody"><span class="rhint">${rEsc(s.hint)}</span>${p?`<span class="rfill"><span class="ric">${p.ic}</span><b>${rEsc(p.name)}</b></span>`:'<span class="rempty">toca y elige la pieza</span>'}</span>${p?`<span class="rx" onclick="event.stopPropagation();retoClear(${n},${i})">×</span>`:''}</button>`;
+      const mk=st.marks?st.marks[i]:''; const cls=mk==='bad'?' bad':(p?' filled':'');
+      h+=`<button class="rslot${cls}${st.sel===i?' sel':''}" onclick="retoSelSlot(${n},${i})"><span class="rnum">${mk==='bad'?'✗':(p?'✓':(i+1))}</span><span class="rbody"><span class="rhint">${rEsc(s.hint)}</span>${p?`<span class="rfill"><span class="ric">${p.ic}</span><b>${rEsc(p.name)}</b></span>`:'<span class="rempty">toca y elige la pieza</span>'}</span>${p?`<span class="rx" onclick="event.stopPropagation();retoClear(${n},${i})">×</span>`:''}</button>`;
       if(i<c.slots.length-1) h+='<div class="rconn">▼</div>';
     });
     h+='</div><div class="reto-tray">';
@@ -2248,7 +2253,7 @@ function retoBody(n){
     if(!anyPool) h+='<span style="color:var(--muted-2);font-size:12.5px">Todo clasificado — pulsa Comprobar.</span>';
     h+='</div><div class="reto-buckets">';
     c.buckets.forEach(b=>{ h+=`<div class="rbucket" onclick="retoDrop(${n},'${b.id}')"><div class="rbh"><span>${b.ic}</span> ${rEsc(b.label)}</div><div class="rbitems">`;
-      Object.keys(st.placed).forEach(iid=>{ if(st.placed[iid]===b.id){ const it=c.items.find(x=>x.id===iid); h+=`<span class="rchip" onclick="event.stopPropagation();retoUnplace(${n},'${iid}')">${it.ic} ${rEsc(it.name)} ×</span>`; } });
+      Object.keys(st.placed).forEach(iid=>{ if(st.placed[iid]===b.id){ const it=c.items.find(x=>x.id===iid); const mk=st.marks?st.marks[iid]:''; h+=`<span class="rchip${mk==='bad'?' bad':mk==='ok'?' ok':''}" onclick="event.stopPropagation();retoUnplace(${n},'${iid}')">${it.ic} ${rEsc(it.name)} ${mk==='bad'?'✗':'×'}</span>`; } });
       h+='</div></div>'; });
     h+='</div>';
   }
@@ -2259,11 +2264,11 @@ function retoBody(n){
 }
 function retoSelSlot(n,i){ if(RS[n].done)return; RS[n].sel=i; rDing(620); retoRender(n); }
 function retoPlace(n,pid){ const st=RS[n]; if(st.done)return; let i=st.sel; if(i==null||st.placed[i]) i=st.placed.findIndex(x=>!x); if(i<0)return;
-  st.placed[i]=pid; const nx=st.placed.findIndex(x=>!x); st.sel=nx<0?i:nx; rDing(820); retoRender(n); }
-function retoClear(n,i){ if(RS[n].done)return; RS[n].placed[i]=null; RS[n].sel=i; rDing(430); retoRender(n); }
+  st.placed[i]=pid; st.marks=null; const nx=st.placed.findIndex(x=>!x); st.sel=nx<0?i:nx; rDing(820); retoRender(n); }
+function retoClear(n,i){ if(RS[n].done)return; RS[n].placed[i]=null; RS[n].marks=null; RS[n].sel=i; rDing(430); retoRender(n); }
 function retoSelItem(n,id){ if(RS[n].done)return; RS[n].sel=id; rDing(620); retoRender(n); }
-function retoDrop(n,b){ const st=RS[n]; if(st.done||st.sel==null)return; st.placed[st.sel]=b; st.sel=null; rDing(820); retoRender(n); }
-function retoUnplace(n,id){ if(RS[n].done)return; delete RS[n].placed[id]; rDing(430); retoRender(n); }
+function retoDrop(n,b){ const st=RS[n]; if(st.done||st.sel==null)return; st.placed[st.sel]=b; st.marks=null; st.sel=null; rDing(820); retoRender(n); }
+function retoUnplace(n,id){ if(RS[n].done)return; delete RS[n].placed[id]; RS[n].marks=null; rDing(430); retoRender(n); }
 function retoCheck(n){ const c=INTERACT[n], st=RS[n]; if(!retoReady(n))return;
   let ok=true, msg='';
   if(c.type==='sequence'){
@@ -2271,7 +2276,13 @@ function retoCheck(n){ const c=INTERACT[n], st=RS[n]; if(!retoReady(n))return;
     else if(!st.placed.every((pid,i)=>pid===c.slots[i].accept)){ ok=false; msg=c.fails.order; }
   } else { if(!c.items.every(it=>st.placed[it.id]===it.bucket)){ ok=false; msg=c.fails.sort; } }
   if(ok){ retoWin(n); return; }
-  const fb=document.getElementById('retoFb-'+n); if(fb){ fb.className='reto-fb show bad'; fb.innerHTML='⚠️ '+rEsc(msg); }
+  // marcar en rojo/verde lo que quedó mal/bien para que el usuario sepa qué mover
+  st.marks={};
+  if(c.type==='sequence') st.placed.forEach((pid,i)=>{ st.marks[i]=(pid===c.slots[i].accept)?'ok':'bad'; });
+  else c.items.forEach(it=>{ st.marks[it.id]=(st.placed[it.id]===it.bucket)?'ok':'bad'; });
+  const bad=Object.values(st.marks).filter(v=>v==='bad').length;
+  retoRender(n);
+  const fb=document.getElementById('retoFb-'+n); if(fb){ fb.className='reto-fb show bad'; fb.innerHTML='⚠️ '+rEsc(msg)+` <b>Lo marcado en rojo (${bad}) está mal ubicado</b> — muévelo y vuelve a comprobar.`; }
   const host=document.getElementById('reto-'+n); if(host){ host.classList.add('shake'); setTimeout(()=>host.classList.remove('shake'),450); }
   rDing(190);
 }
