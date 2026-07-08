@@ -923,6 +923,27 @@
   .reto-check.on{background:linear-gradient(135deg,var(--indigo),var(--indigo-2));color:#fff;cursor:pointer;box-shadow:0 10px 24px -12px var(--indigo)}
   .reto-check.on:hover{transform:translateY(-1px)}
   .tab[data-t="reto"]{color:var(--amber)}
+  .reto-hint2{font-size:12px;color:var(--muted-2);margin:12px 0 4px}
+  .reto-match{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 2px}
+  .mcol{display:flex;flex-direction:column;gap:8px}
+  .mrow{position:relative;display:flex;align-items:center;gap:7px;text-align:left;background:var(--ink-3);border:1px solid var(--line-2);border-radius:11px;padding:10px 11px;font-size:12px;font-weight:600;line-height:1.3;transition:.15s;min-height:48px}
+  .mrow:hover{border-color:var(--indigo)}
+  .mrow .ric{font-size:16px;flex:none} .mrow .mtxt{min-width:0}
+  .mrow.sel{border-color:var(--amber);box-shadow:0 0 0 2px var(--amber-dim)}
+  .mrow.done{background:var(--indigo-dim);border-color:rgba(139,123,255,.45)}
+  .mrow.ok{background:var(--green-dim);border-color:rgba(63,208,127,.4)}
+  .mrow.bad{background:var(--red-dim);border-color:var(--red)}
+  .mrow .mbadge{position:absolute;top:-8px;right:-8px;width:21px;height:21px;border-radius:50%;background:var(--indigo);color:#fff;font-size:11px;display:grid;place-items:center;font-weight:800;border:2px solid var(--ink)}
+  .mrow.ok .mbadge{background:var(--green);color:#04120a} .mrow.bad .mbadge{background:var(--red)}
+  .scen{margin:14px 0}
+  .scen-prog{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin-bottom:9px}
+  .scen-q{font-size:15px;line-height:1.5;margin-bottom:14px;background:var(--ink-2);border:1px solid var(--line-2);border-left:3px solid var(--indigo);border-radius:11px;padding:13px 14px}
+  .scen-opts{display:flex;flex-direction:column;gap:9px}
+  .scen-opt{text-align:left;background:var(--ink-3);border:1px solid var(--line-2);border-radius:11px;padding:12px 14px;font-size:13.5px;font-weight:600;transition:.15s}
+  .scen-opt:hover:not(:disabled){border-color:var(--indigo);transform:translateY(-1px)}
+  .scen-opt:disabled{opacity:.55;cursor:default}
+  .scen-opt.bad{border-color:var(--red);background:var(--red-dim);opacity:1}
+  .scen-opt.good{border-color:var(--green);background:var(--green-dim);opacity:1}
 </style>
 <div id="vaultAssets" style="display:none" aria-hidden="true">
 <!-- ================= BÓVEDA DEL ACELERADOR · 20 assets copiables ================= -->
@@ -2219,23 +2240,29 @@ function rEsc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;'
 function rDing(f){ try{ if(typeof cDing==='function') cDing(f||760); }catch(e){} }
 function rWinSound(){ try{ if(typeof cBell==='function'){ cBell(523.25,.5,.1); setTimeout(()=>cBell(659.25,.5,.1),90); setTimeout(()=>cBell(783.99,.6,.11),185);} }catch(e){} }
 const RS={};
+function rShuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i];a[i]=a[j];a[j]=t; } return a; }
 function hasReto(n){ return !!INTERACT[n]; }
 function retoIsDone(n){ try{ return localStorage.getItem('hyperflow_reto_'+n)==='1'; }catch(e){ return false; } }
-function retoInit(n){ const c=INTERACT[n]; if(!c||RS[n])return; const solved=retoIsDone(n);
-  if(c.type==='sequence') RS[n]={placed: solved?c.slots.map(s=>s.accept):c.slots.map(()=>null), sel:0, done:solved};
-  else { const placed={}; if(solved)c.items.forEach(it=>placed[it.id]=it.bucket); RS[n]={placed, sel:null, done:solved}; }
+function retoNew(n,solved){ const c=INTERACT[n];
+  if(c.type==='sequence') return {placed: solved?c.slots.map(s=>s.accept):c.slots.map(()=>null), sel:0, done:!!solved, order:rShuffle(c.pieces.map(p=>p.id))};
+  if(c.type==='sort'){ const placed={}; if(solved)c.items.forEach(it=>placed[it.id]=it.bucket); return {placed, sel:null, done:!!solved, pool:rShuffle(c.items.map(it=>it.id))}; }
+  if(c.type==='scenario') return {round:0, picked:null, goodFb:null, wrongPick:null, done:!!solved, order:c.rounds.map(r=>rShuffle(r.options.map((o,i)=>i)))};
+  const matches={}, matchOrder=[]; if(solved)c.pairs.forEach((p,i)=>{matches[i]=i;matchOrder.push(i);});
+  return {matches, matchOrder, sel:null, done:!!solved, left:rShuffle(c.pairs.map((p,i)=>i)), right:rShuffle(c.pairs.map((p,i)=>i))};
 }
-function retoReset(n){ const c=INTERACT[n];
-  if(c.type==='sequence') RS[n]={placed:c.slots.map(()=>null), sel:0, done:false};
-  else RS[n]={placed:{}, sel:null, done:false};
-  retoRender(n);
-}
+function retoInit(n){ const c=INTERACT[n]; if(!c||RS[n])return; RS[n]=retoNew(n,retoIsDone(n)); }
+function retoReset(n){ RS[n]=retoNew(n,false); retoRender(n); }
+function matchBadge(st,li){ return st.matchOrder?(st.matchOrder.indexOf(li)+1):0; }
 function retoReady(n){ const c=INTERACT[n], st=RS[n]; if(!st||st.done)return false;
-  return c.type==='sequence' ? st.placed.every(Boolean) : c.items.every(it=>st.placed[it.id]); }
+  if(c.type==='sequence') return st.placed.every(Boolean);
+  if(c.type==='sort') return c.items.every(it=>st.placed[it.id]);
+  if(c.type==='match') return Object.keys(st.matches).length===c.pairs.length;
+  return false; /* scenario no usa Comprobar */ }
 function retoRender(n){ const host=document.getElementById('reto-'+n); if(host) host.innerHTML=retoBody(n); }
 function retoBody(n){
   const c=INTERACT[n], st=RS[n];
   let h=`<div class="reto-head"><span class="reto-badge">🎮 Reto interactivo</span><h3>${rEsc(c.title)}</h3><p>${rEsc(c.intro)}</p></div>`;
+  if(c.type==='scenario') return h+scenarioBody(n);
   if(c.type==='sequence'){
     h+='<div class="reto-slots">';
     c.slots.forEach((s,i)=>{ const pid=st.placed[i], p=pid?c.pieces.find(x=>x.id===pid):null;
@@ -2244,22 +2271,43 @@ function retoBody(n){
       if(i<c.slots.length-1) h+='<div class="rconn">▼</div>';
     });
     h+='</div><div class="reto-tray">';
-    c.pieces.forEach(p=>{ const used=st.placed.includes(p.id);
+    (st.order||c.pieces.map(p=>p.id)).forEach(pid=>{ const p=c.pieces.find(x=>x.id===pid); const used=st.placed.includes(p.id);
       h+=`<button class="rpiece${used?' used':''}" ${used?'disabled':`onclick="retoPlace(${n},'${p.id}')"`}><span class="ric">${p.ic}</span><span>${rEsc(p.name)}</span></button>`; });
     h+='</div>';
-  } else {
+  } else if(c.type==='sort'){
     h+='<div class="reto-pool">'; let anyPool=false;
-    c.items.forEach(it=>{ if(st.placed[it.id])return; anyPool=true; h+=`<button class="ritem${st.sel===it.id?' sel':''}" onclick="retoSelItem(${n},'${it.id}')"><span class="ric">${it.ic}</span>${rEsc(it.name)}</button>`; });
+    (st.pool||c.items.map(it=>it.id)).forEach(iid=>{ const it=c.items.find(x=>x.id===iid); if(st.placed[it.id])return; anyPool=true; h+=`<button class="ritem${st.sel===it.id?' sel':''}" onclick="retoSelItem(${n},'${it.id}')"><span class="ric">${it.ic}</span>${rEsc(it.name)}</button>`; });
     if(!anyPool) h+='<span style="color:var(--muted-2);font-size:12.5px">Todo clasificado — pulsa Comprobar.</span>';
     h+='</div><div class="reto-buckets">';
     c.buckets.forEach(b=>{ h+=`<div class="rbucket" onclick="retoDrop(${n},'${b.id}')"><div class="rbh"><span>${b.ic}</span> ${rEsc(b.label)}</div><div class="rbitems">`;
       Object.keys(st.placed).forEach(iid=>{ if(st.placed[iid]===b.id){ const it=c.items.find(x=>x.id===iid); const mk=st.marks?st.marks[iid]:''; h+=`<span class="rchip${mk==='bad'?' bad':mk==='ok'?' ok':''}" onclick="event.stopPropagation();retoUnplace(${n},'${iid}')">${it.ic} ${rEsc(it.name)} ${mk==='bad'?'✗':'×'}</span>`; } });
       h+='</div></div>'; });
     h+='</div>';
+  } else if(c.type==='match'){
+    h+='<div class="reto-hint2">Une cada tarjeta de la izquierda con su pareja de la derecha.</div><div class="reto-match"><div class="mcol">';
+    st.left.forEach(li=>{ const matched=st.matches[li]!=null; const mk=st.marks?st.marks['l'+li]:''; const bd=matched?matchBadge(st,li):0;
+      h+=`<button class="mrow${st.sel&&st.sel.s==='l'&&st.sel.i===li?' sel':''}${matched?' done':''}${mk==='bad'?' bad':mk==='ok'?' ok':''}" onclick="matchTap(${n},'l',${li})"><span class="ric">${c.pairs[li].l.ic||''}</span><span class="mtxt">${rEsc(c.pairs[li].l.txt)}</span>${matched?`<span class="mbadge">${bd}</span>`:''}</button>`; });
+    h+='</div><div class="mcol">';
+    st.right.forEach(ri=>{ const li=matchOwner(st,ri); const matched=li!=null; const mk=st.marks?st.marks['r'+ri]:''; const bd=matched?matchBadge(st,li):0;
+      h+=`<button class="mrow${st.sel&&st.sel.s==='r'&&st.sel.i===ri?' sel':''}${matched?' done':''}${mk==='bad'?' bad':mk==='ok'?' ok':''}" onclick="matchTap(${n},'r',${ri})"><span class="ric">${c.pairs[ri].r.ic||''}</span><span class="mtxt">${rEsc(c.pairs[ri].r.txt)}</span>${matched?`<span class="mbadge">${bd}</span>`:''}</button>`; });
+    h+='</div></div>';
   }
   h+=`<div class="reto-fb${st.done?' show ok':''}" id="retoFb-${n}">${st.done?('✅ <b>'+rEsc(c.win.msg)+'</b>'):''}</div>`;
   if(st.done) h+=`<button class="reto-check on" onclick="retoReset(${n})">↺ Rehacer el reto</button>`;
   else { const ready=retoReady(n); h+=`<button class="reto-check${ready?' on':''}" onclick="retoCheck(${n})"${ready?'':' disabled'}>Comprobar</button>`; }
+  return h;
+}
+function scenarioBody(n){ const c=INTERACT[n], st=RS[n];
+  if(st.done) return `<div class="reto-fb show ok">✅ <b>${rEsc(c.win.msg)}</b></div><button class="reto-check on" onclick="retoReset(${n})">↺ Rehacer el reto</button>`;
+  const r=c.rounds[st.round], last=st.round>=c.rounds.length-1;
+  let h=`<div class="scen"><div class="scen-prog">⚡ Caso ${st.round+1} de ${c.rounds.length}</div><div class="scen-q">${r.ic?r.ic+' ':''}${rEsc(r.q)}</div><div class="scen-opts">`;
+  const ord=(st.order&&st.order[st.round])||r.options.map((o,i)=>i);
+  ord.forEach(oi=>{ const o=r.options[oi], bad=st.wrongPick===oi, good=st.goodFb!=null&&st.picked===oi;
+    h+=`<button class="scen-opt${bad?' bad':''}${good?' good':''}" ${st.goodFb!=null?'disabled':''} onclick="scenPick(${n},${oi})">${rEsc(o.t)}</button>`; });
+  h+='</div>';
+  if(st.wrongPick!=null) h+=`<div class="reto-fb show bad">⚠️ ${rEsc(r.options[st.wrongPick].fb)}</div>`;
+  if(st.goodFb!=null){ h+=`<div class="reto-fb show ok">✅ ${rEsc(st.goodFb)}</div><button class="reto-check on" onclick="scenNext(${n})">${last?'Terminar el reto ✓':'Siguiente caso →'}</button>`; }
+  h+='</div>';
   return h;
 }
 function retoSelSlot(n,i){ if(RS[n].done)return; RS[n].sel=i; rDing(620); retoRender(n); }
@@ -2269,20 +2317,36 @@ function retoClear(n,i){ if(RS[n].done)return; RS[n].placed[i]=null; RS[n].marks
 function retoSelItem(n,id){ if(RS[n].done)return; RS[n].sel=id; rDing(620); retoRender(n); }
 function retoDrop(n,b){ const st=RS[n]; if(st.done||st.sel==null)return; st.placed[st.sel]=b; st.marks=null; st.sel=null; rDing(820); retoRender(n); }
 function retoUnplace(n,id){ if(RS[n].done)return; delete RS[n].placed[id]; RS[n].marks=null; rDing(430); retoRender(n); }
+/* match */
+function matchOwner(st,ri){ const k=Object.keys(st.matches).find(k=>st.matches[k]==ri); return k==null?null:+k; }
+function pairMatch(st,li,ri){ const prev=matchOwner(st,ri); if(prev!=null)removeMatch(st,prev); st.matches[li]=ri; st.matchOrder=st.matchOrder.filter(x=>x!==li); st.matchOrder.push(li); }
+function removeMatch(st,li){ delete st.matches[li]; st.matchOrder=st.matchOrder.filter(x=>x!==li); }
+function matchTap(n,side,i){ const st=RS[n]; if(st.done)return; st.marks=null;
+  if(side==='l'){ if(st.matches[i]!=null){ removeMatch(st,i); st.sel=null; } else if(st.sel&&st.sel.s==='r'){ pairMatch(st,i,st.sel.i); st.sel=null; } else st.sel={s:'l',i:i}; }
+  else { const li=matchOwner(st,i); if(li!=null){ removeMatch(st,li); st.sel=null; } else if(st.sel&&st.sel.s==='l'){ pairMatch(st,st.sel.i,i); st.sel=null; } else st.sel={s:'r',i:i}; }
+  rDing(700); retoRender(n); }
+/* scenario */
+function scenPick(n,oi){ const c=INTERACT[n], st=RS[n]; if(st.done||st.goodFb!=null)return; const o=c.rounds[st.round].options[oi];
+  if(o.ok){ st.wrongPick=null; st.goodFb=o.fb; st.picked=oi; rDing(880); retoRender(n); }
+  else { st.wrongPick=oi; rDing(190); retoRender(n); const host=document.getElementById('reto-'+n); if(host){host.classList.add('shake'); setTimeout(()=>host.classList.remove('shake'),450);} } }
+function scenNext(n){ const c=INTERACT[n], st=RS[n]; st.goodFb=null; st.wrongPick=null; st.picked=null;
+  if(st.round>=c.rounds.length-1){ retoWin(n); } else { st.round++; retoRender(n); } }
 function retoCheck(n){ const c=INTERACT[n], st=RS[n]; if(!retoReady(n))return;
   let ok=true, msg='';
   if(c.type==='sequence'){
     if(st.placed.some(pid=>{ const p=c.pieces.find(x=>x.id===pid); return p&&p.distractor; })){ ok=false; msg=c.fails.distractor; }
     else if(!st.placed.every((pid,i)=>pid===c.slots[i].accept)){ ok=false; msg=c.fails.order; }
-  } else { if(!c.items.every(it=>st.placed[it.id]===it.bucket)){ ok=false; msg=c.fails.sort; } }
+  } else if(c.type==='sort'){ if(!c.items.every(it=>st.placed[it.id]===it.bucket)){ ok=false; msg=c.fails.sort; } }
+  else if(c.type==='match'){ if(!Object.keys(st.matches).every(li=>st.matches[li]==li)){ ok=false; msg=c.fails.match; } }
   if(ok){ retoWin(n); return; }
-  // marcar en rojo/verde lo que quedó mal/bien para que el usuario sepa qué mover
+  // marcar en rojo/verde para que el usuario sepa qué corregir
   st.marks={};
   if(c.type==='sequence') st.placed.forEach((pid,i)=>{ st.marks[i]=(pid===c.slots[i].accept)?'ok':'bad'; });
-  else c.items.forEach(it=>{ st.marks[it.id]=(st.placed[it.id]===it.bucket)?'ok':'bad'; });
+  else if(c.type==='sort') c.items.forEach(it=>{ st.marks[it.id]=(st.placed[it.id]===it.bucket)?'ok':'bad'; });
+  else Object.keys(st.matches).forEach(li=>{ const good=(st.matches[li]==li); st.marks['l'+li]=good?'ok':'bad'; st.marks['r'+st.matches[li]]=good?'ok':'bad'; });
   const bad=Object.values(st.marks).filter(v=>v==='bad').length;
   retoRender(n);
-  const fb=document.getElementById('retoFb-'+n); if(fb){ fb.className='reto-fb show bad'; fb.innerHTML='⚠️ '+rEsc(msg)+` <b>Lo marcado en rojo (${bad}) está mal ubicado</b> — muévelo y vuelve a comprobar.`; }
+  const fb=document.getElementById('retoFb-'+n); if(fb){ fb.className='reto-fb show bad'; fb.innerHTML='⚠️ '+rEsc(msg)+` <b>Lo marcado en rojo está mal</b> — corrígelo y vuelve a comprobar.`; }
   const host=document.getElementById('reto-'+n); if(host){ host.classList.add('shake'); setTimeout(()=>host.classList.remove('shake'),450); }
   rDing(190);
 }
@@ -2291,10 +2355,15 @@ function retoWin(n){ const c=INTERACT[n]; RS[n].done=true; try{ localStorage.set
   if(typeof showToast==='function') showToast(c.win.medal[1],'🎮 '+c.win.medal[0],'+'+c.win.xp+' XP · reto interactivo superado');
 }
 /* API de test: resuelve el reto (bien o mal) y devuelve si gana */
-function retoSolveTEST(n,wrong){ const c=INTERACT[n]; if(!c)return null; if(!RS[n])retoInit(n); const st=RS[n]; st.done=false;
-  if(c.type==='sequence'){ st.placed=c.slots.map((s,i)=> wrong ? c.slots[(i+1)%c.slots.length].accept : s.accept); }
-  else { st.placed={}; c.items.forEach(it=>{ const bi=c.buckets.findIndex(b=>b.id===it.bucket); st.placed[it.id]= wrong ? c.buckets[(bi+1)%c.buckets.length].id : it.bucket; }); }
-  retoCheck(n); return st.done; }
+function retoSolveTEST(n,wrong){ const c=INTERACT[n]; if(!c)return null; if(!RS[n])retoInit(n); const st=RS[n]; st.done=false; st.marks=null;
+  if(c.type==='sequence'){ st.placed=c.slots.map((s,i)=> wrong ? c.slots[(i+1)%c.slots.length].accept : s.accept); retoCheck(n); return st.done; }
+  if(c.type==='sort'){ st.placed={}; c.items.forEach(it=>{ const bi=c.buckets.findIndex(b=>b.id===it.bucket); st.placed[it.id]= wrong ? c.buckets[(bi+1)%c.buckets.length].id : it.bucket; }); retoCheck(n); return st.done; }
+  if(c.type==='match'){ st.matches={}; st.matchOrder=[]; c.pairs.forEach((p,i)=>{ st.matches[i]= wrong ? (i+1)%c.pairs.length : i; st.matchOrder.push(i); }); retoCheck(n); return st.done; }
+  // scenario: recorre las rondas de verdad usando scenPick/scenNext
+  RS[n]=retoNew(n,false); const s=RS[n];
+  if(wrong){ const r0=c.rounds[0]; const badI=r0.options.findIndex(o=>!o.ok); if(badI<0) return null; scenPick(n,badI); return s.done===true; }
+  for(let ri=0; ri<c.rounds.length; ri++){ const okI=c.rounds[s.round].options.findIndex(o=>o.ok); if(okI<0) return null; scenPick(n,okI); if(s.goodFb==null) return false; scenNext(n); }
+  return s.done; }
 
 /* ---- Retos por episodio (piloto: EP3 y EP4; resto se añade con la misma estructura) ---- */
 const INTERACT={
@@ -2323,21 +2392,43 @@ const INTERACT={
    ],
    win:{medal:['Maestro del Arsenal','🎨'],xp:50,msg:'Cada trabajo con su herramienta: texto con LLM, arte con generadores de imagen, y presencia con video/voz. Eso es tener un arsenal.'},
    fails:{ sort:'Casi. Pista: chatear, redactar o resumir = LLM de texto; crear gráficos = imagen; hablar o aparecer en cámara = video y voz. Revisa las que quedaron mal.' } },
- 5:{ type:'sequence', title:'Arma la anatomía de un agente', intro:'Un agente no es un chatbot. Coloca sus 4 partes en orden y entenderás por qué puede actuar solo (sobra 1 que no es parte del agente).',
-   slots:[ {hint:'1 · ¿Qué lo DISPARA?',accept:'trigger'}, {hint:'2 · ¿Su CEREBRO?',accept:'llm'}, {hint:'3 · ¿Sus HERRAMIENTAS?',accept:'tools'}, {hint:'4 · ¿Qué DEVUELVE?',accept:'out'} ],
-   pieces:[ {id:'trigger',ic:'📩',name:'Disparador que lo inicia'}, {id:'llm',ic:'🧠',name:'Modelo de IA que razona'}, {id:'tools',ic:'🔧',name:'Herramientas/APIs que ejecuta'}, {id:'out',ic:'📤',name:'Respuesta o acción final'}, {id:'x',ic:'🖼️',name:'Un fondo de pantalla bonito',distractor:true} ],
-   win:{medal:['Agente n8n','🤖'],xp:55,msg:'Agente = disparador + cerebro que decide + herramientas para actuar + una salida. Eso es orquestar, no solo conectar cajitas.'},
-   fails:{ order:'Casi. El flujo es: algo lo DISPARA, el CEREBRO (IA) decide, usa sus HERRAMIENTAS y entrega una SALIDA.', distractor:'Un fondo de pantalla no es parte de un agente. Sácalo y usa las 4 piezas que sí lo forman.' } },
- 6:{ type:'sort', title:'Clasifica los módulos de Make', intro:'Todo escenario de Make se arma con 3 tipos de módulo. Toca cada uno y llévalo a su categoría.',
-   buckets:[ {id:'disparo',ic:'⚡',label:'Disparadores (inician)'}, {id:'accion',ic:'▶️',label:'Acciones (hacen algo)'}, {id:'ia',ic:'🧠',label:'IA (entienden)'} ],
-   items:[ {id:'i1',ic:'📨',name:'Watch: llega un email nuevo',bucket:'disparo'}, {id:'i2',ic:'📝',name:'Nuevo registro en un formulario',bucket:'disparo'}, {id:'i3',ic:'💬',name:'Enviar mensaje de WhatsApp',bucket:'accion'}, {id:'i4',ic:'📊',name:'Crear fila en Google Sheets',bucket:'accion'}, {id:'i5',ic:'🔍',name:'Analizar el texto con GPT',bucket:'ia'}, {id:'i6',ic:'📄',name:'Resumir un documento',bucket:'ia'} ],
-   win:{medal:['Arquitecto de escenarios','🧩'],xp:50,msg:'Disparador → (IA que entiende) → Acción. Ese es el esqueleto de cualquier escenario de Make.'},
-   fails:{ sort:'Casi. “Watch/llega/nuevo” = disparador; “enviar/crear” = acción; “analizar/resumir” = IA. Revisa las que quedaron mal.' } },
- 7:{ type:'sequence', title:'El ciclo del vibe coding', intro:'Programar con IA no es magia: es dirigirla con método. Ordena el ciclo (sobra 1 que es un mal hábito).',
-   slots:[ {hint:'1 · EMPIEZA por',accept:'idea'}, {hint:'2 · luego',accept:'prompt'}, {hint:'3 · después',accept:'gen'}, {hint:'4 · y',accept:'test'} ],
-   pieces:[ {id:'idea',ic:'💡',name:'Describe la idea y el objetivo'}, {id:'prompt',ic:'✍️',name:'Escribe un prompt claro'}, {id:'gen',ic:'🤖',name:'La IA genera el código'}, {id:'test',ic:'🧪',name:'Pruebas y pides ajustes'}, {id:'x',ic:'📋',name:'Copiar código ajeno sin leerlo',distractor:true} ],
-   win:{medal:['Vibe Coder','⚡'],xp:55,msg:'Idea → prompt → generar → probar e iterar. Con criterio, la IA multiplica; sin criterio, multiplica el desastre.'},
-   fails:{ order:'Casi. Primero la IDEA, luego el PROMPT, después la IA GENERA y por último PRUEBAS e iteras.', distractor:'Copiar código sin leerlo es la receta del desastre. Sácalo del flujo.' } },
+ 5:{ type:'scenario', title:'Decisiones al construir tu primer agente', intro:'Tu jefe quiere un agente que procese pedidos. Toma las decisiones correctas: cada una tiene su consecuencia.',
+   rounds:[
+     {ic:'🧩', q:'El agente debe arrancar cuando llega un pedido nuevo por email. ¿Qué pones primero?', options:[
+       {t:'Un disparador que vigila la bandeja de entrada', ok:true, fb:'Exacto: sin disparador, el agente nunca se entera de que hay trabajo.'},
+       {t:'Directo la acción de guardar en el sistema', ok:false, fb:'¿Guardar qué? Todavía no llegó nada. Primero va el disparador que inicia el flujo.'},
+       {t:'Un mensaje de bienvenida al cliente', ok:false, fb:'Bonito, pero no procesa nada. Lo primero es el disparador.'} ]},
+     {ic:'🧠', q:'El pedido llega en texto libre y cada cliente escribe distinto. ¿Cómo lo entiende?', options:[
+       {t:'Con un modelo de IA que interpreta el texto', ok:true, fb:'Sí: la IA entiende aunque el formato cambie. Ese es el cerebro del agente.'},
+       {t:'Con reglas fijas del tipo "si dice X entonces Y"', ok:false, fb:'Se rompe con el primer cliente que escribe distinto. Necesitas IA que interprete.'} ]},
+     {ic:'📤', q:'Ya entendió el pedido. ¿Qué hace al final?', options:[
+       {t:'Usa una herramienta para guardarlo en el sistema', ok:true, fb:'Perfecto: entender sin actuar no sirve. La herramienta ejecuta la acción real.'},
+       {t:'Nada más, con haberlo entendido alcanza', ok:false, fb:'Entender no es resolver. El agente debe ejecutar una acción con sus herramientas.'} ]}
+   ],
+   win:{medal:['Agente n8n','🤖'],xp:60,msg:'Disparador que inicia, IA que entiende, herramienta que actúa. Acabas de diseñar un agente de verdad, no un chatbot.'}, fails:{} },
+ 6:{ type:'match', title:'Empareja cada módulo de Make con su función', intro:'Une cada módulo con lo que hace. Toca una tarjeta de la izquierda y luego su pareja de la derecha.',
+   pairs:[
+     {l:{ic:'📨',txt:'Watch: llega un email'}, r:{ic:'⚡',txt:'Disparador (inicia el flujo)'}},
+     {l:{ic:'💬',txt:'Enviar un WhatsApp'}, r:{ic:'▶️',txt:'Acción (hace algo)'}},
+     {l:{ic:'🔍',txt:'Resumir con GPT'}, r:{ic:'🧠',txt:'Módulo de IA (entiende)'}},
+     {l:{ic:'🔀',txt:'Dividir en ramas'}, r:{ic:'🧭',txt:'Router (enruta el flujo)'}},
+     {l:{ic:'🚦',txt:'Dejar pasar solo lo válido'}, r:{ic:'🧹',txt:'Filtro (condiciona)'}}
+   ],
+   win:{medal:['Arquitecto de escenarios','🧩'],xp:55,msg:'Disparador, acción, IA, router y filtro: con esos ladrillos armas cualquier escenario de Make.'},
+   fails:{ match:'Casi. Une cada módulo con su función; lo marcado en rojo no coincide.' } },
+ 7:{ type:'scenario', title:'Dirige a la IA como un vibe coder', intro:'Estás creando una app con Claude. Cada decisión define si terminas hoy o te trabas.',
+   rounds:[
+     {ic:'💡', q:'Quieres una app de reservas. ¿Cómo se lo pides a la IA?', options:[
+       {t:'Describes objetivo, usuarios y qué debe hacer, paso a paso', ok:true, fb:'Sí: un prompt claro y específico produce código útil. Dirigir bien es el 80% del trabajo.'},
+       {t:'Le dices "hazme una app buena"', ok:false, fb:'Demasiado vago: la IA adivina y te da cualquier cosa. Sé específico.'} ]},
+     {ic:'🧪', q:'La IA te entrega el código. ¿Qué haces?', options:[
+       {t:'Lo pruebas y le pides ajustes concretos', ok:true, fb:'Correcto: probar e iterar es el ciclo. Nunca confíes a ciegas.'},
+       {t:'Lo subes a producción sin probar', ok:false, fb:'Riesgo altísimo. Prueba primero y corrige con la IA.'} ]},
+     {ic:'🐛', q:'Aparece un error que no entiendes. ¿Mejor jugada?', options:[
+       {t:'Le pegas el error a la IA y pides que lo explique y lo arregle', ok:true, fb:'Exacto: la IA también depura. Aprendes y avanzas.'},
+       {t:'Copias una solución de internet sin leerla', ok:false, fb:'Puede empeorarlo. Deja que la IA te lo explique y lo corrija con contexto.'} ]}
+   ],
+   win:{medal:['Vibe Coder','⚡'],xp:60,msg:'Prompt claro, probar, iterar y depurar con la IA. Así se crea software sin ser programador.'}, fails:{} },
  8:{ type:'sequence', title:'Levanta un proceso, paso a paso', intro:'Antes de automatizar hay que entender. Ordena el levantamiento de un proceso (sobra 1 error clásico).',
    slots:[ {hint:'1',accept:'ident'}, {hint:'2',accept:'observar'}, {hint:'3',accept:'documentar'}, {hint:'4',accept:'priorizar'} ],
    pieces:[ {id:'ident',ic:'🔎',name:'Identifica el proceso'}, {id:'observar',ic:'👀',name:'Observa cómo se hace hoy'}, {id:'documentar',ic:'📝',name:'Documenta los pasos'}, {id:'priorizar',ic:'🎯',name:'Prioriza qué automatizar'}, {id:'x',ic:'🚀',name:'Automatizar antes de entender',distractor:true} ],
@@ -2348,21 +2439,29 @@ const INTERACT={
    pieces:[ {id:'analisis',ic:'📋',name:'Análisis de requisitos'}, {id:'diseno',ic:'✏️',name:'Diseño de la solución'}, {id:'desarrollo',ic:'🛠️',name:'Desarrollo'}, {id:'pruebas',ic:'🧪',name:'Pruebas'}, {id:'despliegue',ic:'🚀',name:'Despliegue y mantenimiento'}, {id:'x',ic:'⏭️',name:'Saltar directo a producción',distractor:true} ],
    win:{medal:['Gestor de Proyectos','📐'],xp:60,msg:'Análisis → diseño → desarrollo → pruebas → despliegue. Saltarte una fase te la cobra el doble después.'},
    fails:{ order:'Casi. Requisitos → diseño → desarrollo → pruebas → despliegue.', distractor:'Saltar directo a producción sin pruebas es cómo explotan los proyectos. Fuera.' } },
- 10:{ type:'sort', title:'Clasifica los símbolos BPMN', intro:'Un diagrama BPMN se lee con 3 tipos de símbolo. Lleva cada elemento a su familia.',
-   buckets:[ {id:'evento',ic:'⭕',label:'Eventos (inicio/fin)'}, {id:'actividad',ic:'🔷',label:'Actividades (tareas)'}, {id:'compuerta',ic:'🔶',label:'Compuertas (decisiones)'} ],
-   items:[ {id:'i1',ic:'🟢',name:'Inicio del proceso',bucket:'evento'}, {id:'i2',ic:'🔴',name:'Fin del proceso',bucket:'evento'}, {id:'i3',ic:'📧',name:'Enviar la factura',bucket:'actividad'}, {id:'i4',ic:'🔎',name:'Revisar el documento',bucket:'actividad'}, {id:'i5',ic:'❓',name:'¿Está aprobado?',bucket:'compuerta'}, {id:'i6',ic:'💰',name:'¿El monto supera 1000?',bucket:'compuerta'} ],
-   win:{medal:['Modelador BPMN','🗺️'],xp:55,msg:'Eventos marcan inicio/fin, actividades son tareas, compuertas son decisiones. Con eso ya lees cualquier diagrama.'},
-   fails:{ sort:'Casi. Inicio/fin = evento; una tarea (“enviar”, “revisar”) = actividad; una pregunta con “¿?” = compuerta.' } },
+ 10:{ type:'match', title:'El lenguaje del BPMN', intro:'Cada símbolo de un diagrama significa algo. Empareja símbolo con su significado.',
+   pairs:[
+     {l:{ic:'⭕',txt:'Círculo'}, r:{ic:'🚦',txt:'Evento (inicio o fin)'}},
+     {l:{ic:'🔷',txt:'Rectángulo'}, r:{ic:'🔧',txt:'Actividad (una tarea)'}},
+     {l:{ic:'🔶',txt:'Rombo'}, r:{ic:'❓',txt:'Compuerta (una decisión)'}},
+     {l:{ic:'➡️',txt:'Flecha'}, r:{ic:'🔀',txt:'Flujo (el orden entre pasos)'}}
+   ],
+   win:{medal:['Modelador BPMN','🗺️'],xp:55,msg:'Círculo=evento, rectángulo=tarea, rombo=decisión, flecha=flujo. Con esos 4 símbolos lees cualquier diagrama de proceso.'},
+   fails:{ match:'Casi. Círculo=evento, rectángulo=actividad, rombo=compuerta/decisión, flecha=flujo. Lo rojo no coincide.' } },
  11:{ type:'sort', title:'¿Buen candidato para RPA?', intro:'No todo se debe automatizar con un robot. Clasifica cada tarea según convenga o no.',
    buckets:[ {id:'si',ic:'✅',label:'Ideal para RPA'}, {id:'no',ic:'❌',label:'Mejor NO'} ],
    items:[ {id:'i1',ic:'🔁',name:'Tarea repetitiva con reglas claras',bucket:'si'}, {id:'i2',ic:'📈',name:'Alto volumen, mismo patrón',bucket:'si'}, {id:'i3',ic:'📥',name:'Copiar datos entre dos sistemas',bucket:'si'}, {id:'i4',ic:'🎨',name:'Decisión creativa y subjetiva',bucket:'no'}, {id:'i5',ic:'🔀',name:'Cambia de forma cada vez',bucket:'no'}, {id:'i6',ic:'❤️',name:'Requiere criterio humano/empatía',bucket:'no'} ],
    win:{medal:['Cazador de Procesos','🎯'],xp:50,msg:'RPA brilla en lo repetitivo, reglado y de alto volumen. Falla en lo creativo, subjetivo o que cambia siempre.'},
    fails:{ sort:'Casi. Repetitivo + reglas + volumen = ideal. Creativo, subjetivo o cambiante = mejor no.' } },
- 12:{ type:'sort', title:'¿De dónde saco el dato?', intro:'Tres formas de obtener datos, de la mejor a la última opción. Clasifica cada caso.',
-   buckets:[ {id:'api',ic:'🔌',label:'API oficial (lo mejor)'}, {id:'scraping',ic:'🕷️',label:'Web scraping'}, {id:'doc',ic:'📄',label:'Procesar documento'} ],
-   items:[ {id:'i1',ic:'✅',name:'El sitio ofrece una API pública',bucket:'api'}, {id:'i2',ic:'🔗',name:'Integración con un CRM conocido',bucket:'api'}, {id:'i3',ic:'🌐',name:'Web sin API, datos en el HTML',bucket:'scraping'}, {id:'i4',ic:'🏷️',name:'Precios de una tienda sin API',bucket:'scraping'}, {id:'i5',ic:'📑',name:'Datos dentro de un PDF',bucket:'doc'}, {id:'i6',ic:'🧾',name:'Facturas escaneadas',bucket:'doc'} ],
-   win:{medal:['Ingeniero de Datos','🗃️'],xp:50,msg:'Si hay API, úsala (estable y legal). Si no, scraping. Si el dato está en un documento, procésalo. En ese orden.'},
-   fails:{ sort:'Casi. Con API → API. Sin API pero en la web → scraping. Dentro de un archivo → procesar documento.' } },
+ 12:{ type:'match', title:'La herramienta para cada dato', intro:'Según dónde vive el dato, la técnica cambia. Empareja cada caso con su técnica correcta.',
+   pairs:[
+     {l:{ic:'✅',txt:'El sitio ofrece API pública'}, r:{ic:'🔌',txt:'Usar la API (lo mejor)'}},
+     {l:{ic:'🌐',txt:'Web sin API, dato en el HTML'}, r:{ic:'🕷️',txt:'Web scraping'}},
+     {l:{ic:'📑',txt:'Dato dentro de un PDF'}, r:{ic:'📄',txt:'Procesar el documento (OCR)'}},
+     {l:{ic:'🧩',txt:'App conocida (Slack, Sheets)'}, r:{ic:'🔗',txt:'Conector prehecho'}}
+   ],
+   win:{medal:['Ingeniero de Datos','🗃️'],xp:50,msg:'API si existe, scraping si no, procesar si está en un archivo, conector si ya viene hecho. Elegís según dónde vive el dato.'},
+   fails:{ match:'Casi. API pública→API; dato en HTML→scraping; dentro de un PDF→procesar; app conocida→conector. Lo rojo no coincide.' } },
  13:{ type:'sort', title:'Clasifica el error del bot', intro:'Un bot profesional trata distinto cada error. Lleva cada uno a su cajón: reintentar o registrar.',
    buckets:[ {id:'retry',ic:'🔄',label:'Transitorio → reintentar'}, {id:'negocio',ic:'📋',label:'De negocio → registrar y seguir'} ],
    items:[ {id:'i1',ic:'⏱️',name:'Timeout de red',bucket:'retry'}, {id:'i2',ic:'🐢',name:'La página tardó en cargar',bucket:'retry'}, {id:'i3',ic:'🔌',name:'Servicio caído un momento',bucket:'retry'}, {id:'i4',ic:'💳',name:'Saldo insuficiente',bucket:'negocio'}, {id:'i5',ic:'❌',name:'Dato inválido en la factura',bucket:'negocio'}, {id:'i6',ic:'👤',name:'El cliente no existe en el sistema',bucket:'negocio'} ],
@@ -2383,26 +2482,54 @@ const INTERACT={
    pieces:[ {id:'capturar',ic:'📥',name:'Capturar el documento'}, {id:'leer',ic:'👁️',name:'Leer con OCR/visión'}, {id:'clasificar',ic:'🗂️',name:'Clasificar el tipo'}, {id:'extraer',ic:'🔎',name:'Extraer los datos'}, {id:'validar',ic:'✅',name:'Validar y confirmar'}, {id:'x',ic:'⌨️',name:'Teclearlo todo a mano',distractor:true} ],
    win:{medal:['Maestro del IDP','🧾'],xp:60,msg:'Capturar → leer → clasificar → extraer → validar. Así una IA procesa miles de documentos sin teclear uno.'},
    fails:{ order:'Casi. Captura → lee (OCR) → clasifica → extrae → valida.', distractor:'Teclear a mano es justo lo que venimos a eliminar. Fuera.' } },
- 17:{ type:'sort', title:'¿Pull, Push o Conector?', intro:'Tres formas de conectar sistemas. Clasifica cada situación.',
-   buckets:[ {id:'pull',ic:'🔌',label:'API (tú pides)'}, {id:'push',ic:'📡',label:'Webhook (te avisan)'}, {id:'conector',ic:'🧩',label:'Conector prehecho'} ],
-   items:[ {id:'i1',ic:'🕐',name:'Consultas el stock cada hora',bucket:'pull'}, {id:'i2',ic:'📥',name:'Pides los pedidos del día',bucket:'pull'}, {id:'i3',ic:'⚡',name:'Te avisan al instante de un pago',bucket:'push'}, {id:'i4',ic:'🔔',name:'Notificación cuando algo cambia',bucket:'push'}, {id:'i5',ic:'🧱',name:'Módulo de Slack listo en Make',bucket:'conector'}, {id:'i6',ic:'🔗',name:'Conector oficial de Google',bucket:'conector'} ],
-   win:{medal:['Integrador','🔗'],xp:55,msg:'API = tú pides el dato. Webhook = te avisan al instante. Conector = integración ya empaquetada. Elige según urgencia y esfuerzo.'},
-   fails:{ sort:'Casi. Si tú consultas cada tanto = API (pull). Si te avisan al instante = webhook (push). Si ya viene hecho = conector.' } },
- 18:{ type:'sequence', title:'Cómo responde un agente conversacional', intro:'Un buen bot no improvisa. Ordena cómo procesa un mensaje (sobra 1 pésima costumbre).',
-   slots:[ {hint:'1',accept:'entender'}, {hint:'2',accept:'consultar'}, {hint:'3',accept:'responder'}, {hint:'4',accept:'escalar'} ],
-   pieces:[ {id:'entender',ic:'🧠',name:'Entiende la intención'}, {id:'consultar',ic:'📚',name:'Consulta datos/FAQ'}, {id:'responder',ic:'💬',name:'Responde con claridad'}, {id:'escalar',ic:'🙋',name:'Escala a un humano si hace falta'}, {id:'x',ic:'🙈',name:'Inventa si no sabe la respuesta',distractor:true} ],
-   win:{medal:['Diseñador de Bots','💬'],xp:55,msg:'Entiende → consulta → responde → escala. Un bot que inventa destruye la confianza; uno que deriva la construye.'},
-   fails:{ order:'Casi. Entiende la intención → consulta la info → responde → escala a humano si hace falta.', distractor:'Inventar respuestas (alucinar) es lo peor que puede hacer un bot. Fuera.' } },
- 19:{ type:'sequence', title:'Crea un avatar que presenta', intro:'Grabar un video con IA lleva minutos, no un estudio. Ordena los pasos (sobra 1 de la era analógica).',
-   slots:[ {hint:'1',accept:'guion'}, {hint:'2',accept:'avatar'}, {hint:'3',accept:'voz'}, {hint:'4',accept:'generar'} ],
-   pieces:[ {id:'guion',ic:'✍️',name:'Escribe el guion'}, {id:'avatar',ic:'🧑‍🎤',name:'Elige el avatar'}, {id:'voz',ic:'🎙️',name:'Elige o clona la voz'}, {id:'generar',ic:'🎬',name:'Genera el video'}, {id:'x',ic:'📹',name:'Alquilar un estudio de cine',distractor:true} ],
-   win:{medal:['Creador de Avatares','🎭'],xp:50,msg:'Guion → avatar → voz → generar. Un video de presentación profesional sin cámara, sin set y sin actores.'},
-   fails:{ order:'Casi. Guion → elige avatar → elige voz → genera el video.', distractor:'Alquilar un estudio es justo lo que la IA te ahorra. Fuera.' } },
- 20:{ type:'sequence', title:'Orquesta un equipo de agentes', intro:'Los problemas grandes no los resuelve un solo agente. Ordena cómo trabaja un sistema multiagente (sobra 1 idea ingenua).',
-   slots:[ {hint:'1',accept:'plan'}, {hint:'2',accept:'asignar'}, {hint:'3',accept:'ejecutar'}, {hint:'4',accept:'consolidar'} ],
-   pieces:[ {id:'plan',ic:'🧭',name:'Un planificador divide la tarea'}, {id:'asignar',ic:'👥',name:'Asigna a agentes especialistas'}, {id:'ejecutar',ic:'🔧',name:'Cada uno usa sus herramientas'}, {id:'consolidar',ic:'🧩',name:'Se consolida el resultado'}, {id:'x',ic:'🦸',name:'Un solo agente hace todo a la vez',distractor:true} ],
-   win:{medal:['Arquitecto de Agentes','🏛️'],xp:65,msg:'Planificar → asignar a especialistas → ejecutar → consolidar. Dividir y coordinar vence a un “superagente” que lo hace todo.'},
-   fails:{ order:'Casi. Un planificador divide → asigna a especialistas → cada uno ejecuta → se consolida.', distractor:'Un solo agente haciéndolo todo es justo lo que la orquestación evita. Fuera.' } },
+ 17:{ type:'match', title:'Pull, Push o Conector', intro:'Cada forma de integrar sistemas tiene su firma. Empareja el mecanismo con lo que lo define.',
+   pairs:[
+     {l:{ic:'🔌',txt:'API (pull)'}, r:{ic:'🕐',txt:'Tú consultas el dato cuando quieres'}},
+     {l:{ic:'📡',txt:'Webhook (push)'}, r:{ic:'⚡',txt:'El sistema te avisa al instante'}},
+     {l:{ic:'🧩',txt:'Conector'}, r:{ic:'📦',txt:'Integración ya empaquetada'}},
+     {l:{ic:'🗄️',txt:'Base de datos'}, r:{ic:'🔍',txt:'Lees/escribes directo en la tabla'}}
+   ],
+   win:{medal:['Integrador','🔗'],xp:55,msg:'API=tú pides; webhook=te avisan; conector=ya viene hecho; base de datos=directo a la tabla. Eliges según urgencia y esfuerzo.'},
+   fails:{ match:'Casi. Tú consultas=API; te avisan al instante=webhook; ya viene hecho=conector; leer una tabla=base de datos. Lo rojo no coincide.' } },
+ 18:{ type:'scenario', title:'Estás diseñando el bot de atención', intro:'Un cliente escribe a tu negocio a las 3am. Cada decisión define si el bot ayuda o ahuyenta.',
+   rounds:[
+     {ic:'🤔', q:'El cliente pregunta algo que el bot NO sabe con certeza. ¿Qué hace?', options:[
+       {t:'Avisa que no está seguro y deriva a un humano', ok:true, fb:'Correcto: un bot honesto que deriva construye confianza.'},
+       {t:'Inventa una respuesta que suena convincente', ok:false, fb:'Alucinar es lo peor que puede hacer un bot: destruye la confianza y puede costar caro.'} ]},
+     {ic:'📚', q:'Antes de responder sobre tu horario y precios, ¿de dónde saca el dato?', options:[
+       {t:'De una base de conocimiento/FAQ conectada', ok:true, fb:'Sí: el bot consulta datos reales, no improvisa.'},
+       {t:'De lo que "recuerde" del entrenamiento general', ok:false, fb:'Ese dato puede estar viejo o inventado. Conecta una fuente real.'} ]},
+     {ic:'😤', q:'El cliente está enojado y el bot no resuelve. ¿Mejor jugada?', options:[
+       {t:'Escala a un humano de forma rápida y clara', ok:true, fb:'Exacto: saber cuándo salir de escena es señal de un bot bien diseñado.'},
+       {t:'Insiste con respuestas automáticas hasta que se rinda', ok:false, fb:'Eso multiplica la frustración. Un buen bot sabe cuándo pasar la posta.'} ]}
+   ],
+   win:{medal:['Diseñador de Bots','💬'],xp:55,msg:'Honesto cuando no sabe, apoyado en datos reales y capaz de escalar a un humano. Ese es un bot en el que la gente confía.'}, fails:{} },
+ 19:{ type:'scenario', title:'Produce un video con avatar IA', intro:'Necesitas un video de presentación para mañana. Sin cámara, sin estudio, sin actor. Decide bien.',
+   rounds:[
+     {ic:'✍️', q:'Lo primero para que el video no salga vacío es…', options:[
+       {t:'Escribir un guion claro y con gancho', ok:true, fb:'Sí: sin guion, el avatar más realista dice puras vaguedades. El mensaje manda.'},
+       {t:'Elegir el avatar más bonito y arrancar', ok:false, fb:'La cara vende, pero sin guion no hay mensaje. Primero qué dices, luego quién lo dice.'} ]},
+     {ic:'🎙️', q:'Quieres que suene profesional y creíble. ¿Qué cuidas?', options:[
+       {t:'Una voz natural y bien sincronizada con el guion', ok:true, fb:'Correcto: una voz robótica o desincronizada rompe la magia al instante.'},
+       {t:'Que hable rapidísimo para meter más info', ok:false, fb:'Atropellado no convence. Ritmo natural y pausas: así se escucha creíble.'} ]},
+     {ic:'🌍', q:'El cliente lo quiere también en inglés y portugués. ¿Qué haces?', options:[
+       {t:'Traduces el guion y regeneras el video con la IA', ok:true, fb:'Exacto: la gran ventaja de la IA es clonar el video en varios idiomas en minutos.'},
+       {t:'Contratas a dos actores nativos', ok:false, fb:'Justo lo que la IA te ahorra. Traduce el guion y regenera: minutos, no semanas.'} ]}
+   ],
+   win:{medal:['Creador de Avatares','🎭'],xp:50,msg:'Guion primero, voz natural, y multiplícalo a otros idiomas regenerando. Video profesional sin cámara, set ni actores.'}, fails:{} },
+ 20:{ type:'scenario', title:'Dirige un equipo de agentes IA', intro:'Tienes que generar un informe de mercado completo: investigar, analizar y redactar. Eres el orquestador.',
+   rounds:[
+     {ic:'🧭', q:'La tarea es grande y variada. ¿Cómo la encaras?', options:[
+       {t:'La divides en subtareas y asignas un agente especialista a cada una', ok:true, fb:'Correcto: dividir y coordinar vence siempre al “superagente” que lo hace todo.'},
+       {t:'Le pides a un solo agente que lo haga todo de una', ok:false, fb:'Un solo agente para todo se satura y baja la calidad. Especializa y reparte.'} ]},
+     {ic:'🔧', q:'El agente investigador necesita datos actuales de la web. ¿Qué le das?', options:[
+       {t:'Herramientas: búsqueda web y acceso a fuentes', ok:true, fb:'Sí: un agente sin herramientas solo “opina”. Con herramientas, actúa sobre datos reales.'},
+       {t:'Nada, que responda con lo que ya sabe', ok:false, fb:'Sin herramientas repite conocimiento viejo. Dale acceso a datos frescos.'} ]},
+     {ic:'🧩', q:'Cada agente terminó su parte. ¿Último paso?', options:[
+       {t:'Un agente consolida todo en un informe coherente', ok:true, fb:'Exacto: sin consolidación tienes piezas sueltas, no un resultado. La síntesis cierra el sistema.'},
+       {t:'Entregas las 3 salidas por separado y listo', ok:false, fb:'Eso es dejar el trabajo a medias. Alguien debe unir las piezas en un todo.'} ]}
+   ],
+   win:{medal:['Arquitecto de Agentes','🏛️'],xp:65,msg:'Divides, asignas a especialistas con herramientas y consolidas. Así un sistema multiagente resuelve lo que un solo agente no puede.'}, fails:{} },
  21:{ type:'sort', title:'¿Buena práctica o riesgo?', intro:'Automatizar sin cuidar lo legal y la seguridad es jugar con fuego. Clasifica cada acción.',
    buckets:[ {id:'ok',ic:'✅',label:'Buena práctica'}, {id:'riesgo',ic:'⛔',label:'Riesgo / evitar'} ],
    items:[ {id:'i1',ic:'📝',name:'Pedir consentimiento para usar datos',bucket:'ok'}, {id:'i2',ic:'🔐',name:'Cifrar los datos personales',bucket:'ok'}, {id:'i3',ic:'📋',name:'Registrar quién accede a qué',bucket:'ok'}, {id:'i4',ic:'🌐',name:'Subir datos de clientes a una IA pública sin permiso',bucket:'riesgo'}, {id:'i5',ic:'🗝️',name:'Guardar contraseñas en texto plano',bucket:'riesgo'}, {id:'i6',ic:'🤖',name:'Decidir sin supervisión ni aviso',bucket:'riesgo'} ],
