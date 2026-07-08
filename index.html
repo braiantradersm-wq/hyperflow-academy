@@ -1929,6 +1929,8 @@ const ADMIN=_P.has('admin')||_P.has('full');                       // ?admin=1 -
 const SIM_STUDENT=_P.has('alumno')||_P.has('student')||_P.has('curso'); // ?alumno=1 -> simula curso YA comprado
 if(SIM_STUDENT) progress.enrolled=true;                            // ya pagó
 if(_P.has('preview')||_P.has('user')) progress.enrolled=false;     // ?preview=1 -> vista de venta (sin comprar)
+// ?enrolled=1 -> vuelta del pago exitoso de Stripe: inscribe y (si corresponde) desbloquea el Pack Acelerador
+if(_P.has('enrolled')||_P.has('success')){ progress.enrolled=true; if(_P.has('bump')||_P.has('acelerador')) progress.acelerador=true; saveProgress(progress); }
 if(_P.has('reset')){progress.done=[];progress.name='';saveProgress(progress);} // ?reset=1 -> reiniciar progreso
 const FREE_EPS=[];                                                 // Sin muestra gratis: se paga antes de entrar; luego desbloqueo progresivo
 /* Desbloqueo:
@@ -3389,6 +3391,8 @@ function downloadTemario(){
 /* INIT */
 renderCurriculum();renderFaq();renderTesti();renderOutcomes();initNet();
 tickCountdown();setInterval(tickCountdown,1000);
+/* Vuelta del pago exitoso de Stripe: entra directo al campus por el Episodio 1 */
+if(_P.has('enrolled')||_P.has('success')){ try{ if(typeof showToast==='function') showToast('🎉','¡Bienvenido al curso!','Tu acceso está activo · empezá por el Episodio 1'); }catch(e){} currentModule=1; openCampus(); }
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCheckout();});
 /* ribbon de modo (visible en admin / alumno / preview) */
 (function(){
