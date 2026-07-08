@@ -522,9 +522,45 @@
   .cine .skip{position:fixed;bottom:20px;right:18px;font-family:var(--font-mono);font-size:11px;color:var(--muted-2);background:rgba(22,24,46,.8);border:1px solid var(--line-2);padding:7px 12px;border-radius:9px;opacity:.7;transition:.2s;cursor:pointer}
   .cine .skip:hover{opacity:1;color:var(--text);border-color:var(--indigo)}
   body[data-cmood=calm] .cine{background:radial-gradient(120% 90% at 50% 35%,rgba(18,22,50,.9),rgba(8,9,20,.98))}
+  .cine .chint{margin-top:26px;font-family:var(--font-mono);font-size:12px;color:var(--muted-2);opacity:0;transition:opacity .8s .6s}
+  .cine.show .chint{opacity:.8;animation:chintb 1.8s 1.4s infinite}
+  @keyframes chintb{0%,100%{opacity:.4}50%{opacity:.85}}
+
+  /* ===== ruta guiada del episodio ===== */
+  .guide{background:linear-gradient(180deg,var(--ink-2),var(--ink-3));border:1px solid var(--line-2);border-radius:16px;padding:18px;margin:6px 0 22px}
+  .guide-h{font-family:var(--font-mono);font-size:12px;letter-spacing:.04em;color:var(--amber);margin-bottom:14px;font-weight:600}
+  .guide-steps{display:flex;flex-direction:column;gap:10px}
+  .gstep{display:flex;gap:13px;align-items:flex-start;background:var(--ink);border:1px solid var(--line);border-radius:13px;padding:14px 15px;transition:.16s}
+  .gstep.big{border-color:var(--indigo);background:linear-gradient(120deg,var(--indigo-dim),var(--ink));box-shadow:0 0 0 1px var(--indigo-dim)}
+  .gnum{flex:none;width:28px;height:28px;border-radius:50%;background:var(--ink-4);border:1px solid var(--line-2);display:grid;place-items:center;font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--text)}
+  .gstep.big .gnum{background:linear-gradient(135deg,var(--indigo),var(--indigo-2));border:0;color:#fff}
+  .gbody{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+  .gbody .gk{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2)}
+  .gbody b{font-size:15.5px;color:var(--text)}
+  .gbody .gd{font-size:13px;color:var(--muted);line-height:1.45}
+  .gbtn{align-self:flex-start;margin-top:9px;padding:9px 16px;border-radius:10px;font-size:13.5px;font-weight:600;background:var(--ink-3);border:1px solid var(--line-2);color:var(--text);transition:.15s}
+  .gbtn:hover{border-color:var(--indigo);transform:translateY(-1px)}
+  .gbtn-primary{background:linear-gradient(135deg,var(--indigo),var(--indigo-2));border:0;color:#fff;font-size:15px;padding:12px 22px;box-shadow:0 10px 24px -10px var(--indigo)}
+
+  /* ===== overlay del juego (iframe a pantalla completa) ===== */
+  .game-ov{position:fixed;inset:0;z-index:1300;background:var(--ink);display:none;flex-direction:column}
+  .game-ov.on{display:flex;animation:gfade .3s}
+  @keyframes gfade{from{opacity:0}to{opacity:1}}
+  .game-bar{flex:none;display:flex;align-items:center;gap:14px;padding:9px 14px;background:var(--ink-2);border-bottom:1px solid var(--line-2)}
+  .game-back{padding:8px 15px;border-radius:9px;background:var(--ink-3);border:1px solid var(--line-2);color:var(--text);font-size:13.5px;font-weight:600}
+  .game-back:hover{border-color:var(--indigo)}
+  .game-title{font-weight:700;font-size:14px;color:var(--text)}
+  .game-hint{margin-left:auto;font-size:12px;color:var(--muted);font-family:var(--font-mono)}
+  #gameFrame{flex:1;width:100%;border:0;background:var(--ink)}
+  @media(max-width:640px){ .game-hint{display:none} }
 </style>
 
 <div class="cine" id="cine"><div class="cbar" id="cineBar"></div><div class="cscene" id="cineBody"></div><button class="skip" onclick="skipCine()">saltar intro ⏭</button></div>
+
+<div class="game-ov" id="gameOverlay">
+  <div class="game-bar"><button class="game-back" onclick="closeGame()">← Volver al curso</button><span class="game-title" id="gameTitle"></span><span class="game-hint">Cuando termines, vuelve para superar el reto</span></div>
+  <iframe id="gameFrame" title="Experiencia interactiva" allow="autoplay; fullscreen"></iframe>
+</div>
 
 <!-- ============ ANNOUNCEMENT BAR ============ -->
 <div class="annbar" id="annbar">
@@ -1219,24 +1255,73 @@ function cStartPad(){try{cAC=cAC||new (window.AudioContext||window.webkitAudioCo
   const o3=cAC.createOscillator();o3.type='triangle';o3.frequency.value=55;const g3=cAC.createGain();g3.gain.value=.5;o3.connect(g3);g3.connect(f);
   o1.start();o2.start();o3.start();cPad={g,o1,o2,o3};}catch(e){}}
 function cStopPad(){if(!cPad)return;try{cPad.g.gain.linearRampToValueAtTime(0,cAC.currentTime+1.1);const p=cPad;setTimeout(()=>{try{p.o1.stop();p.o2.stop();p.o3.stop();}catch(e){}},1200);}catch(e){}cPad=null;}
+let cineIdx=0, cineScenes=[];
 function cinematic(scenes,cb){
-  cineActive=true;cineDone=cb;const el=document.getElementById('cine');el.classList.add('on');cStartPad();
-  let i=0;
-  (function play(){
-    if(!cineActive)return;
-    if(i>=scenes.length){endCine();return;}
-    const s=scenes[i];document.body.dataset.cmood=s.mood||'';
-    document.getElementById('cineBody').innerHTML=`${s.k?`<div class="ck">${s.k}</div>`:''}<div class="ctext">${s.t}</div>`;
-    el.classList.remove('show');void el.offsetWidth;el.classList.add('show');cDing(s.mood==='calm'?560:440);
-    const words=s.t.replace(/<[^>]+>/g,'').split(/\s+/).length;
-    const dur=s.ms||Math.max(3400,Math.min(7200,words*360));
-    const bar=document.getElementById('cineBar');bar.style.transition='none';bar.style.width='0';void bar.offsetWidth;bar.style.transition='width '+dur+'ms linear';bar.style.width='100%';
-    cineT.push(setTimeout(()=>{el.classList.remove('show');cineT.push(setTimeout(()=>{i++;play();},700));},dur));
-  })();
+  cineActive=true;cineDone=cb;cineScenes=scenes;cineIdx=0;
+  const el=document.getElementById('cine');el.classList.add('on');cStartPad();
+  el.onclick=(e)=>{ if(!e.target.closest('.skip')) cineAdvance(); };
+  cinePlay();
+}
+function cinePlay(){
+  if(!cineActive)return;
+  if(cineIdx>=cineScenes.length){endCine();return;}
+  const s=cineScenes[cineIdx];const el=document.getElementById('cine');document.body.dataset.cmood=s.mood||'';
+  document.getElementById('cineBody').innerHTML=`${s.k?`<div class="ck">${s.k}</div>`:''}<div class="ctext">${s.t}</div><div class="chint">toca para seguir ▸</div>`;
+  el.classList.remove('show');void el.offsetWidth;el.classList.add('show');cDing(s.mood==='calm'?560:440);
+  const words=s.t.replace(/<[^>]+>/g,'').split(/\s+/).length;
+  const dur=s.ms||Math.max(4800,Math.min(13000,words*480));
+  const bar=document.getElementById('cineBar');bar.style.transition='none';bar.style.width='0';void bar.offsetWidth;bar.style.transition='width '+dur+'ms linear';bar.style.width='100%';
+  cineT.push(setTimeout(cineAdvance,dur));
+}
+function cineAdvance(){
+  if(!cineActive)return; cineT.forEach(clearTimeout);cineT=[];
+  document.getElementById('cine').classList.remove('show');
+  cineT.push(setTimeout(()=>{cineIdx++;cinePlay();},450));
 }
 function endCine(){if(!cineActive)return;cineActive=false;cineT.forEach(clearTimeout);cineT=[];cStopPad();document.body.dataset.cmood='';
-  const cb=cineDone;cineDone=null;if(cb)cb();document.getElementById('cine').classList.remove('on','show');}
+  const el=document.getElementById('cine');el.onclick=null;
+  const cb=cineDone;cineDone=null;if(cb)cb();el.classList.remove('on','show');}
 function skipCine(){endCine();}
+/* ===== juego interactivo integrado + ruta guiada ===== */
+const GAME={1:'ep01/',2:'ep02/'};
+function openGame(n){
+  const src=GAME[n]; if(!src)return;
+  const ov=document.getElementById('gameOverlay');
+  document.getElementById('gameFrame').src=src+'index.html?v=3';
+  const m=COURSE.find(x=>x.n===n)||{};
+  document.getElementById('gameTitle').textContent='EP'+pad2(n)+' · '+(m.title||'');
+  ov.classList.add('on'); document.body.style.overflow='hidden';
+}
+function closeGame(){
+  const ov=document.getElementById('gameOverlay'); ov.classList.remove('on');
+  document.getElementById('gameFrame').src='about:blank'; document.body.style.overflow='';
+  renderSide(); // refleja si completó el juego (localStorage)
+  const gs=document.getElementById('guideStatus'); if(gs)gs.style.display='';
+}
+function scrollToPlayer(){ const p=document.querySelector('.vplayer'); if(p)p.scrollIntoView({behavior:'smooth',block:'center'}); }
+function goQuiz(){ switchTab('quiz'); const q=document.getElementById('panel-quiz'); if(q)q.scrollIntoView({behavior:'smooth',block:'start'}); }
+function renderGuide(n){
+  const game=GAME[n];
+  const steps = game ? [
+    {ic:'🎮',k:'Paso 1 · empieza aquí',t:'Vive el episodio',d:(n===1?'Entra a la historia y tú tomas las decisiones. Aprendes jugando.':'Construye tu primer bot arrastrando y conectando piezas.'),btn:'▶ Empezar la experiencia',act:`openGame(${n})`,big:true},
+    {ic:'🎬',k:'Paso 2 · opcional',t:'Profundiza con la clase',d:'Video y clase narrada, más abajo. Solo si quieres ir aún más a fondo.',btn:'Ver la clase ↓',act:'scrollToPlayer()'},
+    {ic:'🏆',k:'Paso 3',t:'Supera el reto',d:'Responde el cuestionario para desbloquear el siguiente episodio.',btn:'Ir al reto →',act:'goQuiz()'}
+  ] : [
+    {ic:'🎬',k:'Paso 1 · empieza aquí',t:'Mira la clase',d:'Elige Video o Clase narrada por IA, justo aquí abajo.',btn:'Ver la clase ↓',act:'scrollToPlayer()',big:true},
+    {ic:'🏆',k:'Paso 2',t:'Supera el reto',d:'Responde el cuestionario para desbloquear el siguiente episodio.',btn:'Ir al reto →',act:'goQuiz()'}
+  ];
+  return `<div class="guide">
+    <div class="guide-h">🧭 Cómo estudiar este episodio — sigue los pasos en orden</div>
+    <div class="guide-steps">
+      ${steps.map((s,i)=>`<div class="gstep${s.big?' big':''}">
+        <div class="gnum">${i+1}</div>
+        <div class="gbody"><span class="gk">${s.k}</span><b>${s.ic} ${s.t}</b><span class="gd">${s.d}</span>
+          <button class="gbtn${s.big?' gbtn-primary':''}" onclick="${s.act}">${s.btn}</button></div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
 function maybeIntro(n){
   if(cineSeen.has(n))return; cineSeen.add(n);
   if(typeof vpStop==='function')vpStop();
@@ -1412,6 +1497,7 @@ function loadModule(n){
     <div class="lesson-meta">
       <span>🎬 ${m.lessons.length} escenas</span><span>⏱ ${m.dur}</span><span>📊 ${m.level}</span><span>⚡ +${XP_PER} XP al superar el reto</span>
     </div>
+    ${renderGuide(n)}
     ${renderPlayer(m)}
     <p class="player-note">// 🎬 Video: clase real curada de YouTube (verificada). 🎙️ Clase IA: narración con voz de IA + subtítulos, 100% gratis y sin depender de internet. Elige el modo arriba.</p>
     <div class="tabs">

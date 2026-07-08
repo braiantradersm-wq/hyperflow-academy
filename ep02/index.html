@@ -166,6 +166,9 @@
   .cine .skip:hover{opacity:1;color:var(--text);border-color:var(--indigo)}
   body[data-mood=dark] .cine{background:radial-gradient(120% 100% at 50% 40%,rgba(30,10,18,.74),rgba(5,4,8,.97))}
   body[data-mood=tense] .cine{background:radial-gradient(120% 90% at 50% 35%,rgba(14,16,40,.84),rgba(5,6,13,.97))}
+  .cine .chint{margin-top:24px;font-family:var(--mono);font-size:12px;color:var(--muted-2);opacity:0;transition:opacity .8s .6s}
+  .cine.show .chint{opacity:.75;animation:chintb 1.8s 1.4s infinite}
+  @keyframes chintb{0%,100%{opacity:.35}50%{opacity:.8}}
 
   @media(max-width:720px){
     .mid{flex-direction:column}
@@ -566,23 +569,27 @@ function startPad(){ try{ AC=AC||new (window.AudioContext||window.webkitAudioCon
   o1.start();o2.start();o3.start(); padN={g,f,o1,o2,o3}; }catch(e){} }
 function stopPad(){ if(!padN)return; try{ padN.g.gain.linearRampToValueAtTime(0,AC.currentTime+1.1); const p=padN; setTimeout(()=>{try{p.o1.stop();p.o2.stop();p.o3.stop();}catch(e){}},1200);}catch(e){} padN=null; }
 function setMood(m){ document.body.dataset.mood=m||''; if(padN){try{const map={calm:560,tense:820,dark:360};padN.f.frequency.linearRampToValueAtTime(map[m]||560,AC.currentTime+1.3);}catch(e){}} }
+let cineIdx=0, cineScenes=[];
 function cinematic(scenes,cb){
-  cineActive=true; cineDone=cb; const el=$('#cine'); el.classList.add('on'); startPad();
-  let i=0;
-  (function play(){
-    if(!cineActive)return;
-    if(i>=scenes.length){ endCine(); return; }
-    const s=scenes[i]; setMood(s.mood);
-    $('#cineBody').innerHTML=`${s.k?`<div class="ck">${s.k}</div>`:''}<div class="ctext">${P(s.t)}</div>`;
-    el.classList.remove('show'); void el.offsetWidth; el.classList.add('show'); ding(s.mood==='dark'?300:s.mood==='tense'?440:560);
-    const words=s.t.replace(/<[^>]+>/g,'').split(/\s+/).length;
-    const dur=s.ms||Math.max(3400,Math.min(7200,words*360));
-    const bar=$('#cineBar'); bar.style.transition='none'; bar.style.width='0'; void bar.offsetWidth; bar.style.transition='width '+dur+'ms linear'; bar.style.width='100%';
-    cineT.push(setTimeout(()=>{ el.classList.remove('show'); cineT.push(setTimeout(()=>{ i++; play(); },700)); }, dur));
-  })();
+  cineActive=true; cineDone=cb; cineScenes=scenes; cineIdx=0;
+  const el=$('#cine'); el.classList.add('on'); startPad();
+  el.onclick=(e)=>{ if(!e.target.closest('.skip')) cineAdvance(); };
+  cinePlay();
 }
+function cinePlay(){
+  if(!cineActive)return;
+  if(cineIdx>=cineScenes.length){ endCine(); return; }
+  const s=cineScenes[cineIdx]; setMood(s.mood);
+  $('#cineBody').innerHTML=`${s.k?`<div class="ck">${s.k}</div>`:''}<div class="ctext">${P(s.t)}</div><div class="chint">toca para seguir ▸</div>`;
+  const el=$('#cine'); el.classList.remove('show'); void el.offsetWidth; el.classList.add('show'); ding(s.mood==='dark'?300:s.mood==='tense'?440:560);
+  const words=s.t.replace(/<[^>]+>/g,'').split(/\s+/).length;
+  const dur=s.ms||Math.max(4800,Math.min(13000,words*480));
+  const bar=$('#cineBar'); bar.style.transition='none'; bar.style.width='0'; void bar.offsetWidth; bar.style.transition='width '+dur+'ms linear'; bar.style.width='100%';
+  cineT.push(setTimeout(cineAdvance,dur));
+}
+function cineAdvance(){ if(!cineActive)return; cineT.forEach(clearTimeout); cineT=[]; $('#cine').classList.remove('show'); cineT.push(setTimeout(()=>{ cineIdx++; cinePlay(); },450)); }
 function endCine(){ if(!cineActive)return; cineActive=false; cineT.forEach(clearTimeout); cineT=[]; stopPad(); setMood('');
-  const cb=cineDone; cineDone=null; if(cb)cb(); $('#cine').classList.remove('on','show'); }
+  const el=$('#cine'); el.onclick=null; const cb=cineDone; cineDone=null; if(cb)cb(); el.classList.remove('on','show'); }
 function skipCine(){ endCine(); }
 
 /* ===== nav ===== */
