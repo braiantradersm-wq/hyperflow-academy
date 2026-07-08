@@ -211,10 +211,13 @@
   .host{display:grid;grid-template-columns:340px 1fr;gap:44px;align-items:center}
   .host-frame{aspect-ratio:4/5;border-radius:18px;border:1px solid var(--line-2);position:relative;overflow:hidden;
     background:radial-gradient(circle at 50% 30%,rgba(102,116,255,.18),transparent 60%),linear-gradient(160deg,#12142A,#070810)}
-  .host-rec{position:absolute;top:14px;left:14px;font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;color:var(--red);display:flex;align-items:center;gap:6px;z-index:2}
-  .host-dot{width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 0 4px rgba(255,107,122,.18)}
-  .host-silh{position:absolute;inset:0;display:grid;place-items:end center}
-  .host-silh svg{width:82%;height:82%}
+  .host-flow{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:22px}
+  .hf-tag{font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2);margin-bottom:6px;text-align:center}
+  .hf-node{width:100%;max-width:210px;background:var(--ink-3);border:1px solid var(--line-2);border-radius:11px;padding:11px 14px;font-size:13px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:9px}
+  .hf-node span{font-size:16px}
+  .hf-ai{border-color:var(--indigo);box-shadow:0 0 0 3px var(--indigo-dim)}
+  .hf-arrow{color:var(--indigo-2);font-size:15px;line-height:.5}
+  .hf-done{margin-top:8px;color:var(--green);font-family:var(--font-mono);font-size:11px;background:var(--green-dim);border:1px solid rgba(63,208,127,.35);border-radius:8px;padding:6px 12px}
   .host-txt h2{font-size:clamp(24px,3.4vw,36px);letter-spacing:-.02em}
   /* ---------- TESTIMONIOS ---------- */
   .testi{background:var(--ink);border:1px solid var(--line);border-radius:16px;padding:26px;display:flex;flex-direction:column;gap:16px}
@@ -773,8 +776,15 @@
       <div class="host">
         <div class="host-media">
           <div class="host-frame">
-            <span class="host-rec"><span class="host-dot"></span>REC</span>
-            <div class="host-silh"><svg viewBox="0 0 120 120" fill="none"><circle cx="60" cy="44" r="24" fill="rgba(139,123,255,.25)"/><path d="M18 116c0-26 19-42 42-42s42 16 42 42" fill="rgba(139,123,255,.18)"/></svg></div>
+            <div class="host-flow">
+              <div class="hf-tag">Ejemplo de lo que construís</div>
+              <div class="hf-node"><span>📧</span> Llega un email</div>
+              <div class="hf-arrow">↓</div>
+              <div class="hf-node hf-ai"><span>🧠</span> La IA lo entiende</div>
+              <div class="hf-arrow">↓</div>
+              <div class="hf-node"><span>💾</span> Se guarda solo</div>
+              <div class="hf-done">✓ Automatizado por vos</div>
+            </div>
           </div>
         </div>
         <div class="host-txt">
