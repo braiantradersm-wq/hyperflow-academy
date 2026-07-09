@@ -639,6 +639,9 @@
   @keyframes cnextpulse{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
   .class-x{flex:none;padding:8px 15px;border-radius:9px;background:var(--ink-3);border:1px solid var(--line-2);color:var(--text);font-size:13.5px;font-weight:600;cursor:pointer}
   .class-x:hover{border-color:var(--indigo)}
+  .class-deep{flex:none;padding:8px 14px;border-radius:9px;background:var(--ink-3);border:1px solid var(--line-2);color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+  .class-deep:hover{color:var(--text);border-color:var(--amber)}
+  @media(max-width:640px){ .class-deep .cdtxt{display:none} }
   .class-stage{flex:1;overflow-y:auto;overflow-x:hidden;display:flex;justify-content:center;align-items:flex-start;padding:22px 16px}
   .class-stage .vplayer{width:100%;max-width:880px;margin:0}
   @media(max-width:640px){ .class-stage{padding:10px} .class-title{display:none} }
@@ -668,6 +671,7 @@
   <div class="class-bar">
     <span class="class-step">▶ Clase</span>
     <span class="class-title" id="classTitle">La clase del episodio</span>
+    <button class="class-deep" id="classDeep" onclick="classProfundizar()" title="Material externo de este episodio (YouTube)">📚 <span class="cdtxt">Profundizar</span></button>
     <button class="class-next" id="classNext" style="display:none" onclick="classFlowNext()">Continuar al episodio →</button>
     <button class="class-x" onclick="exitClass()" aria-label="Salir de la clase">Salir ✕</button>
   </div>
@@ -1924,6 +1928,11 @@ function exitClass(){                                 // el usuario cierra: NO a
   portalPlayerTo('playerHost');
 }
 function classFlowNext(){ classToInteractive(flowN); }
+function classProfundizar(){                          // material externo (YouTube) del episodio, disponible en todo momento
+  const id=(typeof YTMAP!=='undefined')?YTMAP[flowN]:null;
+  const url=id?('https://youtu.be/'+id):'https://www.youtube.com/results?search_query=hiperautomatizaci%C3%B3n';
+  window.open(url,'_blank','noopener');
+}
 function classToInteractive(n){                       // fin de clase → método interactivo (encadena)
   vpStop(); stopOwnLesson();
   document.getElementById('classOverlay').classList.remove('on'); document.body.style.overflow='';
