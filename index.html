@@ -59,6 +59,22 @@
   .btn-ghost{background:var(--ink-3);border:1px solid var(--line-2);color:var(--text)}
   .btn-ghost:hover{background:var(--ink-4)}
   .nav-cta{margin-left:8px}
+  .btn-enter{margin-left:auto;background:rgba(108,116,255,.16);border:1.5px solid var(--indigo);color:#eaebff;font-weight:650}
+  .btn-enter:hover{background:var(--indigo);color:#fff;transform:translateY(-1px);box-shadow:0 12px 28px -12px var(--indigo)}
+  .btn-enter .lbl-sm{display:none}
+  .btn-enter-lg{padding:15px 30px;font-size:15.5px}
+  @media(max-width:560px){
+    .nav-in{gap:8px;height:58px}
+    .brand{font-size:14px;gap:7px}
+    .brand .logo{width:25px;height:25px}
+    .btn-enter,.nav-cta{padding:8px 11px;font-size:12.5px;border-radius:9px}
+    .btn-enter .lbl-lg{display:none}
+    .btn-enter .lbl-sm{display:inline}
+  }
+  @media(max-width:380px){
+    .brand-suffix{display:none}
+    .btn-enter,.nav-cta{padding:8px 10px;font-size:12px}
+  }
 
   /* ---------- HERO ---------- */
   .hero{position:relative;overflow:hidden;padding:96px 0 72px}
@@ -641,14 +657,14 @@
   <div class="wrap nav-in">
     <a class="brand" href="#" onclick="showLanding();return false">
       <span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"/><circle cx="12" cy="12" r="3.2" fill="#fff" stroke="none"/></svg></span>
-      Hyperflow<span style="color:var(--indigo-2)">·</span>Academy
+      Hyperflow<span class="brand-suffix"><span style="color:var(--indigo-2)">·</span>Academy</span>
     </a>
     <nav class="nav-links">
       <a href="#curriculo" onclick="showLanding()">Currículo</a>
       <a href="#precios" onclick="showLanding()">Precios</a>
       <a href="#faq" onclick="showLanding()">FAQ</a>
-      <button onclick="openCampus()">Acceder al campus</button>
     </nav>
+    <button class="btn btn-enter" onclick="openCampus()" aria-label="Entrar al curso"><span class="lbl-lg">▶ Entrar al curso</span><span class="lbl-sm">▶ Entrar</span></button>
     <button class="btn btn-amber nav-cta" onclick="openCheckout()">Inscribirme</button>
   </div>
 </header>
@@ -675,7 +691,7 @@
         <div class="stat"><b>6</b><span>Temporadas con trama</span></div>
         <div class="stat"><b>22</b><span>Episodios con misión</span></div>
         <div class="stat"><b>22</b><span>Episodios interactivos</span></div>
-        <div class="stat"><b>∞</b><span>XP, niveles y logros</span></div>
+        <div class="stat"><b>🎓</b><span>Certificado al terminar</span></div>
       </div>
     </div>
   </section>
@@ -726,7 +742,7 @@
       <div class="sec-head">
         <div class="eyebrow">El curso completo</div>
         <h2>6 temporadas. 22 episodios. Una sola misión: tu maestría.</h2>
-        <p>Cada episodio combina narrativa, video, material y un reto de evaluación que suma XP. Avanza episodio a episodio, de los fundamentos al dominio empresarial.</p>
+        <p>Cada episodio combina narrativa, clase audiovisual, material y un reto de evaluación. Avanza episodio a episodio, de los fundamentos al dominio empresarial.</p>
       </div>
       <div class="curr-top">
         <div class="curr-meta">
@@ -735,7 +751,7 @@
           <span class="chip">Trama básico → dominio</span>
           <span class="chip">Estreno 2026</span>
         </div>
-        <button class="btn btn-ghost" onclick="openCampus()">▶ Entrar al curso →</button>
+        <button class="btn btn-primary btn-enter-lg" onclick="openCampus()">▶ Entrar al curso →</button>
       </div>
       <div class="mod-list" id="currList"></div>
     </div>
@@ -841,7 +857,7 @@
           <ul>
             <li><span class="tick">✓</span> Las 6 temporadas · 22 episodios</li>
             <li><span class="tick">✓</span> Experiencias interactivas tipo juego (aprende haciendo)</li>
-            <li><span class="tick">✓</span> Gamificación: XP, niveles, logros y ruta guiada</li>
+            <li><span class="tick">✓</span> Aprendizaje interactivo: retos prácticos y ruta guiada</li>
             <li><span class="tick">✓</span> Retos, cuaderno de notas y material descargable</li>
             <li><span class="tick">✓</span> Certificado de finalización</li>
             <li><span class="tick">✓</span> Actualizaciones de por vida incluidas</li>
@@ -1857,23 +1873,23 @@ function goReto(){ switchTab('reto'); const p=document.getElementById('panel-ret
 function renderGuide(n){
   const game=GAME[n];
   const steps = game ? [
-    {ic:'🎮',k:'Paso 1 · empieza aquí',t:'Vive el episodio',d:(n===1?'Entra a la historia y tú tomas las decisiones. Aprende jugando.':'Construye tu primer bot arrastrando y conectando piezas.'),btn:'▶ Empezar la experiencia',act:`openGame(${n})`,big:true},
-    {ic:'🎬',k:'Paso 2 · opcional',t:'Profundiza con la clase',d:'Video y clase narrada, más abajo. Solo si quieres ir aún más a fondo.',btn:'Ver la clase ↓',act:'scrollToPlayer()'},
-    {ic:'🏆',k:'Paso 3',t:'Supera el reto',d:'Responde el cuestionario para desbloquear el siguiente episodio.',btn:'Ir al reto →',act:'goQuiz()'}
+    {ic:'🎬',k:'Paso 1 · empieza aquí',t:'Clase',d:'La lección audiovisual del episodio: aquí se explica el tema. Primero se ve y se aprende.',btn:'▶ Ver la clase ↓',act:'scrollToPlayer()',big:true},
+    {ic:'',k:'Paso 2',t:`Episodio ${n}`,d:(n===1?'Entra a la historia y tú tomas las decisiones. Ahora aplicas lo aprendido.':'Construye tu primer bot arrastrando y conectando piezas. Aplicas lo que viste en la clase.'),btn:`▶ Empezar el episodio ${n}`,act:`openGame(${n})`},
+    {ic:'🏆',k:'Paso 3',t:'Supera el reto',d:'Responde el cuestionario para desbloquear el siguiente episodio.',btn:'Ir al cuestionario →',act:'goQuiz()'}
   ] : (hasReto(n) ? [
-    {ic:'🎮',k:'Paso 1 · empieza jugando',t:'Reto interactivo',d:'Aprende haciendo en 1 minuto: arma o clasifica con tus manos y compruébalo. Aquí se aprende de verdad, no mirando.',btn:'🎮 Jugar el reto',act:'goReto()',big:true},
-    {ic:'🎬',k:'Paso 2 · profundiza',t:'Mira la clase',d:'¿Quieres ir más a fondo? Elige Video o Clase narrada por IA, aquí abajo.',btn:'Ver la clase ↓',act:'scrollToPlayer()'},
-    {ic:'🏆',k:'Paso 3',t:'Supera el cuestionario',d:'Responde para desbloquear el siguiente episodio.',btn:'Ir al cuestionario →',act:'goQuiz()'}
+    {ic:'🎬',k:'Paso 1 · empieza aquí',t:'Clase',d:'La lección del episodio: aquí se explica el tema. Primero se ve y se aprende.',btn:'▶ Ver la clase ↓',act:'scrollToPlayer()',big:true},
+    {ic:'',k:'Paso 2',t:`Episodio ${n}`,d:'Aplicas lo aprendido: armas o clasificas con tus manos y lo compruebas. Aquí se afianza de verdad.',btn:`▶ Empezar el episodio ${n}`,act:'goReto()'},
+    {ic:'🏆',k:'Paso 3',t:'Supera el reto',d:'Responde el cuestionario para desbloquear el siguiente episodio.',btn:'Ir al cuestionario →',act:'goQuiz()'}
   ] : [
-    {ic:'🎬',k:'Paso 1 · empieza aquí',t:'Mira la clase',d:'Elige Video o Clase narrada por IA, justo aquí abajo.',btn:'Ver la clase ↓',act:'scrollToPlayer()',big:true},
-    {ic:'🏆',k:'Paso 2',t:'Supera el cuestionario',d:'Responde el cuestionario para desbloquear el siguiente episodio.',btn:'Ir al cuestionario →',act:'goQuiz()'}
+    {ic:'🎬',k:'Paso 1 · empieza aquí',t:'Clase',d:'La lección del episodio: aquí se explica el tema. Primero se ve y se aprende.',btn:'▶ Ver la clase ↓',act:'scrollToPlayer()',big:true},
+    {ic:'🏆',k:'Paso 2',t:'Supera el reto',d:'Responde el cuestionario para desbloquear el siguiente episodio.',btn:'Ir al cuestionario →',act:'goQuiz()'}
   ]);
   return `<div class="guide">
     <div class="guide-h">🧭 Cómo estudiar este episodio — sigue los pasos en orden</div>
     <div class="guide-steps">
       ${steps.map((s,i)=>`<div class="gstep${s.big?' big':''}">
         <div class="gnum">${i+1}</div>
-        <div class="gbody"><span class="gk">${s.k}</span><b>${s.ic} ${s.t}</b><span class="gd">${s.d}</span>
+        <div class="gbody"><span class="gk">${s.k}</span><b>${s.ic?s.ic+' ':''}${s.t}</b><span class="gd">${s.d}</span>
           <button class="gbtn${s.big?' gbtn-primary':''}" onclick="${s.act}">${s.btn}</button></div>
       </div>`).join('')}
     </div>
@@ -1910,7 +1926,7 @@ const FAQ=[
  {q:"¿Qué herramientas necesito y tienen coste?",a:"La mayoría ofrece planes gratuitos suficientes para aprender (n8n, Make, Power Platform, UiPath Community). Te indicamos en cada módulo qué usar y cómo empezar sin gastar."},
  {q:"¿La compra tiene reembolso?",a:"No. Por tratarse de contenido digital de acceso inmediato y de por vida, la compra es final y no admite reembolsos. Por eso ponemos todo el temario, las 6 temporadas y el formato a la vista en esta página: compras con total conocimiento y la decisión es tuya."},
  {q:"¿Incluye soporte o atención al cliente?",a:"No. Es un producto 100% autoguiado: no hay atención al cliente, tutorías ni soporte personalizado. Está diseñado para que aprendas solo, a tu ritmo, con todo lo necesario ya dentro del curso: clases, retos interactivos, evaluaciones con feedback inmediato y material descargable."},
- {q:"No tengo mucho tiempo, ¿podré con esto?",a:"Sí. Está en formato serie por episodios cortos: avanzas 15-25 minutos cuando puedas, con XP y progreso que te mantienen enganchado. Como el acceso es de por vida, no hay reloj en contra."},
+ {q:"No tengo mucho tiempo, ¿podré con esto?",a:"Sí. Está en formato serie por episodios cortos: avanzas 15-25 minutos cuando puedas, y tu progreso se guarda para que retomes justo donde quedaste. Como el acceso es de por vida, no hay reloj en contra."},
  {q:"¿Esto no lo hace gratis la IA por sí sola?",a:"La IA es la herramienta; el valor está en el criterio para detectar oportunidades, diseñar la solución y ponerla en producción sin que se rompa. Eso es lo que se paga y lo que enseña esta serie."},
  {q:"¿Me servirá para conseguir clientes o un mejor puesto?",a:"El programa te enseña a detectar, diseñar e implementar automatizaciones, que es la competencia que se cobra. Te llevas material descargable de cada módulo y, si suma el Pack Acelerador, 20 automatizaciones listas para usar. No garantizamos ingresos ni empleo: te damos las habilidades y las herramientas; el resultado depende de cómo las apliques."},
  {q:"¿Cómo se paga?",a:"Un pago único mediante Stripe, con tarjeta. No es una suscripción: paga una vez y accede de por vida."}
@@ -2111,12 +2127,12 @@ function loadModule(n){
     <div class="ep-code">“${CODE[n]}”</div>
     <h1>${m.title}${m.propuesto?' <span style="color:var(--amber);font-size:14px;font-family:var(--font-mono);vertical-align:middle">(propuesto)</span>':''}</h1>
     <div class="lesson-meta">
-      <span>🎬 ${m.lessons.length} escenas</span><span>⏱ ${m.dur}</span><span>📊 ${m.level}</span><span>⚡ +${XP_PER} XP al superar el reto</span>
+      <span>🎬 ${m.lessons.length} escenas</span><span>⏱ ${m.dur}</span><span>📊 ${m.level}</span><span>🏆 Reto para avanzar</span>
     </div>
     ${renderGuide(n)}
     ${renderPlayer(m)}
     <p class="player-note">${OWNLESSON[n]
-      ? '// 🎬 Lección audiovisual: producción propia de Hyperflow, con voz de locutor y subtítulos. 🎙️ Clase narrada: la misma clase con voz IA (Álvaro). Elige el modo arriba.'
+      ? '// 🎬 Lección audiovisual: producción propia de Hyperflow, con voz de locutor y subtítulos. 🎙️ Clase narrada: la misma clase con voz IA en español de México. Elige el modo arriba.'
       : '// 🎬 Video: clase real curada de YouTube (verificada). 🎙️ Clase IA: narración con voz de IA + subtítulos, 100% gratis y sin depender de internet. Elige el modo arriba.'}</p>
     <div class="tabs">
       <button class="tab active" data-t="contenido" onclick="switchTab('contenido')">Contenido</button>
@@ -2251,7 +2267,7 @@ function renderQuiz(m){
   return `
   <div class="quiz-intro">
     <span class="qic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></span>
-    <div><b>Reto del episodio</b><p>Supera las ${m.quiz.length} preguntas con 70% o más para completar el episodio y ganar +${XP_PER} XP.</p></div>
+    <div><b>Reto del episodio</b><p>Supera las ${m.quiz.length} preguntas con 70% o más para completar el episodio y desbloquear el siguiente.</p></div>
   </div>
   <form id="quizForm" onsubmit="return false">
     ${m.quiz.map((q,qi)=>`
@@ -2349,17 +2365,13 @@ function gradeQuiz(n){
   res.className='quiz-result show '+(pass?'pass':'fail');
   res.textContent=`${pass?'✓ Aprobado':'✕ No superado'} · ${correct}/${m.quiz.length} correctas (${pct}%)`;
   if(pass&&!progress.done.includes(n)){
-    const before=levelInfo().level;
     progress.done.push(n);saveProgress(progress);
-    const after=levelInfo();
     renderSide();
     const sd=document.getElementById('side'+n);if(sd)sd.classList.add('done');
-    if(after.level>before){
-      showToast('👑','¡Subiste a Nivel '+after.level+'!','Ahora eres “'+after.title+'” · '+after.xp+' XP');
-    }else if(n<22){
-      showToast('🔓','+'+XP_PER+' XP · Episodio superado','Desbloqueado: “'+CODE[n+1]+'” (EP '+pad2(epInSeason(n+1))+')');
+    if(n<22){
+      showToast('🔓','Episodio superado','Desbloqueado: “'+CODE[n+1]+'” (EP '+pad2(epInSeason(n+1))+')');
     }else{
-      showToast('🏆','¡Serie completada!','Reclama tu certificado de Arquitecto');
+      showToast('🏆','¡Curso completado!','Reclama tu certificado de Arquitecto');
     }
   }else if(pass){
     showToast('✓','Reto superado','Ya tenías este episodio completado');
@@ -2526,7 +2538,7 @@ function retoCheck(n){ const c=INTERACT[n], st=RS[n]; if(!retoReady(n))return;
 }
 function retoWin(n){ const c=INTERACT[n]; RS[n].done=true; try{ localStorage.setItem('hyperflow_reto_'+n,'1'); }catch(e){}
   retoRender(n); rWinSound();
-  if(typeof showToast==='function') showToast(c.win.medal[1],'🎮 '+c.win.medal[0],'+'+c.win.xp+' XP · reto interactivo superado');
+  if(typeof showToast==='function') showToast('🎮','Reto interactivo superado','¡Bien hecho! Ya puedes seguir.');
 }
 /* API de test: resuelve el reto (bien o mal) y devuelve si gana */
 function retoSolveTEST(n,wrong){ const c=INTERACT[n]; if(!c)return null; if(!RS[n])retoInit(n); const st=RS[n]; st.done=false; st.marks=null;
@@ -2752,7 +2764,10 @@ const OWNLESSON={1:"piloto/leccion/"};
    Cada episodio: array de clips MP3 (data URI) alineado a las diapositivas de la clase.
    Si un episodio tiene audio pregenerado (voz IA Edge-TTS), suena ese; si no, cae a la voz del navegador. */
 const AUDIO=/*AUDIO_JSON*/{"1":["audio/ep1/0.mp3","audio/ep1/1.mp3","audio/ep1/2.mp3","audio/ep1/3.mp3","audio/ep1/4.mp3","audio/ep1/5.mp3"],"2":["audio/ep2/0.mp3","audio/ep2/1.mp3","audio/ep2/2.mp3","audio/ep2/3.mp3","audio/ep2/4.mp3","audio/ep2/5.mp3"],"3":["audio/ep3/0.mp3","audio/ep3/1.mp3","audio/ep3/2.mp3","audio/ep3/3.mp3","audio/ep3/4.mp3","audio/ep3/5.mp3"],"4":["audio/ep4/0.mp3","audio/ep4/1.mp3","audio/ep4/2.mp3","audio/ep4/3.mp3","audio/ep4/4.mp3","audio/ep4/5.mp3"],"5":["audio/ep5/0.mp3","audio/ep5/1.mp3","audio/ep5/2.mp3","audio/ep5/3.mp3","audio/ep5/4.mp3","audio/ep5/5.mp3"],"6":["audio/ep6/0.mp3","audio/ep6/1.mp3","audio/ep6/2.mp3","audio/ep6/3.mp3","audio/ep6/4.mp3","audio/ep6/5.mp3"],"7":["audio/ep7/0.mp3","audio/ep7/1.mp3","audio/ep7/2.mp3","audio/ep7/3.mp3","audio/ep7/4.mp3","audio/ep7/5.mp3"],"8":["audio/ep8/0.mp3","audio/ep8/1.mp3","audio/ep8/2.mp3","audio/ep8/3.mp3","audio/ep8/4.mp3","audio/ep8/5.mp3"],"9":["audio/ep9/0.mp3","audio/ep9/1.mp3","audio/ep9/2.mp3","audio/ep9/3.mp3","audio/ep9/4.mp3","audio/ep9/5.mp3"],"10":["audio/ep10/0.mp3","audio/ep10/1.mp3","audio/ep10/2.mp3","audio/ep10/3.mp3","audio/ep10/4.mp3","audio/ep10/5.mp3"],"11":["audio/ep11/0.mp3","audio/ep11/1.mp3","audio/ep11/2.mp3","audio/ep11/3.mp3","audio/ep11/4.mp3","audio/ep11/5.mp3"],"12":["audio/ep12/0.mp3","audio/ep12/1.mp3","audio/ep12/2.mp3","audio/ep12/3.mp3","audio/ep12/4.mp3","audio/ep12/5.mp3"],"13":["audio/ep13/0.mp3","audio/ep13/1.mp3","audio/ep13/2.mp3","audio/ep13/3.mp3","audio/ep13/4.mp3","audio/ep13/5.mp3"],"14":["audio/ep14/0.mp3","audio/ep14/1.mp3","audio/ep14/2.mp3","audio/ep14/3.mp3","audio/ep14/4.mp3","audio/ep14/5.mp3"],"15":["audio/ep15/0.mp3","audio/ep15/1.mp3","audio/ep15/2.mp3","audio/ep15/3.mp3","audio/ep15/4.mp3","audio/ep15/5.mp3"],"16":["audio/ep16/0.mp3","audio/ep16/1.mp3","audio/ep16/2.mp3","audio/ep16/3.mp3","audio/ep16/4.mp3","audio/ep16/5.mp3"],"17":["audio/ep17/0.mp3","audio/ep17/1.mp3","audio/ep17/2.mp3","audio/ep17/3.mp3","audio/ep17/4.mp3","audio/ep17/5.mp3"],"18":["audio/ep18/0.mp3","audio/ep18/1.mp3","audio/ep18/2.mp3","audio/ep18/3.mp3","audio/ep18/4.mp3","audio/ep18/5.mp3"],"19":["audio/ep19/0.mp3","audio/ep19/1.mp3","audio/ep19/2.mp3","audio/ep19/3.mp3","audio/ep19/4.mp3","audio/ep19/5.mp3"],"20":["audio/ep20/0.mp3","audio/ep20/1.mp3","audio/ep20/2.mp3","audio/ep20/3.mp3","audio/ep20/4.mp3","audio/ep20/5.mp3"],"21":["audio/ep21/0.mp3","audio/ep21/1.mp3","audio/ep21/2.mp3","audio/ep21/3.mp3","audio/ep21/4.mp3","audio/ep21/5.mp3"],"22":["audio/ep22/0.mp3","audio/ep22/1.mp3","audio/ep22/2.mp3","audio/ep22/3.mp3","audio/ep22/4.mp3","audio/ep22/5.mp3"]}/*END_AUDIO*/;
-function hasLocutor(n){return AUDIO[n]&&AUDIO[n].length;}
+/* MP3 pregenerados eran Álvaro es-ES (España). Braian quiere voz es-MX (México), la que elegimos.
+   Hasta poder regenerarlos con Edge-TTS en es-MX, se desactivan y la clase narrada usa el TTS
+   del navegador con prioridad es-MX (igual que la lección audiovisual). */
+function hasLocutor(n){return false;}
 
 /* ================= GUIONES DE CLASE (escritos, tono instructor) =================
    Cada beat: t = titular en pantalla · s = narración (voz IA + subtítulo) */
@@ -2902,7 +2917,8 @@ function scoreVoice(v){
   if(/google/.test(n))s+=6;                                      // Google suena más natural que SAPI
   if(/(pablo|raul|raúl|jorge|diego|carlos|miguel|juan|enrique|álvaro|alvaro|alonso|gonzalo|lorenzo|dario|darío|andres|andrés|felipe|male|hombre|masculin)/.test(n))s+=9; // hombre
   if(/(sabina|helena|mónica|monica|paulina|laura|elvira|dalia|ximena|marisol|isabela|paloma|catalina|female|mujer|femenin)/.test(n))s-=6; // leve preferencia por hombre
-  if(/es-es/i.test(v.lang))s+=3;                                 // castellano (España)
+  if(/es-mx|es-419|m[eé]xic/i.test(v.lang+' '+n))s+=8;           // español de México / neutro latino: prioridad (la voz elegida)
+  if(/es-es/i.test(v.lang))s-=4;                                 // castellano de España: se evita (queremos neutro mexicano)
   return s;
 }
 function spanishVoices(){return (TTS?TTS.getVoices():[]).filter(v=>/^es/i.test(v.lang)).sort((a,b)=>scoreVoice(b)-scoreVoice(a));}
@@ -2937,7 +2953,7 @@ function buildSlides(m){
   }else{
     sl.push({k:'obj',kick:'Objetivos',title:'Lo que vas a dominar',bullets:m.obj,say:'En este episodio vas a lograr lo siguiente. '+m.obj.join('. ')+'.'});
     m.lessons.forEach((l,i)=>sl.push({k:'lesson',kick:'Escena '+pad2(i+1)+' · '+l.d,title:l.t,text:l.desc,say:l.t+'. '+l.desc}));
-    sl.push({k:'end',kick:'Cierre',title:'Ahora te toca a ti',text:'Supera el reto del episodio para ganar tu XP.',say:'Excelente. Ahora supera el reto del episodio para ganar tu experiencia.'});
+    sl.push({k:'end',kick:'Cierre',title:'Ahora te toca a ti',text:'Supera el reto del episodio para avanzar al siguiente.',say:'Excelente. Ahora supera el reto del episodio para avanzar al siguiente.'});
   }
   return sl;
 }
@@ -2990,7 +3006,7 @@ function renderPlayer(m){
         </select>
       </div>
       <div class="vhint" id="vhint" style="display:none">
-        <span>🎧 <b>¿La voz suena robótica?</b> Abre este curso en <b>Microsoft Edge</b> para activar gratis una voz IA más natural (Álvaro, castellano). O elige el modo 🎬 Video arriba.</span>
+        <span>🎧 <b>¿La voz suena robótica?</b> Abre este curso en <b>Microsoft Edge</b> para activar gratis una voz IA más natural en <b>español de México</b> (Jorge). O elige otra voz en el selector de arriba.</span>
       </div>
     </div>
   </div>`;
@@ -3043,7 +3059,7 @@ function vpSpeak(i){
   const s=vp.slides[i];
   if(TTS)TTS.cancel();
   if(vp.timer){clearTimeout(vp.timer);vp.timer=null;}
-  const clip=(AUDIO[vp.mod.n]||[])[i];
+  const clip=hasLocutor(vp.mod.n)?(AUDIO[vp.mod.n]||[])[i]:null;
   const a=document.getElementById('vaudio');
   if(clip&&a){
     try{
@@ -3060,7 +3076,7 @@ function speakTTS(i,s){
   if(TTS){
     TTS.cancel();
     const u=new SpeechSynthesisUtterance(s.say);
-    u.lang=(vp.voice&&vp.voice.lang)||'es-ES';if(vp.voice)u.voice=vp.voice;u.rate=vp.rate;u.pitch=vp.pitch;
+    u.lang=(vp.voice&&vp.voice.lang)||'es-MX';if(vp.voice)u.voice=vp.voice;u.rate=vp.rate;u.pitch=vp.pitch;
     u.onend=()=>{if(vp.playing&&vp.i===i)vpNextAuto();};
     TTS.speak(u);
     const est=Math.max(3500,s.say.length*55/vp.rate);
@@ -3072,7 +3088,7 @@ function speakTTS(i,s){
 }
 function vpNextAuto(){
   if(vp.i<vp.slides.length-1){vpGo(vp.i+1);}
-  else{vp.playing=false;vpIcon(false);const cap=document.getElementById('vcapTxt');if(cap)cap.textContent='Fin de la clase. Pasa al reto del episodio para ganar tu XP. ▸';}
+  else{vp.playing=false;vpIcon(false);const cap=document.getElementById('vcapTxt');if(cap)cap.textContent='Fin de la clase. Pasa al reto del episodio para avanzar. ▸';}
 }
 function vpGo(i){
   if(i<0)i=0;if(i>vp.slides.length-1)i=vp.slides.length-1;

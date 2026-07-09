@@ -168,11 +168,6 @@
 <div class="top">
   <div class="toprow">
     <button class="deepbtn" onclick="openDeep()">📚 Profundizar</button>
-    <span class="rankchip" id="rankchip">Novato · 0 XP</span>
-  </div>
-  <div class="hud hidden" id="hud">
-    <div class="bar" id="barP"><div class="bl"><span>💚 Salud del proyecto</span><b id="pVal">55</b></div><div class="track"><div class="fill" id="pFill"></div></div></div>
-    <div class="bar" id="barC"><div class="bl"><span>⭐ Tu credibilidad</span><b id="cVal">50</b></div><div class="track"><div class="fill" id="cFill"></div></div></div>
   </div>
 </div>
 
@@ -210,8 +205,8 @@ let NAME='', xp=0, beat=0, proyecto=55, cred=50;
 const RANKS=[[0,'Novato'],[300,'Aprendiz'],[720,'Operador'],[1200,'Analista'],[1680,'Consultor'],[2160,'Arquitecto'],[2640,'Experto']];
 function rankName(x){let n='Novato';RANKS.forEach(r=>{if(x>=r[0])n=r[1];});return n;}
 function P(t){return t.replaceAll('[N]','<span class="nm">'+NAME+'</span>');}
-function updateChip(){ $('#rankchip').textContent=rankName(xp)+' · '+xp+' XP'; }
-function addXP(n,msg){ xp+=n; updateChip(); if(msg)toast('+'+n+' XP · '+msg); }
+function updateChip(){}
+function addXP(n,msg){ xp+=n; }
 let tt; function toast(m){const t=$('#toast');t.innerHTML='<span class="ti">⚡</span><span><b>'+m+'</b></span>';t.classList.add('show');ding(880);clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2100);}
 let medals=[];
 function chord(){bell(523.25,.55,.12);setTimeout(()=>bell(659.25,.55,.12),100);setTimeout(()=>bell(783.99,.7,.13),200);}
@@ -219,7 +214,7 @@ function unlockMedal(m){ if(!m||medals.find(x=>x.name===m.name))return; medals.p
   const t=$('#toast'); t.innerHTML='<span class="ti">'+m.ic+'</span><span><b>¡Medalla desbloqueada!</b> <span style="color:var(--muted);font-size:12px">'+m.name+'</span></span>';
   t.classList.add('show'); chord(); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('show'),2800);
 }
-function reward(b){ if(b.xp&&!b._done){ b._done=true; xp+=b.xp; updateChip(); } if(b.medal){ unlockMedal(b.medal); } else if(b.xpmsg){ toast('+'+(b.xp||0)+' XP · '+b.xpmsg); } }
+function reward(b){}
 
 let AC=null;
 /* campana/marimba suave: fundamental + armónico de octava, ataque suave y decaída natural (sonido premium, no 8-bit) */
@@ -302,16 +297,12 @@ function downloadResumen(){
 
 /* ===== HUD ===== */
 function paintHud(){
-  const col=v=>v>=60?'var(--green)':v>=35?'var(--amber)':'var(--red)';
-  $('#pVal').textContent=proyecto; $('#cVal').textContent=cred;
-  $('#pFill').style.width=proyecto+'%'; $('#pFill').style.background=col(proyecto);
-  $('#cFill').style.width=cred+'%'; $('#cFill').style.background=col(cred);
   document.body.classList.toggle('danger', proyecto<35);
   applyMood();   // la música se tensa con el peligro, respetando el mood de la sección
 }
 function applyDelta(d){
-  if(d.p){ proyecto=Math.max(0,Math.min(100,proyecto+d.p)); flash('barP'); }
-  if(d.c){ cred=Math.max(0,Math.min(100,cred+d.c)); flash('barC'); }
+  if(d.p){ proyecto=Math.max(0,Math.min(100,proyecto+d.p)); }
+  if(d.c){ cred=Math.max(0,Math.min(100,cred+d.c)); }
   paintHud();
 }
 function flash(id){const el=$('#'+id);el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash');}
@@ -354,7 +345,7 @@ const BEATS=[
 function renderProg(){}
 function nameGate(){
   stopPad(); document.body.dataset.mood='';
-  proyecto=55;cred=50;xp=0;beat=0;updateChip();$('#hud').classList.add('hidden');document.body.classList.remove('danger');
+  proyecto=55;cred=50;xp=0;beat=0;document.body.classList.remove('danger');
   $('#stage').innerHTML=`<div class="namebox scene">
     <div class="k">Antes de empezar</div>
     <h1>Esta historia es <span style="font-style:normal" class="nm">tuya</span></h1>
@@ -373,7 +364,7 @@ function startStory(){ const v=$('#nameInput').value.trim(); if(!v)return; NAME=
     {t:BEATS[1].t, mood:'tense'},
     {t:BEATS[2].t, mood:'dark'}
   ];
-  cinematic(intro, ()=>{ beat=3; $('#hud').classList.remove('hidden'); paintHud(); renderBeat(); });
+  cinematic(intro, ()=>{ beat=3; paintHud(); renderBeat(); });
 }
 
 function renderBeat(){
@@ -436,7 +427,7 @@ function choose(i){
   }
 }
 function showHint(){ const box=$('#hintBox'),btn=$('#hintBtn'); if(box.classList.contains('show'))return; box.classList.add('show'); btn.style.display='none'; ding(560); }
-function deltaTxt(d){ if(!d)return''; let s=[]; if(d.p)s.push('<span style="color:'+(d.p>0?'var(--green)':'var(--red)')+'">Proyecto '+(d.p>0?'+':'')+d.p+'</span>'); if(d.c)s.push('<span style="color:'+(d.c>0?'var(--green)':'var(--red)')+'">Credibilidad '+(d.c>0?'+':'')+d.c+'</span>'); return s.length?'<div style="font-family:var(--mono);font-size:11px;margin-bottom:8px">'+s.join(' · ')+'</div>':''; }
+function deltaTxt(d){ return ''; }
 
 let roiWon=false;
 function calcRoi(){
@@ -466,8 +457,6 @@ function renderEnd(){
     <div class="seal ${tier}"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5"/></svg></div>
     <div class="ek" style="color:${tier==='win'?'var(--green)':tier==='mid'?'var(--amber)':'var(--red)'}">${ek}</div>
     <h2>${h.replace(NAME,'<span class="nm">'+NAME+'</span>')}</h2>
-    <div class="lvlup">⚡ ${xp} XP · rango ${rankName(xp)} · Proyecto ${proyecto}/100</div>
-    ${medals.length?`<div class="medalrow">${medals.map(m=>`<span class="medalpill" title="${m.name}">${m.ic} ${m.name}</span>`).join('')}</div>`:''}
     <p>${txt}</p>
     <div class="cta">
       <button class="btn btn-primary" onclick="goNext()">Continuar →</button>

@@ -181,10 +181,8 @@
     <div class="toprow">
       <div class="mission">🎯 <b>Arma el flujo:</b> Recibir → Leer con IA → Guardar</div>
       <button class="deepbtn" onclick="openDeep()">📚</button>
-      <span class="rankchip" id="rankchip">Novato · 0 XP</span>
     </div>
     <div class="hud">
-      <div class="bar"><div class="bl"><span>😰 Estrés</span><b id="stVal">0</b></div><div class="track"><div class="fill" id="stFill" style="background:var(--green)"></div></div></div>
       <div class="clock" id="clock">⏱ <span id="clkTxt">02:00</span> <span style="color:var(--muted-2);font-size:9px">entrega</span></div>
     </div>
   </div>
@@ -233,7 +231,6 @@
   <div style="font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--green);margin-bottom:8px">Nivel superado</div>
   <h3 class="serif" id="winH">Tu primer bot vive</h3>
   <p id="winP"></p>
-  <div class="medalrow" id="winMedals"></div>
   <div class="pill-info" id="winUnlock" style="color:var(--amber);border-color:rgba(255,180,84,.3);background:var(--amber-dim)"></div>
   <div class="cta">
     <button class="btn btn-primary" onclick="goNext()">Siguiente →</button>
@@ -259,7 +256,7 @@ const $=s=>document.querySelector(s);
 let NAME='Consultor', xp=0, stress=0, clock=120, clkInt=null, done=false, aiUnlocked=false;
 const RANKS=[[0,'Novato'],[300,'Aprendiz'],[720,'Operador'],[1200,'Analista'],[1680,'Consultor'],[2160,'Arquitecto'],[2640,'Experto']];
 function rankName(x){let n='Novato';RANKS.forEach(r=>{if(x>=r[0])n=r[1];});return n;}
-function updateChip(){$('#rankchip').textContent=rankName(xp)+' · '+xp+' XP';}
+function updateChip(){}
 let medals=[];
 
 /* ===== AUDIO premium ===== */
@@ -299,8 +296,8 @@ function setMood(m){ document.body.dataset.mood=m||''; musicMood=m||'calm'; }
 /* ===== toasts ===== */
 let tt;function toast(m,ic){$('#toastI').textContent=ic||'⚡';$('#toastM').textContent=m;const t=$('#toast');t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2100);}
 let jt;function jit(title,txt){$('#jitT').textContent=title;$('#jitP').textContent=txt;const j=$('#jit');j.classList.add('show');bell(560,.4,.06);clearTimeout(jt);jt=setTimeout(()=>j.classList.remove('show'),5200);}
-function unlockMedal(name,ic){if(medals.find(m=>m.name===name))return;medals.push({name,ic});toast(name,ic);chord();}
-function addXP(n,msg){xp+=n;updateChip();if(msg)toast('+'+n+' XP · '+msg);try{localStorage.setItem('hyperflow_xp',String(xp));}catch(e){}}
+function unlockMedal(name,ic){}
+function addXP(n,msg){xp+=n;}
 function logC(html,cls){const c=$('#console');const d=document.createElement('div');d.className='cl '+(cls||'');d.innerHTML=html;c.appendChild(d);c.scrollTop=c.scrollHeight;}
 
 /* ===== piezas y pasos ===== */
@@ -401,9 +398,7 @@ function winLevel(){
   setMonitor('good','¡Facturas procesándose solas! ✨');
   logC('✅ <b>¡FLUJO EJECUTADO!</b> Recibir → Leer con IA → Guardar. Las 400 facturas se procesan solas.','ok');
   chord(); setTimeout(()=>bell(1046.5,.6,.12),240);
-  addXP(70,'Primer bot'); unlockMedal('Constructor de Bots','🤖'); if(Object.keys(errHist).length===0)unlockMedal('Sin un solo error','🎖️');
   try{localStorage.setItem('hyperflow_ep02_done','1');}catch(e){}
-  $('#winMedals').innerHTML=medals.map(m=>`<span class="medalpill">${m.ic} ${m.name}</span>`).join('');
   $('#winH').textContent='Tu primer bot vive, '+NAME;
   $('#winP').innerHTML='TecnoSur recibe sus facturas a tiempo. El CEO se traga sus palabras. Ya no <span class="hl">imitas clics</span>: <b>orquestas máquinas</b>.';
   $('#winUnlock').innerHTML='🎁 <b>Nueva herramienta desbloqueada:</b> 📄 Lector de PDF — te espera en el próximo nivel.';
@@ -412,7 +407,7 @@ function winLevel(){
 }
 
 /* ===== HUD ===== */
-function paintStress(){ const c=stress<40?'var(--green)':stress<70?'var(--amber)':'var(--red)'; $('#stVal').textContent=stress; $('#stFill').style.width=stress+'%'; $('#stFill').style.background=c; if(!done)setMood(stress>=60?'tense':'calm'); }
+function paintStress(){ if(!done)setMood(stress>=60?'tense':'calm'); }
 function stressUp(n){ stress=Math.min(100,stress+n); paintStress(); }
 function startClock(){ if(clkInt)clearInterval(clkInt); clock=120; clkInt=setInterval(()=>{ if(done){clearInterval(clkInt);return;} clock--; const m=String(Math.floor(Math.max(0,clock)/60)).padStart(2,'0'),s=String(Math.max(0,clock)%60).padStart(2,'0'); $('#clkTxt').textContent=m+':'+s; if(clock<=20)$('#clock').classList.add('warn'); if(clock<=0){ clearInterval(clkInt); $('#clkTxt').textContent='00:00'; stressUp(10); logC('⏱ El CEO asoma: “¿Ya está eso?” — sin prisa, pero termina.','ai'); } },1000); }
 
