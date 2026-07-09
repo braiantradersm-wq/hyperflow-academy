@@ -301,7 +301,7 @@ function pickVoice(){ if(!('speechSynthesis'in window))return; const vs=speechSy
   const n=document.getElementById('voiceNote'); if(esVoice&&n) n.innerHTML='<b>Voz actual:</b> '+esVoice.name+' — demostración del formato; en el curso final va locución profesional. Guion y animación 100% propios.';
 }
 if('speechSynthesis'in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
-function mkUtter(txt){ const u=new SpeechSynthesisUtterance(txt); if(esVoice)u.voice=esVoice; u.lang=esVoice?esVoice.lang:'es-MX'; u.rate=.98; u.pitch=.92; return u; }
+function mkUtter(txt){ const u=new SpeechSynthesisUtterance(txt); if(esVoice)u.voice=esVoice; u.lang=esVoice?esVoice.lang:'es-MX'; u.rate=1; u.pitch=1; return u; }
 function stopSpeak(){ if('speechSynthesis'in window)speechSynthesis.cancel(); }
 function toggleVoice(){ voiceOn=!voiceOn; document.getElementById('vBtn').classList.toggle('off',!voiceOn); stopSpeak(); if(playing)goScene(idx); }
 
@@ -320,15 +320,25 @@ function goScene(i){
   if(hasVoice()){ setTimeout(()=>{ if(playing&&my===token) speakScene(i,my); }, 70); } // separa cancel() de speak() (bug Chrome)
   else { safety=setTimeout(()=>{ if(playing&&my===token)goScene(i+1); }, SCENES[i].dur*1000); }
 }
-/* divide en fragmentos cortos (≤~20 palabras) por . ! ? … ; : y, si aún largos, por comas */
+/* Agrupa en bloques fluidos ≤24 palabras (~10s), CONSERVANDO comas y puntos dentro
+   del texto (la voz hace la pausa natural). Solo separa por límites mayores (. ; :)
+   y recién por comas si una sola frase sigue siendo demasiado larga. */
+function wc(s){ return s.split(/\s+/).filter(Boolean).length; }
+const MAXW=24;
 function splitParts(txt){
-  const raw=txt.match(/[^.!?…;:]+[.!?…;:]*/g)||[txt];
-  const out=[];
-  raw.forEach(seg=>{ seg=seg.trim(); if(!seg)return;
-    if(seg.split(/\s+/).length<=20){ out.push(seg); return; }
-    let buf=''; seg.split(/,\s*/).forEach(pc=>{ const cand=buf?buf+', '+pc:pc; if(buf&&cand.split(/\s+/).length>20){ out.push(buf); buf=pc; } else buf=cand; });
-    if(buf)out.push(buf);
+  const sents = txt.match(/[^.!?…]+[.!?…]+/g) || [txt.trim()];
+  const units=[];
+  sents.forEach(s=>{ s=s.trim(); if(!s)return;
+    if(wc(s)<=26){ units.push(s); return; }
+    (s.match(/[^;:]+[;:]?/g)||[s]).forEach(seg=>{ seg=seg.trim(); if(!seg)return;
+      if(wc(seg)<=26){ units.push(seg); return; }
+      let buf=''; seg.split(/(?<=,)\s+/).forEach(pc=>{ pc=pc.trim(); const cand=buf?buf+' '+pc:pc; if(buf&&wc(cand)>MAXW){ units.push(buf); buf=pc; } else buf=cand; });
+      if(buf)units.push(buf);
+    });
   });
+  const out=[]; let buf='';
+  units.forEach(u=>{ const cand=buf?buf+' '+u:u; if(buf&&wc(cand)>MAXW){ out.push(buf); buf=u; } else buf=cand; });
+  if(buf)out.push(buf);
   return out.filter(Boolean);
 }
 /* narra la escena FRASE POR FRASE: utterances cortas nunca llegan al corte de ~15s de Chrome */
