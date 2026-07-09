@@ -527,8 +527,10 @@
   .vstage .vplay svg{width:28px;height:28px;fill:#fff;margin-left:4px}
   .vcap{min-height:44px;padding:11px 18px;font-size:13.5px;color:var(--muted);background:#05060D;font-family:var(--font-mono);border-top:1px solid var(--line);display:flex;align-items:center;gap:10px}
   .vcap .rec{width:8px;height:8px;border-radius:50%;background:var(--red);flex:none;box-shadow:0 0 0 4px rgba(255,107,122,.18)}
-  .vprog{height:4px;background:#12142A}
-  .vprog-fill{height:100%;width:0;background:linear-gradient(90deg,var(--indigo),var(--amber));transition:width .3s}
+  .vprog{height:7px;background:#12142A;cursor:pointer;position:relative}
+  .vprog:hover{background:#171a34}
+  .vprog-fill{height:100%;width:0;background:linear-gradient(90deg,var(--indigo),var(--amber));transition:none;pointer-events:none}
+  .vtime{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:11px;color:var(--muted);padding:5px 16px 0}
   .vctl{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--ink-2);border-top:1px solid var(--line);flex-wrap:wrap}
   .vctl button{width:38px;height:38px;border-radius:9px;background:var(--ink-3);border:1px solid var(--line);color:var(--text);display:grid;place-items:center;font-size:15px;transition:.15s}
   .vctl button:hover{background:var(--ink-4);border-color:var(--line-2)}
@@ -2993,7 +2995,8 @@ function renderPlayer(m){
         </div></div>
       </div>
       <div class="vcap" id="vcap"><span class="rec"></span><span id="vcapTxt">Pulsa play para iniciar la clase con voz de IA.</span></div>
-      <div class="vprog"><div class="vprog-fill" id="vprog"></div></div>
+      <div class="vprog" id="vprogBar" onclick="vpSeek(event)" title="Toca la barra para adelantar o retroceder"><div class="vprog-fill" id="vprog"></div></div>
+      <div class="vtime"><span id="vtCur">0:00</span><span id="vtTot">≈ 0:00</span></div>
       <div class="vctl">
         <button class="vmain" onclick="vpToggle()"><span id="vpIcon">▶</span><span id="vpLabel">Reproducir</span></button>
         <button onclick="vpGo(vp.i-1)" title="Escena anterior">⏮</button>
@@ -3030,14 +3033,66 @@ function vpMode(n,mode){
   if(mode==='ia'){if(ia)ia.style.display='';vpStop();vpIcon(false);}
   else{if(mode==='own'){if(own)own.style.display='';}else if(yt){yt.style.display='';}vpStop();vpIcon(false);}
 }
+/* ---- narración robusta (troceo por frases, evita el corte ~15s de Chrome) + barra con tiempo ---- */
+function vpWc(s){return (s||'').split(/\s+/).filter(Boolean).length;}
+const VP_MAXW=24;
+function vpSplitParts(txt){
+  txt=(txt||'').trim(); if(!txt)return [];
+  const sents = txt.match(/[^.!?…]+[.!?…]+/g) || [txt];
+  const units=[];
+  sents.forEach(s=>{ s=s.trim(); if(!s)return;
+    if(vpWc(s)<=26){ units.push(s); return; }
+    (s.match(/[^;:]+[;:]?/g)||[s]).forEach(seg=>{ seg=seg.trim(); if(!seg)return;
+      if(vpWc(seg)<=26){ units.push(seg); return; }
+      let buf=''; seg.split(/(?<=,)\s+/).forEach(pc=>{ pc=pc.trim(); const cand=buf?buf+' '+pc:pc; if(buf&&vpWc(cand)>VP_MAXW){ units.push(buf); buf=pc; } else buf=cand; });
+      if(buf)units.push(buf);
+    });
+  });
+  const out=[]; let buf='';
+  units.forEach(u=>{ const cand=buf?buf+' '+u:u; if(buf&&vpWc(cand)>VP_MAXW){ out.push(buf); buf=u; } else buf=cand; });
+  if(buf)out.push(buf);
+  return out.filter(Boolean);
+}
+function vpPauseAfter(t){ const c=(t||'').trim().slice(-1); if('.!?…'.includes(c))return 340; if(';:'.includes(c))return 230; if(c===',')return 150; return 110; }
+function vpEstMs(txt){ return Math.max(2500, Math.round(vpWc(txt)/2.35*1000)); }  // ~2.35 palabras/seg
+function vpFmt(sec){ sec=Math.max(0,Math.round(sec)); const m=Math.floor(sec/60), s=sec%60; return m+':'+String(s).padStart(2,'0'); }
+function vpCumBefore(i){ let a=0; if(!vp.durs)return 0; for(let k=0;k<i&&k<vp.durs.length;k++)a+=vp.durs[k]||0; return a; }
+function vpPaintBar(i,frac){
+  if(!vp.durs||!vp.total)return;
+  const acc=vpCumBefore(i)+((vp.durs[i]||0)*(frac||0));
+  const pr=document.getElementById('vprog'); if(pr)pr.style.width=Math.min(100,acc/vp.total*100)+'%';
+  const tc=document.getElementById('vtCur'); if(tc)tc.textContent=vpFmt(acc/1000);
+  const tt=document.getElementById('vtTot'); if(tt)tt.textContent='≈ '+vpFmt(vp.total/1000);
+}
+function vpTick(){
+  if(vp.playing&&vp.slides&&vp.slides.length&&vp.i>=0&&vp.i<vp.slides.length&&vp.durs){
+    const est=(vp.durs[vp.i]||3000);
+    const frac=Math.min(1,(performance.now()-(vp.sceneStart||performance.now()))/est);
+    vpPaintBar(vp.i,frac);
+  }
+  requestAnimationFrame(vpTick);
+}
+requestAnimationFrame(vpTick);
+function vpSeek(ev){
+  if(!vp.slides||!vp.slides.length||!vp.total)return;
+  const bar=ev.currentTarget, rect=bar.getBoundingClientRect();
+  const frac=Math.min(1,Math.max(0,(ev.clientX-rect.left)/rect.width));
+  const target=frac*vp.total; let acc=0, idx=0;
+  for(let k=0;k<vp.durs.length;k++){ if(acc+(vp.durs[k]||0)>=target){ idx=k; break; } acc+=(vp.durs[k]||0); idx=k; }
+  vpGo(idx);
+}
 function vpInit(m){
-  vp.mod=m;vp.slides=buildSlides(m);vp.i=0;vp.playing=false;
+  vp.mod=m;vp.slides=buildSlides(m);vp.i=0;vp.playing=false;vp.token=(vp.token||0)+1;
+  vp.durs=vp.slides.map(s=>vpEstMs(s.say));
+  vp.total=vp.durs.reduce((a,b)=>a+b,0);
+  vp.sceneStart=performance.now();
   if(TTS&&!vp.voice)vp.voice=pickVoice();
   populateVoices();
+  vpPaintBar(0,0);
   const c=document.getElementById('vcount');if(c)c.textContent='0 / '+vp.slides.length;
 }
 function vpStop(){
-  vp.playing=false;
+  vp.playing=false;vp.token=(vp.token||0)+1;
   if(TTS)TTS.cancel();
   const a=document.getElementById('vaudio');if(a){try{a.pause();}catch(e){}}
   if(vp.timer){clearTimeout(vp.timer);vp.timer=null;}
@@ -3054,43 +3109,47 @@ function vpShow(i){
   stage.innerHTML='<div class="vslide" id="curSlide">'+slideHTML(s)+'</div>';
   requestAnimationFrame(()=>{const el=document.getElementById('curSlide');if(el)el.classList.add('on');});
   const cap=document.getElementById('vcapTxt');if(cap)cap.textContent=s.say;
-  const pr=document.getElementById('vprog');if(pr)pr.style.width=((i+1)/vp.slides.length*100)+'%';
+  vpPaintBar(i,0);
   const c=document.getElementById('vcount');if(c)c.textContent=(i+1)+' / '+vp.slides.length;
 }
 function vpSpeak(i){
-  const s=vp.slides[i];
+  vp.token=(vp.token||0)+1; const my=vp.token;
   if(TTS)TTS.cancel();
   if(vp.timer){clearTimeout(vp.timer);vp.timer=null;}
+  vp.sceneStart=performance.now();
   const clip=hasLocutor(vp.mod.n)?(AUDIO[vp.mod.n]||[])[i]:null;
   const a=document.getElementById('vaudio');
   if(clip&&a){
     try{
       a.pause();a.src=clip;a.playbackRate=Math.min(2,Math.max(0.5,vp.rate));
-      a.onended=()=>{if(vp.playing&&vp.i===i)vpNextAuto();};
-      a.onerror=()=>{speakTTS(i,s);};
-      const p=a.play();if(p&&p.catch)p.catch(()=>speakTTS(i,s));
+      a.onended=()=>{if(vp.playing&&vp.i===i&&my===vp.token)vpNextAuto();};
+      a.onerror=()=>{vpNarrate(i,my);};
+      const p=a.play();if(p&&p.catch)p.catch(()=>vpNarrate(i,my));
       return;
-    }catch(e){speakTTS(i,s);return;}
+    }catch(e){vpNarrate(i,my);return;}
   }
-  speakTTS(i,s);
+  vpNarrate(i,my);
 }
-function speakTTS(i,s){
-  if(TTS){
-    TTS.cancel();
-    const u=new SpeechSynthesisUtterance(s.say);
-    u.lang=(vp.voice&&vp.voice.lang)||'es-MX';if(vp.voice)u.voice=vp.voice;u.rate=vp.rate;u.pitch=vp.pitch;
-    u.onend=()=>{if(vp.playing&&vp.i===i)vpNextAuto();};
-    TTS.speak(u);
-    const est=Math.max(3500,s.say.length*55/vp.rate);
-    vp.timer=setTimeout(()=>{if(vp.playing&&vp.i===i&&!TTS.speaking)vpNextAuto();},est+1500);
-  }else{
-    const est=Math.max(3500,s.say.length*55/vp.rate);
-    vp.timer=setTimeout(()=>{if(vp.playing&&vp.i===i)vpNextAuto();},est);
-  }
+/* narra la escena FRASE POR FRASE encadenando por onend: utterances cortas nunca llegan al corte de Chrome */
+function vpNarrate(i,my){
+  if(!TTS){ vp.timer=setTimeout(()=>{ if(vp.playing&&vp.i===i&&my===vp.token)vpNextAuto(); }, (vp.durs&&vp.durs[i])||3000); return; }
+  const parts=vpSplitParts(vp.slides[i].say); let k=0;
+  vp.timer=setTimeout(function nextPart(){   // separa cancel() de speak() (bug Chrome)
+    if(!vp.playing||my!==vp.token||vp.i!==i)return;
+    if(k>=parts.length){ if(vp.timer)clearTimeout(vp.timer); vp.timer=setTimeout(()=>{ if(vp.playing&&my===vp.token&&vp.i===i)vpNextAuto(); },300); return; }
+    const cap=document.getElementById('vcapTxt'); if(cap)cap.textContent=parts[k];
+    const u=new SpeechSynthesisUtterance(parts[k]);
+    u.lang=(vp.voice&&vp.voice.lang)||'es-MX'; if(vp.voice)u.voice=vp.voice; u.rate=vp.rate; u.pitch=vp.pitch;
+    let moved=false;
+    const go=()=>{ if(moved)return; moved=true; if(vp.timer)clearTimeout(vp.timer); if(vp.playing&&my===vp.token&&vp.i===i){ const p=vpPauseAfter(parts[k]); k++; vp.timer=setTimeout(nextPart, p); } };
+    u.onend=go; u.onerror=go;
+    if(vp.timer)clearTimeout(vp.timer); vp.timer=setTimeout(go, vpEstMs(parts[k])+7000); // si una frase se cuelga, sigue
+    try{ TTS.speak(u); }catch(e){ go(); }
+  }, 60);
 }
 function vpNextAuto(){
   if(vp.i<vp.slides.length-1){vpGo(vp.i+1);}
-  else{vp.playing=false;vpIcon(false);const cap=document.getElementById('vcapTxt');if(cap)cap.textContent='Fin de la clase. Pasa al reto del episodio para avanzar. ▸';}
+  else{vp.playing=false;vp.token=(vp.token||0)+1;vpIcon(false);vpPaintBar(vp.slides.length-1,1);const cap=document.getElementById('vcapTxt');if(cap)cap.textContent='Fin de la clase. Pasa al reto del episodio para avanzar. ▸';}
 }
 function vpGo(i){
   if(i<0)i=0;if(i>vp.slides.length-1)i=vp.slides.length-1;
