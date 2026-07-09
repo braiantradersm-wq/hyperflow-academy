@@ -489,6 +489,9 @@
   .ytfacade .ytfNote{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
   .ytframe{aspect-ratio:16/9;background:#000}
   .ytframe iframe{width:100%;height:100%;border:0;display:block}
+  #vmOwn{margin:0}
+  .ownframe{display:block;width:100%;height:676px;border:0;background:#070914;border-radius:14px}
+  @media(max-width:960px){.ownframe{height:760px}}
   .vstage{aspect-ratio:16/9;position:relative;display:grid;place-items:center;padding:38px;text-align:center;overflow:hidden;
     background:radial-gradient(circle at 50% 30%,rgba(102,116,255,.16),transparent 60%),linear-gradient(160deg,#0B0D1C,#070810)}
   .vstage .vslide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;padding:8% 9%;opacity:0;transform:translateY(14px) scale(.99);transition:opacity .5s,transform .5s}
@@ -656,16 +659,16 @@
     <canvas id="net"></canvas>
     <div class="hero-glow"></div>
     <div class="wrap hero-in">
-      <div class="badge"><span class="dot"></span> Sin humo · sin gurús · sin promesas de hacerse rico en una semana</div>
-      <h1>Aquí no le vendemos humo. Le convertimos en <span class="g">Arquitecto de Hiperautomatización</span> — de verdad, construyendo cada flujo con sus propias manos.</h1>
-      <p class="lead">Nada de mirar videos en piloto automático. Aquí se aprende <b>haciendo</b>: cada episodio le pone a construir agentes de IA, RPA y automatizaciones reales, con retos que resuelve usted mismo. Está diseñado para salir <b>sabiendo hacerlo</b>, no solo habiéndolo visto. Un pago único, acceso de por vida, y los módulos se abren a su ritmo a medida que avanza.</p>
+      <div class="badge"><span class="dot"></span> Sin gurús · sin promesas de hacerse rico en una semana</div>
+      <h1>Conviértete en <span class="g">Arquitecto de Hiperautomatización</span>.</h1>
+      <p class="lead">Construye cada flujo con tus propias manos, desde cero hasta producción. Nada de mirar videos en piloto automático: cada episodio te pone a construir agentes de IA, RPA y automatizaciones reales, con retos que resuelves tú mismo. Está diseñado para que salgas <b>sabiendo hacerlo</b>, no solo habiéndolo visto. Un pago único, acceso de por vida, y los módulos se abren a tu ritmo a medida que avanzas.</p>
       <div class="hero-cta">
         <button class="btn btn-amber" onclick="openCheckout('unico')">Obtener acceso completo →</button>
         <button class="btn btn-ghost" onclick="document.getElementById('precios')?.scrollIntoView({behavior:'smooth'})">Ver el programa y el precio ▸</button>
       </div>
       <div class="hero-note">
         <span><span class="tick">✓</span> Pago único, acceso de por vida</span>
-        <span><span class="tick">✓</span> Se desbloquea a su ritmo</span>
+        <span><span class="tick">✓</span> Se desbloquea a tu ritmo</span>
         <span><span class="tick">✓</span> Se aprende haciendo, no mirando</span>
       </div>
       <div class="stats">
@@ -709,9 +712,9 @@
   <section class="blk" style="padding-top:0">
     <div class="wrap">
       <div class="sec-head">
-        <div class="eyebrow">Lo que va a aprender</div>
-        <h2>A lo largo del curso trabaja estas habilidades…</h2>
-        <p>Estas son las competencias que se enseñan y se practican en el programa. Cuánto las domine y qué haga con ellas depende exclusivamente de usted.</p>
+        <div class="eyebrow">Lo que vas a aprender</div>
+        <h2>A lo largo del curso trabajas estas habilidades…</h2>
+        <p>Estas son las competencias que se enseñan y se practican en el programa. Cuánto las domines y qué hagas con ellas depende exclusivamente de ti.</p>
       </div>
       <div class="outcomes" id="outcomesList"></div>
     </div>
@@ -722,7 +725,7 @@
     <div class="wrap">
       <div class="sec-head">
         <div class="eyebrow">El curso completo</div>
-        <h2>6 temporadas. 22 episodios. Una sola misión: su maestría.</h2>
+        <h2>6 temporadas. 22 episodios. Una sola misión: tu maestría.</h2>
         <p>Cada episodio combina narrativa, video, material y un reto de evaluación que suma XP. Avanza episodio a episodio, de los fundamentos al dominio empresarial.</p>
       </div>
       <div class="curr-top">
@@ -743,27 +746,27 @@
     <div class="wrap">
       <div class="sec-head">
         <div class="eyebrow">Antes de entrar</div>
-        <h2>¿Es este curso para usted?</h2>
-        <p>Preferimos que entre con claridad. Vea si encaja.</p>
+        <h2>¿Es este curso para ti?</h2>
+        <p>Preferimos que entres con claridad. Mira si encaja.</p>
       </div>
       <div class="fit">
         <div class="fitcol yes">
-          <h4>✅ Es para usted si…</h4>
+          <h4>✅ Es para ti si…</h4>
           <ul>
-            <li><span class="mk">✓</span> Quiere una habilidad rentable y con demanda real (IA + automatización)</li>
-            <li><span class="mk">✓</span> Es emprendedor, freelance o profesional que quiere ahorrar horas o facturar más</li>
-            <li><span class="mk">✓</span> Prefiere aprender construyendo, no memorizando teoría</li>
-            <li><span class="mk">✓</span> Quiere ofrecer automatización como servicio o aplicarla en su empresa</li>
-            <li><span class="mk">✓</span> No sabe programar y quiere empezar por no-code con IA de copiloto</li>
+            <li><span class="mk">✓</span> Quieres una habilidad rentable y con demanda real (IA + automatización)</li>
+            <li><span class="mk">✓</span> Eres emprendedor, freelance o profesional y quieres ahorrar horas o facturar más</li>
+            <li><span class="mk">✓</span> Prefieres aprender construyendo, no memorizando teoría</li>
+            <li><span class="mk">✓</span> Quieres ofrecer automatización como servicio o aplicarla en tu empresa</li>
+            <li><span class="mk">✓</span> No sabes programar y quieres empezar por no-code con IA de copiloto</li>
           </ul>
         </div>
         <div class="fitcol no">
-          <h4>✕ No es para usted si…</h4>
+          <h4>✕ No es para ti si…</h4>
           <ul>
-            <li><span class="mk">✕</span> Busca una fórmula mágica sin poner en práctica nada</li>
-            <li><span class="mk">✕</span> No está dispuesto a dedicar unas horas por semana</li>
-            <li><span class="mk">✕</span> Ya es experto senior en RPA e IA y no busca metodología ni criterio</li>
-            <li><span class="mk">✕</span> Quiere solo teoría académica sin foco en resultados de negocio</li>
+            <li><span class="mk">✕</span> Buscas una fórmula mágica sin poner en práctica nada</li>
+            <li><span class="mk">✕</span> No estás dispuesto a dedicar unas horas por semana</li>
+            <li><span class="mk">✕</span> Ya eres experto senior en RPA e IA y no buscas metodología ni criterio</li>
+            <li><span class="mk">✕</span> Quieres solo teoría académica sin foco en resultados de negocio</li>
           </ul>
         </div>
       </div>
@@ -777,24 +780,24 @@
         <div class="host-media">
           <div class="host-frame">
             <div class="host-flow">
-              <div class="hf-tag">Ejemplo de lo que construye</div>
+              <div class="hf-tag">Ejemplo de lo que construyes</div>
               <div class="hf-node"><span>🗓️</span> Cada lunes</div>
               <div class="hf-arrow">↓</div>
               <div class="hf-node hf-ai"><span>🤖</span> Arma el reporte solo</div>
               <div class="hf-arrow">↓</div>
               <div class="hf-node"><span>📧</span> Lo envía por email</div>
-              <div class="hf-done">✓ Sin que mueva un dedo</div>
+              <div class="hf-done">✓ Sin que muevas un dedo</div>
             </div>
           </div>
         </div>
         <div class="host-txt">
           <div class="eyebrow">El método</div>
           <h2>Aprende con las <span style="color:var(--indigo-2)">herramientas reales</span>, haciendo — no mirando teoría</h2>
-          <p class="muted" style="margin:16px 0">Nada de teoría recalentada. Cada episodio le pone a construir con las herramientas que se usan de verdad hoy —n8n, Make, Claude, UiPath, Power Platform— sobre casos concretos. Se lleva el criterio para decidir qué automatizar y cómo, no solo los pasos.</p>
+          <p class="muted" style="margin:16px 0">Nada de teoría recalentada. Cada episodio te pone a construir con las herramientas que se usan de verdad hoy —n8n, Make, Claude, UiPath, Power Platform— sobre casos concretos. Te llevas el criterio para decidir qué automatizar y cómo, no solo los pasos.</p>
           <ul class="obj" style="gap:12px">
             <li><span class="tick">✓</span> Construido sobre las herramientas y flujos que se usan hoy en automatización</li>
-            <li><span class="tick">✓</span> Enfoque en ROI: cada episodio apunta a que ahorre tiempo o dinero</li>
-            <li><span class="tick">✓</span> Cero relleno: práctico y al grano</li>
+            <li><span class="tick">✓</span> Enfoque en ROI: cada episodio apunta a que ahorres tiempo o dinero</li>
+            <li><span class="tick">✓</span> Directo y al grano: solo lo que se aplica</li>
           </ul>
         </div>
       </div>
@@ -805,9 +808,9 @@
   <section class="blk" style="background:var(--ink-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
     <div class="wrap">
       <div class="sec-head">
-        <div class="eyebrow">Lo que se lleva</div>
+        <div class="eyebrow">Lo que te llevas</div>
         <h2>Competencias reales, no promesas</h2>
-        <p>Esto es lo que va a saber hacer al terminar cada tramo del programa. Lo construye usted mismo en los retos, no lo mira en un video.</p>
+        <p>Esto es lo que vas a saber hacer al terminar cada tramo del programa. Lo construyes tú mismo en los retos, no lo miras en un video.</p>
       </div>
       <div class="grid-3" id="testiList"></div>
       <p class="player-note" style="margin-top:20px;text-align:center">// Cuando tenga alumnos, aquí van sus reseñas reales.</p>
@@ -820,34 +823,11 @@
       <div class="sec-head">
         <div class="eyebrow">Inversión</div>
         <h2>Un solo pago. Acceso para siempre.</h2>
-        <p>Sin suscripciones ni cuotas mensuales. Paga una vez y el programa completo es suyo de por vida, con todas las actualizaciones incluidas.</p>
-      </div>
-      <div class="pledge">
-        <div class="pledge-h">🤝 Nuestro compromiso: cero humo</div>
-        <p class="pledge-sub">Un tema complejo, enseñado de forma estructurada y agradable. Lo que ve aquí es exactamente lo que recibe al entrar.</p>
-        <div class="pledge-cols">
-          <div class="pledge-yes">
-            <b>✅ Lo que sí</b>
-            <ul>
-              <li>Un camino paso a paso para aprender IA, agentes, RPA y automatización, sin que sea aburrido.</li>
-              <li>Aprende haciendo: construye usted en cada episodio, con las herramientas reales.</li>
-              <li>El temario completo está a la vista. No inventamos testimonios ni resultados.</li>
-            </ul>
-          </div>
-          <div class="pledge-no">
-            <b>❌ Lo que no</b>
-            <ul>
-              <li>No le garantizamos resultados, ingresos ni nada mágico.</li>
-              <li>No hay atajos: lo que logre depende exclusivamente de usted.</li>
-              <li>No vendemos nada que no esté dentro del curso.</li>
-            </ul>
-          </div>
-        </div>
-        <div class="pledge-foot">Lo único que le garantizamos: que hicimos el trabajo lo mejor posible para darle un curso que de verdad enseñe. El resto lo pone usted.</div>
+        <p>Sin suscripciones ni cuotas mensuales. Paga una vez y el programa completo es tuyo de por vida, con todas las actualizaciones incluidas.</p>
       </div>
       <div class="whybuy">
-        <div class="wb"><span class="wbic">💸</span><b>Puede pagarse solo</b><span>Con automatizar <b>un</b> proceso repetitivo que hoy hace a mano, muchas personas ahorran en horas más de lo que cuesta el curso. El resultado depende de que lo aplique.</span></div>
-        <div class="wb"><span class="wbic">⚖️</span><b>Comparado, no es nada</b><span>Un bootcamp de automatización supera los <b>$2.000</b>. Una sola hora de consultoría cuesta más que esto. Aquí es <b>$89.99, una vez</b>, y es suyo para siempre.</span></div>
+        <div class="wb"><span class="wbic">💸</span><b>Se paga solo</b><span>Con automatizar <b>un</b> proceso repetitivo que hoy hace a mano, muchas personas ahorran en horas más de lo que cuesta el curso. El resultado depende de que lo apliques.</span></div>
+        <div class="wb"><span class="wbic">⚖️</span><b>Comparado, no es nada</b><span>Un bootcamp de automatización supera los <b>$2.000</b>. Una sola hora de consultoría cuesta más que esto. Aquí es <b>$89.99, una vez</b>, y es tuyo para siempre.</span></div>
         <div class="wb"><span class="wbic">⏳</span><b>Lo caro es no hacerlo</b><span>Cada semana haciendo a mano lo que un bot haría solo son horas, clientes y oportunidades que no vuelven. Eso sí es costoso.</span></div>
       </div>
       <div class="pricing pricing-one">
@@ -868,10 +848,10 @@
           </ul>
           <div class="valuerow"><span>Incluye</span><b>22 episodios + retos + material</b></div>
           <div class="valuerow"><span>Pago único</span><b style="color:var(--amber)">$89.99</b></div>
-          <div class="micro">≈ lo que gasta en café en un mes. Solo que esto no se acaba: es para toda la vida.</div>
+          <div class="micro">≈ lo que gastas en café en un mes. Solo que esto no se acaba: es para toda la vida.</div>
           <button class="btn btn-primary" onclick="openCheckout('unico')">Obtener acceso completo →</button>
           <div class="micro" style="margin-top:10px;color:var(--muted)">Compra final: por ser contenido digital de acceso inmediato y de por vida, no hay reembolsos. Compra informado con todo el temario a la vista.</div>
-          <div class="pay" style="margin-top:12px">Lo importante es lo que se lleva. El pago es <b>una sola vez</b> y el curso es suyo para siempre: entra, empieza por el Episodio 1 y cada módulo se abre al superar el anterior.</div>
+          <div class="pay" style="margin-top:12px">Lo importante es lo que te llevas. El pago es <b>una sola vez</b> y el curso es tuyo para siempre: entra, empieza por el Episodio 1 y cada módulo se abre al superar el anterior.</div>
         </div>
       </div>
     </div>
@@ -882,7 +862,7 @@
     <div class="wrap">
       <div class="sec-head">
         <div class="eyebrow">Preguntas frecuentes</div>
-        <h2>Todo lo que necesita saber</h2>
+        <h2>Todo lo que necesitas saber</h2>
       </div>
       <div class="faq" id="faqList"></div>
     </div>
@@ -910,17 +890,9 @@
   <div class="campus-shell">
     <aside class="side">
       <div class="side-head">
-        <h3>Su jornada</h3>
+        <h3>Tu jornada</h3>
         <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
         <div class="prog-label"><span id="progTxt">0 / 22 episodios</span><span id="progPct">0%</span></div>
-        <div class="xp-panel">
-          <div class="xp-top">
-            <div class="xp-lvl">Nivel <b id="xpLevel">1</b> · <span id="xpTitle">Recluta</span></div>
-            <div class="xp-badge" id="xpBadge">🎖️</div>
-          </div>
-          <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
-          <div class="xp-num"><span id="xpNow">0 XP</span><span id="xpNext">→ 400 XP</span></div>
-        </div>
         <button class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:16px;font-size:13px;padding:10px" onclick="showCertificate()" id="certBtn">🎓 Ver certificado</button>
         <button class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:10px;font-size:13px;padding:10px;border-color:rgba(255,180,84,.35);color:var(--amber)" onclick="openVault()" id="vaultBtn">🔓 Bóveda del Acelerador</button>
       </div>
@@ -1465,7 +1437,7 @@ CLAVES:
       <div><b id="coPrice">$89.99</b><div class="muted" style="font-size:12px" id="coPlan">Acceso completo · pago único</div></div>
       <span class="chip" id="coBadge">Más popular</span>
     </div>
-    <div class="field"><label>Nombre completo</label><input id="coName" placeholder="Su nombre" autocomplete="name"></div>
+    <div class="field"><label>Nombre completo</label><input id="coName" placeholder="Tu nombre" autocomplete="name"></div>
     <div class="field"><label>Email</label><input id="coEmail" type="email" placeholder="tu@email.com" autocomplete="email"></div>
     <label class="bump"><input type="checkbox" id="coBump" onchange="toggleBump()"><span><b>Sí, añade el Pack Acelerador (+$27)</b><span>20 automatizaciones ya montadas para copiar y pegar: prompts de IA, workflows n8n/Make y scripts. Ahorra semanas de trabajo.</span></span></label>
     <button class="btn btn-amber" onclick="fakeCheckout()">Pagar y acceder al campus →</button>
@@ -1521,7 +1493,7 @@ const COURSE = [
    {t:"Anatomía de un prompt profesional",d:"18m",desc:"Rol, contexto, tarea, restricciones, formato y ejemplos. La estructura RCTFE."},
    {t:"Few-shot, chain-of-thought y self-consistency",d:"24m",desc:"Técnicas para subir la precisión sin cambiar de modelo."},
    {t:"Salidas estructuradas y function calling",d:"22m",desc:"Forzar JSON válido y conectar el modelo con herramientas externas."},
-   {t:"Seguridad del prompt: injection y jailbreaks",d:"20m",desc:"Cómo blindar su agente contra manipulación de usuarios malintencionados."}],
+   {t:"Seguridad del prompt: injection y jailbreaks",d:"20m",desc:"Cómo blindar tu agente contra manipulación de usuarios malintencionados."}],
   quiz:[
    {q:"¿Para qué sirve la técnica 'chain-of-thought'?",o:["Encadenar varios modelos","Pedir al modelo que razone paso a paso antes de responder, mejorando la precisión","Reducir el coste","Traducir prompts"],a:1,e:"Chain-of-thought guía al modelo a mostrar su razonamiento intermedio, lo que mejora notablemente tareas de lógica y cálculo."},
    {q:"¿Qué es un 'system prompt'?",o:["El mensaje del usuario","La instrucción base que define el rol, las reglas y el comportamiento del agente","Un error del sistema","El historial de conversación"],a:1,e:"El system prompt establece la identidad y las reglas persistentes del agente, por encima de cada mensaje del usuario."},
@@ -1529,23 +1501,23 @@ const COURSE = [
 
  {n:4,title:"Herramientas de inteligencia artificial generativa",tag:"IA Generativa",dur:"1h 55m",level:"Básico",
   desc:"Panorama práctico de las herramientas: modelos de texto, imagen, voz y video, y cómo elegir la adecuada.",
-  obj:["Comparar los principales modelos y proveedores","Elegir la herramienta según coste, calidad y privacidad","Generar texto, imágenes, voz y video con IA","Integrar APIs de IA en sus flujos"],
+  obj:["Comparar los principales modelos y proveedores","Elegir la herramienta según coste, calidad y privacidad","Generar texto, imágenes, voz y video con IA","Integrar APIs de IA en tus flujos"],
   lessons:[
    {t:"Mapa de modelos: texto, imagen, voz, video",d:"20m",desc:"Claude, GPT, Gemini, y modelos de imagen/voz. Fortalezas de cada uno."},
    {t:"Criterios de selección: coste, calidad, privacidad",d:"18m",desc:"Cloud vs local, ventana de contexto y cumplimiento de datos."},
    {t:"Generación multimodal en la práctica",d:"22m",desc:"De un brief a imagen, locución y video con herramientas actuales."},
-   {t:"Conectar APIs de IA a sus automatizaciones",d:"20m",desc:"Claves, autenticación y llamadas desde n8n/Make/código."}],
+   {t:"Conectar APIs de IA a tus automatizaciones",d:"20m",desc:"Claves, autenticación y llamadas desde n8n/Make/código."}],
   quiz:[
    {q:"¿Qué factor es clave al elegir un modelo para datos sensibles de empresa?",o:["Que sea el más popular","La privacidad y el cumplimiento (dónde se procesan y almacenan los datos)","El color del logo","La velocidad únicamente"],a:1,e:"Con datos sensibles, la privacidad, la residencia de datos y el cumplimiento normativo (p. ej. GDPR) son decisivos."},
    {q:"¿Qué es la 'ventana de contexto' de un modelo?",o:["El tiempo de respuesta","La cantidad máxima de texto (tokens) que puede considerar a la vez","El precio por mes","La interfaz de usuario"],a:1,e:"La ventana de contexto define cuánta información puede manejar el modelo simultáneamente; a mayor ventana, más documentos caben."},
    {q:"¿Qué ventaja principal ofrece un modelo ejecutado localmente (on-premise)?",o:["Siempre es más inteligente","Control total de los datos y funcionamiento sin enviar información a terceros","Es gratis siempre","No necesita hardware"],a:1,e:"Los modelos locales mantienen los datos dentro de la organización, ideal para información confidencial, a cambio de más infraestructura."}]},
 
  {n:5,title:"Creación de agentes con n8n",tag:"No-code",dur:"2h 40m",level:"Intermedio",
-  desc:"Construya agentes y automatizaciones reales en n8n: nodos, triggers, IA integrada y despliegue.",
+  desc:"Construye agentes y automatizaciones reales en n8n: nodos, triggers, IA integrada y despliegue.",
   obj:["Dominar la interfaz y los conceptos de n8n","Crear flujos con triggers, nodos y lógica condicional","Integrar nodos de IA y agentes","Desplegar y monitorizar flujos en producción"],
   lessons:[
    {t:"n8n desde cero: instalación y conceptos",d:"22m",desc:"Cloud vs self-hosted, workspace, ejecuciones y credenciales."},
-   {t:"Su primer flujo: trigger → lógica → acción",d:"26m",desc:"Webhooks, HTTP Request, IF/Switch y manejo de datos JSON."},
+   {t:"Tu primer flujo: trigger → lógica → acción",d:"26m",desc:"Webhooks, HTTP Request, IF/Switch y manejo de datos JSON."},
    {t:"El nodo AI Agent y las tools",d:"28m",desc:"Construir un agente con memoria y herramientas dentro de n8n."},
    {t:"Despliegue, errores y monitorización",d:"24m",desc:"Reintentos, workflows de error y buenas prácticas de producción."}],
   quiz:[
@@ -1554,7 +1526,7 @@ const COURSE = [
    {q:"¿Para qué sirve un 'error workflow' en n8n?",o:["Para provocar errores","Para capturar fallos de otros flujos y reaccionar (notificar, reintentar, registrar)","Para borrar datos","Para acelerar el flujo"],a:1,e:"Un error workflow centraliza la gestión de fallos: notifica, registra y permite reintentos, clave para robustez en producción."}]},
 
  {n:6,title:"Creación de agentes con Make",tag:"No-code",dur:"2h 20m",level:"Intermedio",
-  desc:"Automatice con Make (Integromat): escenarios visuales, módulos, routers y agentes con IA.",
+  desc:"Automatiza con Make (Integromat): escenarios visuales, módulos, routers y agentes con IA.",
   obj:["Diseñar escenarios en el editor visual de Make","Usar módulos, routers, filtros e iteradores","Integrar IA y APIs externas","Gestionar operaciones, errores y consumo"],
   lessons:[
    {t:"Make vs n8n: cuándo usar cada uno",d:"16m",desc:"Modelo de operaciones, apps disponibles y curva de aprendizaje."},
@@ -1567,20 +1539,20 @@ const COURSE = [
    {q:"¿Qué hace un 'iterador' en Make?",o:["Repite el escenario completo","Convierte un array en varios bundles para procesarlos uno a uno","Elimina duplicados","Detiene el flujo"],a:1,e:"El iterador descompone una colección en elementos individuales para procesar cada uno por separado."}]},
 
  {n:7,title:"Automatización y vibe coding con Claude",tag:"IA + Código",dur:"2h 30m",level:"Intermedio",
-  desc:"Use Claude como copiloto para construir automatizaciones y software sin ser programador experto: vibe coding.",
+  desc:"Usa Claude como copiloto para construir automatizaciones y software sin ser programador experto: vibe coding.",
   obj:["Aprovechar Claude para generar y depurar código","Aplicar el enfoque 'vibe coding' de forma disciplinada","Conectar Claude a herramientas vía MCP y agentes","Construir un mini-proyecto funcional de principio a fin"],
   lessons:[
    {t:"¿Qué es el vibe coding y cuándo funciona?",d:"18m",desc:"Construir por intención en lenguaje natural, con sus límites y riesgos."},
    {t:"Claude como copiloto de automatización",d:"26m",desc:"Generar scripts, transformar datos y crear integraciones guiadas."},
    {t:"MCP, herramientas y agentes con Claude",d:"26m",desc:"Conectar Claude a APIs, archivos y servicios mediante el protocolo MCP."},
-   {t:"Proyecto guiado: automatice una tarea real",d:"20m",desc:"De la idea a un flujo funcional, iterando con Claude paso a paso."}],
+   {t:"Proyecto guiado: automatiza una tarea real",d:"20m",desc:"De la idea a un flujo funcional, iterando con Claude paso a paso."}],
   quiz:[
    {q:"¿Cuál es el mayor riesgo del 'vibe coding' sin disciplina?",o:["Que sea muy lento","Aceptar código que funciona 'aparentemente' sin entender ni verificar su seguridad y correctitud","Que consuma internet","Que sea aburrido"],a:1,e:"El vibe coding acelera mucho, pero exige verificar y entender el resultado: código no revisado puede tener fallos de seguridad o lógica."},
    {q:"¿Qué es MCP (Model Context Protocol)?",o:["Un lenguaje de programación","Un estándar para conectar modelos de IA con herramientas, datos y servicios externos","Un modelo de Claude","Un tipo de prompt"],a:1,e:"MCP estandariza cómo un modelo accede a herramientas y fuentes de datos, facilitando agentes conectados a sistemas reales."},
    {q:"¿Cuál es una buena práctica al usar Claude para automatizar?",o:["Nunca revisar el resultado","Iterar en pasos pequeños y verificar cada salida antes de avanzar","Pedir todo de una vez","Evitar dar contexto"],a:1,e:"Iterar en pasos pequeños con verificación continua produce resultados más fiables y fáciles de depurar."}]},
 
  {n:8,title:"Levantamiento de procesos y detección de oportunidades",tag:"Análisis",dur:"2h 10m",level:"Intermedio",
-  desc:"Aprenda a mapear procesos, medir su impacto y priorizar qué automatizar primero con criterio de consultor.",
+  desc:"Aprende a mapear procesos, medir su impacto y priorizar qué automatizar primero con criterio de consultor.",
   obj:["Documentar procesos AS-IS con precisión","Aplicar técnicas de entrevista y process mining","Evaluar automatizabilidad y priorizar por impacto","Construir el pipeline de oportunidades"],
   lessons:[
    {t:"Técnicas de levantamiento: entrevistas y observación",d:"22m",desc:"Cómo extraer el proceso real (no el documentado) de los usuarios."},
@@ -1645,7 +1617,7 @@ const COURSE = [
    {q:"¿Cuándo es preferible usar una API en lugar de scraping?",o:["Nunca","Siempre que exista: es más estable, legal y estructurada que raspar HTML","Solo los fines de semana","Cuando la web es lenta"],a:1,e:"Una API oficial ofrece datos estructurados, estables y autorizados; el scraping es el último recurso cuando no hay API."}]},
 
  {n:13,title:"Diseño de automatizaciones empresariales robustas y control de excepciones",tag:"Robustez",dur:"2h 30m",level:"Avanzado",
-  desc:"Construya automatizaciones que no se rompen: manejo de errores, reintentos, logging y recuperación.",
+  desc:"Construye automatizaciones que no se rompen: manejo de errores, reintentos, logging y recuperación.",
   obj:["Diseñar con manejo de excepciones (business vs system)","Implementar reintentos, timeouts y transacciones","Registrar logs útiles para diagnóstico","Aplicar patrones de resiliencia y recuperación"],
   lessons:[
    {t:"Excepciones de negocio vs de sistema",d:"22m",desc:"Distinguir y tratar cada tipo de fallo correctamente."},
@@ -1671,7 +1643,7 @@ const COURSE = [
    {q:"¿Qué permite un 'trigger' en Orchestrator?",o:["Detener todos los bots","Programar la ejecución automática de procesos (por tiempo o por cola)","Borrar logs","Cambiar el idioma"],a:1,e:"Los triggers lanzan procesos automáticamente según un horario (time trigger) o cuando hay ítems en una cola (queue trigger)."}]},
 
  {n:15,title:"Creación de aplicaciones low-code con PowerApps y Power Automate",tag:"Low-code",dur:"2h 40m",level:"Intermedio",
-  desc:"Construya apps y flujos empresariales en la Power Platform de Microsoft, integrados con datos corporativos.",
+  desc:"Construye apps y flujos empresariales en la Power Platform de Microsoft, integrados con datos corporativos.",
   obj:["Crear apps canvas y basadas en modelo con PowerApps","Automatizar procesos con Power Automate (cloud/desktop)","Conectar a Dataverse, SharePoint y 365","Aplicar gobernanza y buenas prácticas"],
   lessons:[
    {t:"Power Platform: visión general y componentes",d:"20m",desc:"PowerApps, Power Automate, Dataverse y conectores."},
@@ -1710,7 +1682,7 @@ const COURSE = [
    {q:"¿Qué indica un código de estado HTTP 200?",o:["Un error del servidor","Que la petición se procesó correctamente (éxito)","Que no existe el recurso","Que falta autenticación"],a:1,e:"El 200 OK indica éxito. Los 4xx son errores del cliente (p. ej. 401 no autenticado, 404 no encontrado) y los 5xx del servidor."}]},
 
  {n:18,title:"Agentes conversacionales: automatización de chats y llamadas telefónicas",tag:"Agentes",dur:"2h 35m",level:"Avanzado",
-  desc:"Diseñe asistentes que atienden por chat y voz: NLU, flujos conversacionales, voz y handoff a humanos.",
+  desc:"Diseña asistentes que atienden por chat y voz: NLU, flujos conversacionales, voz y handoff a humanos.",
   obj:["Diseñar flujos conversacionales naturales","Integrar chat en WhatsApp, web y redes","Construir agentes de voz para llamadas (voicebots)","Gestionar el traspaso a agentes humanos"],
   lessons:[
    {t:"Diseño de conversaciones que no frustran",d:"22m",desc:"Intenciones, contexto, memoria y manejo de ambigüedad."},
@@ -1723,7 +1695,7 @@ const COURSE = [
    {q:"¿Por qué es clave un buen 'handoff' a humano?",o:["Para ahorrar internet","Para derivar con contexto los casos que el bot no debe o no puede resolver, sin frustrar al usuario","Para eliminar agentes","No es importante"],a:1,e:"Un handoff fluido, con el contexto de la conversación, evita que el usuario repita todo y mantiene la calidad del servicio."}]},
 
  {n:19,title:"Interacción con avatares inteligentes",tag:"IA + Video",dur:"1h 50m",level:"Avanzado",
-  desc:"Cree presentadores y asistentes con rostro y voz mediante avatares generados por IA.",
+  desc:"Crea presentadores y asistentes con rostro y voz mediante avatares generados por IA.",
   obj:["Generar avatares realistas con voz sincronizada","Producir video con avatares para formación y soporte","Integrar avatares en tiempo real con agentes","Considerar ética, consentimiento y usos responsables"],
   lessons:[
    {t:"Panorama de avatares por IA",d:"18m",desc:"Herramientas, calidad, idiomas y casos de uso reales."},
@@ -1749,11 +1721,11 @@ const COURSE = [
    {q:"¿Por qué es más difícil la observabilidad en sistemas multiagente?",o:["No lo es","Porque el comportamiento emerge de muchas interacciones; hace falta trazabilidad de extremo a extremo","Porque usan menos logs","Porque son más lentos"],a:1,e:"Con múltiples agentes interactuando, se necesitan trazas distribuidas y métricas para entender y depurar el comportamiento global."}]},
 
  {n:21,title:"Marco legal, normativo y de ciberseguridad en la automatización",tag:"Gobernanza",dur:"2h 10m",level:"Avanzado",
-  desc:"Automatice cumpliendo la ley: protección de datos, el AI Act, seguridad y gestión de accesos.",
+  desc:"Automatiza cumpliendo la ley: protección de datos, el AI Act, seguridad y gestión de accesos.",
   obj:["Aplicar GDPR y normativa de protección de datos","Entender el AI Act y la clasificación de riesgo","Asegurar credenciales, secretos y accesos","Implementar auditoría y trazabilidad"],
   lessons:[
    {t:"Protección de datos: GDPR en la práctica",d:"24m",desc:"Bases legales, minimización, derechos y datos personales en flujos."},
-   {t:"El AI Act y la regulación de la IA",d:"22m",desc:"Niveles de riesgo, obligaciones y qué significa para sus agentes."},
+   {t:"El AI Act y la regulación de la IA",d:"22m",desc:"Niveles de riesgo, obligaciones y qué significa para tus agentes."},
    {t:"Ciberseguridad de automatizaciones",d:"24m",desc:"Gestión de secretos, mínimo privilegio y superficie de ataque de los bots."},
    {t:"Auditoría, trazabilidad y cumplimiento",d:"15m",desc:"Registrar quién hizo qué para superar auditorías con tranquilidad."}],
   quiz:[
@@ -1762,7 +1734,7 @@ const COURSE = [
    {q:"¿Qué es el principio de 'mínimo privilegio' en seguridad?",o:["Dar acceso total a todos","Conceder a cada bot/usuario solo los permisos imprescindibles para su tarea","No usar contraseñas","Compartir credenciales"],a:1,e:"El mínimo privilegio limita el daño potencial: cada componente accede únicamente a lo que necesita, nada más."}]},
 
  {n:22,title:"Ética, transparencia y mitigación de riesgos en IA",tag:"Ética",dur:"1h 45m",level:"Avanzado",
-  desc:"Construya IA responsable: sesgos, transparencia, supervisión humana y gestión de riesgos.",
+  desc:"Construye IA responsable: sesgos, transparencia, supervisión humana y gestión de riesgos.",
   obj:["Detectar y mitigar sesgos en sistemas de IA","Aplicar transparencia y explicabilidad","Diseñar supervisión humana significativa","Gestionar riesgos y comunicar límites del sistema"],
   lessons:[
    {t:"Sesgos: de dónde vienen y cómo mitigarlos",d:"22m",desc:"Sesgo en datos, modelos y decisiones automatizadas."},
@@ -1778,7 +1750,7 @@ const COURSE = [
 /* ---- SERIE: temporadas, nombres de episodio y gamificación ---- */
 const SEASONS=[
  {n:1,title:"El Despertar",sub:"Fundamentos e IA generativa",eps:[1,2,3,4]},
- {n:2,title:"El Arsenal",sub:"Construyendo sus primeros agentes",eps:[5,6,7]},
+ {n:2,title:"El Arsenal",sub:"Construyendo tus primeros agentes",eps:[5,6,7]},
  {n:3,title:"El Método",sub:"Del proceso caótico a la solución",eps:[8,9,10]},
  {n:4,title:"La Fuerza",sub:"RPA y automatización empresarial",eps:[11,12,13,14]},
  {n:5,title:"La Expansión",sub:"Plataformas e inteligencia documental",eps:[15,16,17]},
@@ -1841,7 +1813,7 @@ function cinePlay(){
   if(!cineActive)return;
   if(cineIdx>=cineScenes.length){endCine();return;}
   const s=cineScenes[cineIdx];const el=document.getElementById('cine');document.body.dataset.cmood=s.mood||'';cSetMood(s.mood);
-  document.getElementById('cineBody').innerHTML=`${s.k?`<div class="ck">${s.k}</div>`:''}<div class="ctext">${s.t}</div><div class="chint">toque para seguir ▸</div>`;
+  document.getElementById('cineBody').innerHTML=`${s.k?`<div class="ck">${s.k}</div>`:''}<div class="ctext">${s.t}</div><div class="chint">toca para seguir ▸</div>`;
   el.classList.remove('show');void el.offsetWidth;el.classList.add('show');cDing(s.mood==='calm'?560:440);
   const words=s.t.replace(/<[^>]+>/g,'').split(/\s+/).length;
   const dur=s.ms||Math.max(4800,Math.min(13000,words*480));
@@ -1885,19 +1857,19 @@ function goReto(){ switchTab('reto'); const p=document.getElementById('panel-ret
 function renderGuide(n){
   const game=GAME[n];
   const steps = game ? [
-    {ic:'🎮',k:'Paso 1 · empieza aquí',t:'Viva el episodio',d:(n===1?'Entre a la historia y usted toma las decisiones. Aprende jugando.':'Construya su primer bot arrastrando y conectando piezas.'),btn:'▶ Empezar la experiencia',act:`openGame(${n})`,big:true},
-    {ic:'🎬',k:'Paso 2 · opcional',t:'Profundice con la clase',d:'Video y clase narrada, más abajo. Solo si quiere ir aún más a fondo.',btn:'Ver la clase ↓',act:'scrollToPlayer()'},
-    {ic:'🏆',k:'Paso 3',t:'Supere el reto',d:'Responda el cuestionario para desbloquear el siguiente episodio.',btn:'Ir al reto →',act:'goQuiz()'}
+    {ic:'🎮',k:'Paso 1 · empieza aquí',t:'Vive el episodio',d:(n===1?'Entra a la historia y tú tomas las decisiones. Aprende jugando.':'Construye tu primer bot arrastrando y conectando piezas.'),btn:'▶ Empezar la experiencia',act:`openGame(${n})`,big:true},
+    {ic:'🎬',k:'Paso 2 · opcional',t:'Profundiza con la clase',d:'Video y clase narrada, más abajo. Solo si quieres ir aún más a fondo.',btn:'Ver la clase ↓',act:'scrollToPlayer()'},
+    {ic:'🏆',k:'Paso 3',t:'Supera el reto',d:'Responde el cuestionario para desbloquear el siguiente episodio.',btn:'Ir al reto →',act:'goQuiz()'}
   ] : (hasReto(n) ? [
-    {ic:'🎮',k:'Paso 1 · empieza jugando',t:'Reto interactivo',d:'Aprenda haciendo en 1 minuto: arme o clasifique con sus manos y compruébelo. Aquí se aprende de verdad, no mirando.',btn:'🎮 Jugar el reto',act:'goReto()',big:true},
-    {ic:'🎬',k:'Paso 2 · profundiza',t:'Mire la clase',d:'¿Quiere ir más a fondo? Elija Video o Clase narrada por IA, aquí abajo.',btn:'Ver la clase ↓',act:'scrollToPlayer()'},
-    {ic:'🏆',k:'Paso 3',t:'Supere el cuestionario',d:'Responda para desbloquear el siguiente episodio.',btn:'Ir al cuestionario →',act:'goQuiz()'}
+    {ic:'🎮',k:'Paso 1 · empieza jugando',t:'Reto interactivo',d:'Aprende haciendo en 1 minuto: arma o clasifica con tus manos y compruébalo. Aquí se aprende de verdad, no mirando.',btn:'🎮 Jugar el reto',act:'goReto()',big:true},
+    {ic:'🎬',k:'Paso 2 · profundiza',t:'Mira la clase',d:'¿Quieres ir más a fondo? Elige Video o Clase narrada por IA, aquí abajo.',btn:'Ver la clase ↓',act:'scrollToPlayer()'},
+    {ic:'🏆',k:'Paso 3',t:'Supera el cuestionario',d:'Responde para desbloquear el siguiente episodio.',btn:'Ir al cuestionario →',act:'goQuiz()'}
   ] : [
-    {ic:'🎬',k:'Paso 1 · empieza aquí',t:'Mire la clase',d:'Elija Video o Clase narrada por IA, justo aquí abajo.',btn:'Ver la clase ↓',act:'scrollToPlayer()',big:true},
-    {ic:'🏆',k:'Paso 2',t:'Supere el cuestionario',d:'Responda el cuestionario para desbloquear el siguiente episodio.',btn:'Ir al cuestionario →',act:'goQuiz()'}
+    {ic:'🎬',k:'Paso 1 · empieza aquí',t:'Mira la clase',d:'Elige Video o Clase narrada por IA, justo aquí abajo.',btn:'Ver la clase ↓',act:'scrollToPlayer()',big:true},
+    {ic:'🏆',k:'Paso 2',t:'Supera el cuestionario',d:'Responde el cuestionario para desbloquear el siguiente episodio.',btn:'Ir al cuestionario →',act:'goQuiz()'}
   ]);
   return `<div class="guide">
-    <div class="guide-h">🧭 Cómo estudiar este episodio — siga los pasos en orden</div>
+    <div class="guide-h">🧭 Cómo estudiar este episodio — sigue los pasos en orden</div>
     <div class="guide-steps">
       ${steps.map((s,i)=>`<div class="gstep${s.big?' big':''}">
         <div class="gnum">${i+1}</div>
@@ -1932,15 +1904,15 @@ function avatarColor(name){const c=['#FFB454','#6674FF','#3FD07F','#8B7BFF','#FF
   let h=0;for(const ch of name)h=(h*31+ch.charCodeAt(0))%c.length;return c[h];}
 
 const FAQ=[
- {q:"¿Necesito saber programar para hacer este curso?",a:"No. Empezamos desde los fundamentos y gran parte del programa es no-code/low-code (n8n, Make, Power Platform). En los módulos con código, usamos IA (Claude) como copiloto, así que avanza aunque no sea desarrollador."},
- {q:"¿Cómo funciona el acceso?",a:"Se paga una vez para entrar. Empieza por el Episodio 1 y cada módulo siguiente se desbloquea cuando supera el reto del anterior, para que avance con base sólida y a su ritmo. El acceso es de por vida e incluye las actualizaciones futuras sin coste adicional."},
- {q:"¿El certificado tiene validez?",a:"Al completar los 22 módulos se genera un certificado de finalización descargable, con un código único ligado a su nombre. Acredita las competencias trabajadas en el programa; no es un título oficial universitario, sino una certificación de programa profesional."},
- {q:"¿Qué herramientas necesito y tienen coste?",a:"La mayoría ofrece planes gratuitos suficientes para aprender (n8n, Make, Power Platform, UiPath Community). Le indicamos en cada módulo qué usar y cómo empezar sin gastar."},
- {q:"¿La compra tiene reembolso?",a:"No. Por tratarse de contenido digital de acceso inmediato y de por vida, la compra es final y no admite reembolsos. Por eso ponemos todo el temario, las 6 temporadas y el formato a la vista en esta página: compra con total conocimiento y la decisión es suya."},
- {q:"¿Incluye soporte o atención al cliente?",a:"No. Es un producto 100% autoguiado: no hay atención al cliente, tutorías ni soporte personalizado. Está diseñado para que aprenda solo, a su ritmo, con todo lo necesario ya dentro del curso: clases, retos interactivos, evaluaciones con feedback inmediato y material descargable."},
- {q:"No tengo mucho tiempo, ¿podré con esto?",a:"Sí. Está en formato serie por episodios cortos: avanza 15-25 minutos cuando pueda, con XP y progreso que le mantienen enganchado. Como el acceso es de por vida, no hay reloj en contra."},
+ {q:"¿Necesito saber programar para hacer este curso?",a:"No. Empezamos desde los fundamentos y gran parte del programa es no-code/low-code (n8n, Make, Power Platform). En los módulos con código, usamos IA (Claude) como copiloto, así que avanzas aunque no seas desarrollador."},
+ {q:"¿Cómo funciona el acceso?",a:"Se paga una vez para entrar. Empieza por el Episodio 1 y cada módulo siguiente se desbloquea cuando superas el reto del anterior, para que avances con base sólida y a tu ritmo. El acceso es de por vida e incluye las actualizaciones futuras sin coste adicional."},
+ {q:"¿El certificado tiene validez?",a:"Al completar los 22 módulos se genera un certificado de finalización descargable, con un código único ligado a tu nombre. Acredita las competencias trabajadas en el programa; no es un título oficial universitario, sino una certificación de programa profesional."},
+ {q:"¿Qué herramientas necesito y tienen coste?",a:"La mayoría ofrece planes gratuitos suficientes para aprender (n8n, Make, Power Platform, UiPath Community). Te indicamos en cada módulo qué usar y cómo empezar sin gastar."},
+ {q:"¿La compra tiene reembolso?",a:"No. Por tratarse de contenido digital de acceso inmediato y de por vida, la compra es final y no admite reembolsos. Por eso ponemos todo el temario, las 6 temporadas y el formato a la vista en esta página: compras con total conocimiento y la decisión es tuya."},
+ {q:"¿Incluye soporte o atención al cliente?",a:"No. Es un producto 100% autoguiado: no hay atención al cliente, tutorías ni soporte personalizado. Está diseñado para que aprendas solo, a tu ritmo, con todo lo necesario ya dentro del curso: clases, retos interactivos, evaluaciones con feedback inmediato y material descargable."},
+ {q:"No tengo mucho tiempo, ¿podré con esto?",a:"Sí. Está en formato serie por episodios cortos: avanzas 15-25 minutos cuando puedas, con XP y progreso que te mantienen enganchado. Como el acceso es de por vida, no hay reloj en contra."},
  {q:"¿Esto no lo hace gratis la IA por sí sola?",a:"La IA es la herramienta; el valor está en el criterio para detectar oportunidades, diseñar la solución y ponerla en producción sin que se rompa. Eso es lo que se paga y lo que enseña esta serie."},
- {q:"¿Me servirá para conseguir clientes o un mejor puesto?",a:"El programa le enseña a detectar, diseñar e implementar automatizaciones, que es la competencia que se cobra. Se lleva material descargable de cada módulo y, si suma el Pack Acelerador, 20 automatizaciones listas para usar. No garantizamos ingresos ni empleo: le damos las habilidades y las herramientas; el resultado depende de cómo las aplique."},
+ {q:"¿Me servirá para conseguir clientes o un mejor puesto?",a:"El programa te enseña a detectar, diseñar e implementar automatizaciones, que es la competencia que se cobra. Te llevas material descargable de cada módulo y, si suma el Pack Acelerador, 20 automatizaciones listas para usar. No garantizamos ingresos ni empleo: te damos las habilidades y las herramientas; el resultado depende de cómo las apliques."},
  {q:"¿Cómo se paga?",a:"Un pago único mediante Stripe, con tarjeta. No es una suscripción: paga una vez y accede de por vida."}
 ];
 
@@ -2072,7 +2044,7 @@ function buildEpDrawer(){
   document.body.appendChild(d);
 }
 function renderEpDrawer(){
-  const prog=document.getElementById('epdProg'); if(prog) prog.textContent=`Su avance: ${progress.done.length}/${COURSE.length} episodios completados`;
+  const prog=document.getElementById('epdProg'); if(prog) prog.textContent=`Tu avance: ${progress.done.length}/${COURSE.length} episodios completados`;
   const el=document.getElementById('epdList'); if(!el)return;
   el.innerHTML=SEASONS.map(s=>{
     const sdone=s.eps.filter(n=>progress.done.includes(n)).length;
@@ -2089,7 +2061,7 @@ function renderEpDrawer(){
 function openEpDrawer(){ buildEpDrawer(); renderEpDrawer(); requestAnimationFrame(()=>document.getElementById('epDrawer')?.classList.add('open')); }
 function closeEpDrawer(){ document.getElementById('epDrawer')?.classList.remove('open'); }
 function epGo(n){
-  if(!hasAccess(n)){ if(typeof showToast==='function') showToast('🔒','Episodio bloqueado','Complete el episodio anterior para desbloquearlo'); return; }
+  if(!hasAccess(n)){ if(typeof showToast==='function') showToast('🔒','Episodio bloqueado','Completa el episodio anterior para desbloquearlo'); return; }
   closeEpDrawer(); closeMainMenu();
   document.getElementById('certView')?.classList.remove('active');
   const mn=document.querySelector('.main'); if(mn)mn.style.display='';
@@ -2118,12 +2090,6 @@ function updateProgressBar(){
   document.getElementById('progFill').style.width=pct+'%';
   document.getElementById('progTxt').textContent=`${progress.done.length} / ${COURSE.length} episodios`;
   document.getElementById('progPct').textContent=pct+'%';
-  const li=levelInfo();
-  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
-  set('xpLevel',li.level);set('xpTitle',li.title);set('xpNow',li.xp+' XP');
-  set('xpNext',li.next?('→ '+li.ceil+' XP'):'MAX');
-  const xf=document.getElementById('xpFill');if(xf)xf.style.width=li.pct+'%';
-  const badge=document.getElementById('xpBadge');if(badge)badge.textContent=['🎖️','🥉','🥈','🥇','💎','👑'][li.level-1]||'👑';
 }
 let currentTab='contenido';
 function loadModule(n){
@@ -2149,7 +2115,9 @@ function loadModule(n){
     </div>
     ${renderGuide(n)}
     ${renderPlayer(m)}
-    <p class="player-note">// 🎬 Video: clase real curada de YouTube (verificada). 🎙️ Clase IA: narración con voz de IA + subtítulos, 100% gratis y sin depender de internet. Elija el modo arriba.</p>
+    <p class="player-note">${OWNLESSON[n]
+      ? '// 🎬 Lección audiovisual: producción propia de Hyperflow, con voz de locutor y subtítulos. 🎙️ Clase narrada: la misma clase con voz IA (Álvaro). Elige el modo arriba.'
+      : '// 🎬 Video: clase real curada de YouTube (verificada). 🎙️ Clase IA: narración con voz de IA + subtítulos, 100% gratis y sin depender de internet. Elige el modo arriba.'}</p>
     <div class="tabs">
       <button class="tab active" data-t="contenido" onclick="switchTab('contenido')">Contenido</button>
       ${hasReto(n)?`<button class="tab" data-t="reto" onclick="switchTab('reto')">🎮 Reto interactivo</button>`:''}
@@ -2186,16 +2154,16 @@ function renderLocked(n){
     body=`
     <div class="locked-hero">
       <div class="locked-seal"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></div>
-      <h2>Aún no ha llegado aquí</h2>
-      <p>Los episodios se abren <b>en orden</b>: estudie la clase, supere el reto (≥70%) y se desbloquea el siguiente. Para abrir <b>“${CODE[n]}”</b> primero debe superar <b>“${CODE[n-1]}”</b>${prev?` (EP ${pad2(epInSeason(n-1))})`:''}.</p>
+      <h2>Aún no has llegado aquí</h2>
+      <p>Los episodios se abren <b>en orden</b>: estudia la clase, supera el reto (≥70%) y se desbloquea el siguiente. Para abrir <b>“${CODE[n]}”</b> primero debes superar <b>“${CODE[n-1]}”</b>${prev?` (EP ${pad2(epInSeason(n-1))})`:''}.</p>
       <div class="locked-teaser">
-        <span class="lt-k">Su progreso</span>
-        <ul class="obj"><li>${tickSvg}Episodios superados: <b style="color:var(--text)">${progress.done.length}/${COURSE.length}</b></li><li>${tickSvg}Continúe por: <b style="color:var(--text)">“${CODE[go]}” · ${gm.title}</b></li></ul>
+        <span class="lt-k">Tu progreso</span>
+        <ul class="obj"><li>${tickSvg}Episodios superados: <b style="color:var(--text)">${progress.done.length}/${COURSE.length}</b></li><li>${tickSvg}Continúa por: <b style="color:var(--text)">“${CODE[go]}” · ${gm.title}</b></li></ul>
       </div>
       <div class="locked-cta">
         <button class="btn btn-primary" onclick="loadModule(${go})">▶ Continuar por donde voy →</button>
       </div>
-      <p class="locked-foot">Aprenda · Apruebe el examen · Desbloquee · Repita hasta el certificado 🎓</p>
+      <p class="locked-foot">Aprende · Aprueba el examen · Desbloquea · Repite hasta el certificado 🎓</p>
     </div>`;
   }else{
     /* No comprado -> bloqueo de venta */
@@ -2222,7 +2190,7 @@ function renderLocked(n){
 function renderContent(m){
   return `<div class="content-blk">
     <p><b style="color:var(--text)">Sobre este módulo.</b> ${m.desc}</p>
-    <h3>Lo que va a aprender</h3>
+    <h3>Lo que vas a aprender</h3>
     <ul class="obj" style="margin-bottom:8px">${m.obj.map(o=>`<li>${tickSvg}${o}</li>`).join('')}</ul>
     <h3>Lecciones</h3>
     ${m.lessons.map((l,i)=>`
@@ -2243,11 +2211,11 @@ function renderResources(m){
       <span class="rt"><b>Apuntes del episodio (descargar)</b><span>Guía completa: guion, objetivos y respuestas del reto</span></span>
       <span class="rd">.MD</span>
     </a>
-    <a href="https://youtu.be/${YTMAP[m.n]}" target="_blank" rel="noopener">
+    ${OWNLESSON[m.n]?'':`<a href="https://youtu.be/${YTMAP[m.n]}" target="_blank" rel="noopener">
       <span class="ri"><svg viewBox="0 0 24 24" fill="none" stroke-width="2">${ic.yt}</svg></span>
-      <span class="rt"><b>Video de la clase en YouTube</b><span>Ábralo a pantalla completa o guárdelo para ver luego</span></span>
+      <span class="rt"><b>Video de la clase en YouTube</b><span>Ábrelo a pantalla completa o guárdalo para ver luego</span></span>
       <span class="rd">↗</span>
-    </a>
+    </a>`}
     <a href="#" onclick="downloadNotes(${m.n});return false">
       <span class="ri"><svg viewBox="0 0 24 24" fill="none" stroke-width="2">${ic.tpl}</svg></span>
       <span class="rt"><b>Checklist práctico</b><span>Incluido dentro de los apuntes descargables</span></span>
@@ -2283,7 +2251,7 @@ function renderQuiz(m){
   return `
   <div class="quiz-intro">
     <span class="qic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></span>
-    <div><b>Reto del episodio</b><p>Supere las ${m.quiz.length} preguntas con 70% o más para completar el episodio y ganar +${XP_PER} XP.</p></div>
+    <div><b>Reto del episodio</b><p>Supera las ${m.quiz.length} preguntas con 70% o más para completar el episodio y ganar +${XP_PER} XP.</p></div>
   </div>
   <form id="quizForm" onsubmit="return false">
     ${m.quiz.map((q,qi)=>`
@@ -2303,7 +2271,7 @@ function renderQuiz(m){
   </form>`;
 }
 function renderCliff(n){
-  if(n>=22) return `<div class="cliff"><div><div class="cn">🏆 Gran final de la serie</div><div class="cc">“${CODE[22]}”</div><div class="ct">Ha llegado al último episodio. Supere el reto y reclame su certificado de Arquitecto.</div></div><button class="btn btn-amber cbtn" onclick="showCertificate()">🎓 Certificado</button></div>`;
+  if(n>=22) return `<div class="cliff"><div><div class="cn">🏆 Gran final de la serie</div><div class="cc">“${CODE[22]}”</div><div class="ct">Has llegado al último episodio. Supera el reto y reclama tu certificado de Arquitecto.</div></div><button class="btn btn-amber cbtn" onclick="showCertificate()">🎓 Certificado</button></div>`;
   const nx=n+1,ns=seasonOf(nx),m2=COURSE.find(x=>x.n===nx),cross=seasonOf(n).n!==ns.n;
   return `<div class="cliff">
     <div>
@@ -2324,13 +2292,13 @@ function loadNotes(){try{return JSON.parse(localStorage.getItem('hyperflow_notes
 function saveNotes(o){try{localStorage.setItem('hyperflow_notes',JSON.stringify(o))}catch(e){}}
 function renderComments(n){
   const all=loadNotes(), mine=all[n]||[];
-  const list = mine.length ? mine.map(t=>commentHTML(progress.name||'Usted','su nota',t)).join('')
-    : `<div class="cempty">Aún no tiene notas en este episodio. Escriba las ideas clave que quiera recordar y aplicar.</div>`;
+  const list = mine.length ? mine.map(t=>commentHTML(progress.name||'Tú','tu nota',t)).join('')
+    : `<div class="cempty">Aún no tienes notas en este episodio. Escribe las ideas clave que quieras recordar y aplicar.</div>`;
   return `<div class="comments">
     <h3>Mis notas del episodio</h3>
-    <div class="csub">// Su cuaderno privado: se guarda en su navegador, solo lo ve usted.</div>
+    <div class="csub">// Tu cuaderno privado: se guarda en tu navegador, solo lo ves tú.</div>
     <div class="cadd">
-      <input id="cInput" placeholder="Escriba una idea que quiera recordar…" onkeydown="if(event.key==='Enter')addComment()">
+      <input id="cInput" placeholder="Escribe una idea que quieras recordar…" onkeydown="if(event.key==='Enter')addComment()">
       <button class="btn btn-primary" onclick="addComment()">Guardar nota</button>
     </div>
     <div id="cList">${list}</div>
@@ -2340,7 +2308,7 @@ function addComment(){
   const inp=document.getElementById('cInput');if(!inp)return;const v=inp.value.trim();if(!v)return;
   const all=loadNotes(); (all[currentModule]=all[currentModule]||[]).unshift(v); saveNotes(all);
   const list=document.getElementById('cList'); const empty=list.querySelector('.cempty'); if(empty)empty.remove();
-  list.insertAdjacentHTML('afterbegin',commentHTML(progress.name||'Usted','su nota',v));
+  list.insertAdjacentHTML('afterbegin',commentHTML(progress.name||'Tú','tu nota',v));
   inp.value='';
 }
 function showToast(icon,title,sub){
@@ -2387,14 +2355,14 @@ function gradeQuiz(n){
     renderSide();
     const sd=document.getElementById('side'+n);if(sd)sd.classList.add('done');
     if(after.level>before){
-      showToast('👑','¡Subió a Nivel '+after.level+'!','Ahora es “'+after.title+'” · '+after.xp+' XP');
+      showToast('👑','¡Subiste a Nivel '+after.level+'!','Ahora eres “'+after.title+'” · '+after.xp+' XP');
     }else if(n<22){
       showToast('🔓','+'+XP_PER+' XP · Episodio superado','Desbloqueado: “'+CODE[n+1]+'” (EP '+pad2(epInSeason(n+1))+')');
     }else{
-      showToast('🏆','¡Serie completada!','Reclame su certificado de Arquitecto');
+      showToast('🏆','¡Serie completada!','Reclama tu certificado de Arquitecto');
     }
   }else if(pass){
-    showToast('✓','Reto superado','Ya tenía este episodio completado');
+    showToast('✓','Reto superado','Ya tenías este episodio completado');
   }
   updateProgressBar();
 }
@@ -2438,7 +2406,7 @@ function retoBody(n){
     h+='<div class="reto-slots">';
     c.slots.forEach((s,i)=>{ const pid=st.placed[i], p=pid?c.pieces.find(x=>x.id===pid):null;
       const mk=st.marks?st.marks[i]:''; const cls=mk==='bad'?' bad':(p?' filled':'');
-      h+=`<button class="rslot${cls}${st.sel===i?' sel':''}" onclick="retoSelSlot(${n},${i})"><span class="rnum">${mk==='bad'?'✗':(p?'✓':(i+1))}</span><span class="rbody"><span class="rhint">${rEsc(s.hint)}</span>${p?`<span class="rfill"><span class="ric">${p.ic}</span><b>${rEsc(p.name)}</b></span>`:'<span class="rempty">toque y elija la pieza</span>'}</span>${p?`<span class="rx" onclick="event.stopPropagation();retoClear(${n},${i})">×</span>`:''}</button>`;
+      h+=`<button class="rslot${cls}${st.sel===i?' sel':''}" onclick="retoSelSlot(${n},${i})"><span class="rnum">${mk==='bad'?'✗':(p?'✓':(i+1))}</span><span class="rbody"><span class="rhint">${rEsc(s.hint)}</span>${p?`<span class="rfill"><span class="ric">${p.ic}</span><b>${rEsc(p.name)}</b></span>`:'<span class="rempty">toca y elige la pieza</span>'}</span>${p?`<span class="rx" onclick="event.stopPropagation();retoClear(${n},${i})">×</span>`:''}</button>`;
       if(i<c.slots.length-1) h+='<div class="rconn">▼</div>';
     });
     h+='</div><div class="reto-tray">';
@@ -2448,14 +2416,14 @@ function retoBody(n){
   } else if(c.type==='sort'){
     h+='<div class="reto-pool">'; let anyPool=false;
     (st.pool||c.items.map(it=>it.id)).forEach(iid=>{ const it=c.items.find(x=>x.id===iid); if(st.placed[it.id])return; anyPool=true; h+=`<button class="ritem${st.sel===it.id?' sel':''}" onclick="retoSelItem(${n},'${it.id}')"><span class="ric">${it.ic}</span>${rEsc(it.name)}</button>`; });
-    if(!anyPool) h+='<span style="color:var(--muted-2);font-size:12.5px">Todo clasificado — pulse Comprobar.</span>';
+    if(!anyPool) h+='<span style="color:var(--muted-2);font-size:12.5px">Todo clasificado — pulsa Comprobar.</span>';
     h+='</div><div class="reto-buckets">';
     c.buckets.forEach(b=>{ h+=`<div class="rbucket" onclick="retoDrop(${n},'${b.id}')"><div class="rbh"><span>${b.ic}</span> ${rEsc(b.label)}</div><div class="rbitems">`;
       Object.keys(st.placed).forEach(iid=>{ if(st.placed[iid]===b.id){ const it=c.items.find(x=>x.id===iid); const mk=st.marks?st.marks[iid]:''; h+=`<span class="rchip${mk==='bad'?' bad':mk==='ok'?' ok':''}" onclick="event.stopPropagation();retoUnplace(${n},'${iid}')">${it.ic} ${rEsc(it.name)} ${mk==='bad'?'✗':'×'}</span>`; } });
       h+='</div></div>'; });
     h+='</div>';
   } else if(c.type==='match'){
-    h+='<div class="reto-hint2">Una cada tarjeta de la izquierda con su pareja de la derecha.</div><div class="reto-match"><div class="mcol">';
+    h+='<div class="reto-hint2">Une cada tarjeta de la izquierda con su pareja de la derecha.</div><div class="reto-match"><div class="mcol">';
     st.left.forEach(li=>{ const matched=st.matches[li]!=null; const mk=st.marks?st.marks['l'+li]:''; const bd=matched?matchBadge(st,li):0;
       h+=`<button class="mrow${st.sel&&st.sel.s==='l'&&st.sel.i===li?' sel':''}${matched?' done':''}${mk==='bad'?' bad':mk==='ok'?' ok':''}" onclick="matchTap(${n},'l',${li})"><span class="ric">${c.pairs[li].l.ic||''}</span><span class="mtxt">${rEsc(c.pairs[li].l.txt)}</span>${matched?`<span class="mbadge">${bd}</span>`:''}</button>`; });
     h+='</div><div class="mcol">';
@@ -2463,7 +2431,7 @@ function retoBody(n){
       h+=`<button class="mrow${st.sel&&st.sel.s==='r'&&st.sel.i===ri?' sel':''}${matched?' done':''}${mk==='bad'?' bad':mk==='ok'?' ok':''}" onclick="matchTap(${n},'r',${ri})"><span class="ric">${c.pairs[ri].r.ic||''}</span><span class="mtxt">${rEsc(c.pairs[ri].r.txt)}</span>${matched?`<span class="mbadge">${bd}</span>`:''}</button>`; });
     h+='</div></div>';
   } else if(c.type==='cloze'){
-    h+='<div class="reto-hint2">Toque un hueco y luego la ficha que lo completa. Arme el prompt correcto.</div><div class="cloze-sent">';
+    h+='<div class="reto-hint2">Toca un hueco y luego la ficha que lo completa. Arma el prompt correcto.</div><div class="cloze-sent">';
     c.parts.forEach(pt=>{ if(pt.t!=null){ h+=`<span class="ctext">${rEsc(pt.t)}</span>`; return; }
       const gi=pt.gap, cid=st.filled[gi], ch=cid?c.chips.find(x=>x.id===cid):null; const mk=st.marks?st.marks[gi]:'';
       const cls=mk==='bad'?' bad':mk==='ok'?' ok':(ch?' filled':'')+(st.sel===gi?' sel':'');
@@ -2552,7 +2520,7 @@ function retoCheck(n){ const c=INTERACT[n], st=RS[n]; if(!retoReady(n))return;
   else Object.keys(st.matches).forEach(li=>{ const good=(st.matches[li]==li); st.marks['l'+li]=good?'ok':'bad'; st.marks['r'+st.matches[li]]=good?'ok':'bad'; });
   const bad=Object.values(st.marks).filter(v=>v==='bad').length;
   retoRender(n);
-  const fb=document.getElementById('retoFb-'+n); if(fb){ fb.className='reto-fb show bad'; fb.innerHTML='⚠️ '+rEsc(msg)+` <b>Lo marcado en rojo está mal</b> — corríjalo y vuelva a comprobar.`; }
+  const fb=document.getElementById('retoFb-'+n); if(fb){ fb.className='reto-fb show bad'; fb.innerHTML='⚠️ '+rEsc(msg)+` <b>Lo marcado en rojo está mal</b> — corrígelo y vuelve a comprobar.`; }
   const host=document.getElementById('reto-'+n); if(host){ host.classList.add('shake'); setTimeout(()=>host.classList.remove('shake'),450); }
   rDing(190);
 }
@@ -2578,8 +2546,8 @@ function retoSolveTEST(n,wrong){ const c=INTERACT[n]; if(!c)return null; if(!RS[
 
 /* ---- Retos por episodio (piloto: EP3 y EP4; resto se añade con la misma estructura) ---- */
 const INTERACT={
- 3:{ type:'cloze', title:'Complete el prompt profesional',
-   intro:'Un prompt flojo da respuestas flojas. Toque cada hueco y elija la ficha que lo completa: va a escribir, palabra por palabra, un prompt de nivel pro.',
+ 3:{ type:'cloze', title:'Completa el prompt profesional',
+   intro:'Un prompt flojo da respuestas flojas. Toca cada hueco y elige la ficha que lo completa: vas a escribir, palabra por palabra, un prompt de nivel pro.',
    parts:[
      {t:'Actúa como '},{gap:0},{t:'. '},
      {t:'Tu tarea es '},{gap:1},{t:'. '},
@@ -2598,31 +2566,31 @@ const INTERACT={
    win:{medal:['Prompt Engineer','✍️'],xp:60,msg:'Rol + tarea + contexto + formato: ese prompt ya no improvisa. Así se construye un agente confiable, no uno que alucina. Frases vacías como “sé creativo” no guían nada.'},
    fails:{ cloze:'Casi. Cada hueco pide algo concreto: QUIÉN es (rol), QUÉ hace (tarea), el CONTEXTO y el FORMATO de salida. Las frases vagas no sirven.' } },
  4:{ type:'swipe', title:'¿Mito o realidad de la IA?',
-   intro:'Circula mucha leyenda sobre la IA generativa. Decida carta por carta: ¿es un mito o una realidad? Cada respuesta le explica por qué.',
+   intro:'Circula mucha leyenda sobre la IA generativa. Decide carta por carta: ¿es un mito o una realidad? Cada respuesta te explica por qué.',
    cards:[
      {t:'Un mismo modelo de texto sirve igual de bien para crear un logo profesional.', real:false, fb:'Mito. Cada trabajo tiene su familia: LLM para texto, generadores de imagen para gráficos, video/voz para presencia. Elegir bien la herramienta es media batalla.'},
-     {t:'La IA puede “alucinar” y darle datos falsos con total seguridad.', real:true, fb:'Realidad. Por eso nunca confía a ciegas: verifica los datos críticos que le da.'},
+     {t:'La IA puede “alucinar” y darle datos falsos con total seguridad.', real:true, fb:'Realidad. Por eso nunca confíes a ciegas: verifica los datos críticos que te da.'},
      {t:'Para tareas de imagen conviene una herramienta especializada, no un chat de texto.', real:true, fb:'Realidad. Un generador de imagen (o de video/voz) hace lo que un LLM de texto no puede.'},
      {t:'Cuanto más vago el prompt, mejor: así la IA “usa su creatividad”.', real:false, fb:'Mito. Un prompt vago da resultados vagos. Rol + tarea + contexto + formato = respuestas útiles.'},
      {t:'Locutar un texto y poner un avatar a cámara se resuelve con herramientas de video/voz.', real:true, fb:'Realidad. Voz IA y avatares son familia audiovisual, no texto.'}
    ],
-   win:{medal:['Cazador de Mitos','🎨'],xp:50,msg:'Ya distingue qué hace cada IA y qué es leyenda: cada trabajo con su herramienta, y siempre verificando. Eso es tener criterio, no solo un arsenal.'},
+   win:{medal:['Cazador de Mitos','🎨'],xp:50,msg:'Ya distingues qué hace cada IA y qué es leyenda: cada trabajo con su herramienta, y siempre verificando. Eso es tener criterio, no solo un arsenal.'},
    fails:{} },
- 5:{ type:'scenario', title:'Decisiones al construir su primer agente', intro:'Su jefe quiere un agente que procese pedidos. Tome las decisiones correctas: cada una tiene su consecuencia.',
+ 5:{ type:'scenario', title:'Decisiones al construir tu primer agente', intro:'Tu jefe quiere un agente que procese pedidos. Toma las decisiones correctas: cada una tiene su consecuencia.',
    rounds:[
-     {ic:'🧩', q:'El agente debe arrancar cuando llega un pedido nuevo por email. ¿Qué pone primero?', options:[
+     {ic:'🧩', q:'El agente debe arrancar cuando llega un pedido nuevo por email. ¿Qué pones primero?', options:[
        {t:'Un disparador que vigila la bandeja de entrada', ok:true, fb:'Exacto: sin disparador, el agente nunca se entera de que hay trabajo.'},
        {t:'Directo la acción de guardar en el sistema', ok:false, fb:'¿Guardar qué? Todavía no llegó nada. Primero va el disparador que inicia el flujo.'},
        {t:'Un mensaje de bienvenida al cliente', ok:false, fb:'Bonito, pero no procesa nada. Lo primero es el disparador.'} ]},
-     {ic:'🧠', q:'El pedido llega en texto libre y cada cliente escribe distinto. ¿Cómo lo entiende?', options:[
+     {ic:'🧠', q:'El pedido llega en texto libre y cada cliente escribe distinto. ¿Cómo lo entiendes?', options:[
        {t:'Con un modelo de IA que interpreta el texto', ok:true, fb:'Sí: la IA entiende aunque el formato cambie. Ese es el cerebro del agente.'},
        {t:'Con reglas fijas del tipo "si dice X entonces Y"', ok:false, fb:'Se rompe con el primer cliente que escribe distinto. Necesita IA que interprete.'} ]},
-     {ic:'📤', q:'Ya entendió el pedido. ¿Qué hace al final?', options:[
+     {ic:'📤', q:'Ya entendiste el pedido. ¿Qué haces al final?', options:[
        {t:'Usa una herramienta para guardarlo en el sistema', ok:true, fb:'Perfecto: entender sin actuar no sirve. La herramienta ejecuta la acción real.'},
        {t:'Nada más, con haberlo entendido alcanza', ok:false, fb:'Entender no es resolver. El agente debe ejecutar una acción con sus herramientas.'} ]}
    ],
-   win:{medal:['Agente n8n','🤖'],xp:60,msg:'Disparador que inicia, IA que entiende, herramienta que actúa. Acaba de diseñar un agente de verdad, no un chatbot.'}, fails:{} },
- 6:{ type:'match', title:'Empareje cada módulo de Make con su función', intro:'Una cada módulo con lo que hace. Toque una tarjeta de la izquierda y luego su pareja de la derecha.',
+   win:{medal:['Agente n8n','🤖'],xp:60,msg:'Disparador que inicia, IA que entiende, herramienta que actúa. Acabas de diseñar un agente de verdad, no un chatbot.'}, fails:{} },
+ 6:{ type:'match', title:'Empareja cada módulo de Make con su función', intro:'Une cada módulo con lo que hace. Toca una tarjeta de la izquierda y luego su pareja de la derecha.',
    pairs:[
      {l:{ic:'📨',txt:'Watch: llega un email'}, r:{ic:'⚡',txt:'Disparador (inicia el flujo)'}},
      {l:{ic:'💬',txt:'Enviar un WhatsApp'}, r:{ic:'▶️',txt:'Acción (hace algo)'}},
@@ -2630,10 +2598,10 @@ const INTERACT={
      {l:{ic:'🔀',txt:'Dividir en ramas'}, r:{ic:'🧭',txt:'Router (enruta el flujo)'}},
      {l:{ic:'🚦',txt:'Dejar pasar solo lo válido'}, r:{ic:'🧹',txt:'Filtro (condiciona)'}}
    ],
-   win:{medal:['Arquitecto de escenarios','🧩'],xp:55,msg:'Disparador, acción, IA, router y filtro: con esos ladrillos arma cualquier escenario de Make.'},
+   win:{medal:['Arquitecto de escenarios','🧩'],xp:55,msg:'Disparador, acción, IA, router y filtro: con esos ladrillos armas cualquier escenario de Make.'},
    fails:{ match:'Casi. Una cada módulo con su función; lo marcado en rojo no coincide.' } },
- 7:{ type:'cloze', title:'Escriba la instrucción de código',
-   intro:'Como vibe coder no programa: dirige. Complete la instrucción que le da a la IA para que genere una función útil, sin ambigüedades.',
+ 7:{ type:'cloze', title:'Escribe la instrucción de código',
+   intro:'Como vibe coder no programas: diriges. Completa la instrucción que le das a la IA para que genere una función útil, sin ambigüedades.',
    parts:[
      {t:'Crea una función que reciba '},{gap:0},{t:', '},
      {t:'que '},{gap:1},{t:', '},
@@ -2651,17 +2619,17 @@ const INTERACT={
    ],
    win:{medal:['Vibe Coder','⚡'],xp:60,msg:'Entrada, acción, manejo de error y formato de salida: instrucción sin ambigüedad = código que sirve al primer intento. Dirigir bien es el 80% del trabajo.'},
    fails:{ cloze:'Casi. Una buena instrucción dice QUÉ recibe, QUÉ hace, QUÉ pasa si falla y CÓMO la entrega. “Hazla buena” no le dice nada a la IA.' } },
- 8:{ type:'sequence', title:'Levante un proceso, paso a paso', intro:'Antes de automatizar hay que entender. Ordene el levantamiento de un proceso (sobra 1 error clásico).',
+ 8:{ type:'sequence', title:'Levanta un proceso, paso a paso', intro:'Antes de automatizar hay que entender. Ordena el levantamiento de un proceso (sobra 1 error clásico).',
    slots:[ {hint:'1',accept:'ident'}, {hint:'2',accept:'observar'}, {hint:'3',accept:'documentar'}, {hint:'4',accept:'priorizar'} ],
-   pieces:[ {id:'ident',ic:'🔎',name:'Identifique el proceso'}, {id:'observar',ic:'👀',name:'Observe cómo se hace hoy'}, {id:'documentar',ic:'📝',name:'Documente los pasos'}, {id:'priorizar',ic:'🎯',name:'Priorice qué automatizar'}, {id:'x',ic:'🚀',name:'Automatizar antes de entender',distractor:true} ],
+   pieces:[ {id:'ident',ic:'🔎',name:'Identifica el proceso'}, {id:'observar',ic:'👀',name:'Observa cómo se hace hoy'}, {id:'documentar',ic:'📝',name:'Documenta los pasos'}, {id:'priorizar',ic:'🎯',name:'Prioriza qué automatizar'}, {id:'x',ic:'🚀',name:'Automatizar antes de entender',distractor:true} ],
    win:{medal:['Analista de Procesos','🔎'],xp:55,msg:'Primero entender, después automatizar. Quien salta el levantamiento automatiza el caos y lo vuelve más rápido.'},
-   fails:{ order:'Casi. Identifique → observe cómo se hace hoy → documente → priorice qué automatizar.', distractor:'Automatizar antes de entender es el error nº1. Fuera.' } },
- 9:{ type:'sequence', title:'El ciclo de vida de una solución', intro:'Todo proyecto sigue un ciclo. Ordene sus 5 fases (sobra 1 atajo peligroso).',
+   fails:{ order:'Casi. Identifica → observa cómo se hace hoy → documenta → prioriza qué automatizar.', distractor:'Automatizar antes de entender es el error nº1. Fuera.' } },
+ 9:{ type:'sequence', title:'El ciclo de vida de una solución', intro:'Todo proyecto sigue un ciclo. Ordena sus 5 fases (sobra 1 atajo peligroso).',
    slots:[ {hint:'1',accept:'analisis'}, {hint:'2',accept:'diseno'}, {hint:'3',accept:'desarrollo'}, {hint:'4',accept:'pruebas'}, {hint:'5',accept:'despliegue'} ],
    pieces:[ {id:'analisis',ic:'📋',name:'Análisis de requisitos'}, {id:'diseno',ic:'✏️',name:'Diseño de la solución'}, {id:'desarrollo',ic:'🛠️',name:'Desarrollo'}, {id:'pruebas',ic:'🧪',name:'Pruebas'}, {id:'despliegue',ic:'🚀',name:'Despliegue y mantenimiento'}, {id:'x',ic:'⏭️',name:'Saltar directo a producción',distractor:true} ],
    win:{medal:['Gestor de Proyectos','📐'],xp:60,msg:'Análisis → diseño → desarrollo → pruebas → despliegue. Saltarse una fase se la cobra el doble después.'},
    fails:{ order:'Casi. Requisitos → diseño → desarrollo → pruebas → despliegue.', distractor:'Saltar directo a producción sin pruebas es cómo explotan los proyectos. Fuera.' } },
- 10:{ type:'match', title:'El lenguaje del BPMN', intro:'Cada símbolo de un diagrama significa algo. Empareje símbolo con su significado.',
+ 10:{ type:'match', title:'El lenguaje del BPMN', intro:'Cada símbolo de un diagrama significa algo. Empareja símbolo con su significado.',
    pairs:[
      {l:{ic:'⭕',txt:'Círculo'}, r:{ic:'🚦',txt:'Evento (inicio o fin)'}},
      {l:{ic:'🔷',txt:'Rectángulo'}, r:{ic:'🔧',txt:'Actividad (una tarea)'}},
@@ -2670,12 +2638,12 @@ const INTERACT={
    ],
    win:{medal:['Modelador BPMN','🗺️'],xp:55,msg:'Círculo=evento, rectángulo=tarea, rombo=decisión, flecha=flujo. Con esos 4 símbolos lees cualquier diagrama de proceso.'},
    fails:{ match:'Casi. Círculo=evento, rectángulo=actividad, rombo=compuerta/decisión, flecha=flujo. Lo rojo no coincide.' } },
- 11:{ type:'sort', title:'¿Buen candidato para RPA?', intro:'No todo se debe automatizar con un robot. Clasifique cada tarea según convenga o no.',
+ 11:{ type:'sort', title:'¿Buen candidato para RPA?', intro:'No todo se debe automatizar con un robot. Clasifica cada tarea según convenga o no.',
    buckets:[ {id:'si',ic:'✅',label:'Ideal para RPA'}, {id:'no',ic:'❌',label:'Mejor NO'} ],
    items:[ {id:'i1',ic:'🔁',name:'Tarea repetitiva con reglas claras',bucket:'si'}, {id:'i2',ic:'📈',name:'Alto volumen, mismo patrón',bucket:'si'}, {id:'i3',ic:'📥',name:'Copiar datos entre dos sistemas',bucket:'si'}, {id:'i4',ic:'🎨',name:'Decisión creativa y subjetiva',bucket:'no'}, {id:'i5',ic:'🔀',name:'Cambia de forma cada vez',bucket:'no'}, {id:'i6',ic:'❤️',name:'Requiere criterio humano/empatía',bucket:'no'} ],
    win:{medal:['Cazador de Procesos','🎯'],xp:50,msg:'RPA brilla en lo repetitivo, reglado y de alto volumen. Falla en lo creativo, subjetivo o que cambia siempre.'},
    fails:{ sort:'Casi. Repetitivo + reglas + volumen = ideal. Creativo, subjetivo o cambiante = mejor no.' } },
- 12:{ type:'match', title:'La herramienta para cada dato', intro:'Según dónde vive el dato, la técnica cambia. Empareje cada caso con su técnica correcta.',
+ 12:{ type:'match', title:'La herramienta para cada dato', intro:'Según dónde vive el dato, la técnica cambia. Empareja cada caso con su técnica correcta.',
    pairs:[
      {l:{ic:'✅',txt:'El sitio ofrece API pública'}, r:{ic:'🔌',txt:'Usar la API (lo mejor)'}},
      {l:{ic:'🌐',txt:'Web sin API, dato en el HTML'}, r:{ic:'🕷️',txt:'Web scraping'}},
@@ -2684,86 +2652,86 @@ const INTERACT={
    ],
    win:{medal:['Ingeniero de Datos','🗃️'],xp:50,msg:'API si existe, scraping si no, procesar si está en un archivo, conector si ya viene hecho. Elige según dónde vive el dato.'},
    fails:{ match:'Casi. API pública→API; dato en HTML→scraping; dentro de un PDF→procesar; app conocida→conector. Lo rojo no coincide.' } },
- 13:{ type:'sort', title:'Clasifique el error del bot', intro:'Un bot profesional trata distinto cada error. Lleve cada uno a su cajón: reintentar o registrar.',
+ 13:{ type:'sort', title:'Clasifica el error del bot', intro:'Un bot profesional trata distinto cada error. Lleva cada uno a su cajón: reintentar o registrar.',
    buckets:[ {id:'retry',ic:'🔄',label:'Transitorio → reintentar'}, {id:'negocio',ic:'📋',label:'De negocio → registrar y seguir'} ],
    items:[ {id:'i1',ic:'⏱️',name:'Timeout de red',bucket:'retry'}, {id:'i2',ic:'🐢',name:'La página tardó en cargar',bucket:'retry'}, {id:'i3',ic:'🔌',name:'Servicio caído un momento',bucket:'retry'}, {id:'i4',ic:'💳',name:'Saldo insuficiente',bucket:'negocio'}, {id:'i5',ic:'❌',name:'Dato inválido en la factura',bucket:'negocio'}, {id:'i6',ic:'👤',name:'El cliente no existe en el sistema',bucket:'negocio'} ],
-   win:{medal:['Ingeniero de Robustez','🛡️'],xp:60,msg:'Transitorio = reintente con backoff. De negocio = regístrelo y siga. Nunca reintente lo que jamás va a funcionar.'},
+   win:{medal:['Ingeniero de Robustez','🛡️'],xp:60,msg:'Transitorio = reintenta con backoff. De negocio = regístralo y sigue. Nunca reintentes lo que jamás va a funcionar.'},
    fails:{ sort:'Casi. Red/timeout/caído un momento = reintentar. Saldo, dato inválido, cliente inexistente = no reintentar, registrar.' } },
- 14:{ type:'sequence', title:'Despliegue un robot con Orchestrator', intro:'Un robot no se manda por email. Ordene los pasos para ponerlo en producción (sobra 1 disparate).',
+ 14:{ type:'sequence', title:'Despliegue un robot con Orchestrator', intro:'Un robot no se manda por email. Ordena los pasos para ponerlo en producción (sobra 1 disparate).',
    slots:[ {hint:'1',accept:'dev'}, {hint:'2',accept:'publish'}, {hint:'3',accept:'process'}, {hint:'4',accept:'run'} ],
    pieces:[ {id:'dev',ic:'🛠️',name:'Desarrolla el robot en Studio'}, {id:'publish',ic:'📦',name:'Publica el paquete al Orchestrator'}, {id:'process',ic:'⚙️',name:'Crea el proceso y lo asigna'}, {id:'run',ic:'▶️',name:'Ejecuta/programa y monitorea'}, {id:'x',ic:'📧',name:'Le manda el .exe por email al robot',distractor:true} ],
-   win:{medal:['Orquestador RPA','🎼'],xp:60,msg:'Studio → publicar → crear proceso → ejecutar y monitorear. El Orchestrator es la sala de control de sus robots.'},
+   win:{medal:['Orquestador RPA','🎼'],xp:60,msg:'Studio → publicar → crear proceso → ejecutar y monitorear. El Orchestrator es la sala de control de tus robots.'},
    fails:{ order:'Casi. Desarrolla → publica → crea el proceso → ejecuta y monitorea.', distractor:'Mandar un .exe por email no es desplegar. Fuera.' } },
- 15:{ type:'sort', title:'¿PowerApps o Power Automate?', intro:'Dos herramientas hermanas, dos trabajos distintos. Clasifique cada necesidad.',
+ 15:{ type:'sort', title:'¿PowerApps o Power Automate?', intro:'Dos herramientas hermanas, dos trabajos distintos. Clasifica cada necesidad.',
    buckets:[ {id:'apps',ic:'📱',label:'PowerApps (crear apps)'}, {id:'flow',ic:'🔄',label:'Power Automate (flujos)'} ],
    items:[ {id:'i1',ic:'🧾',name:'Pantalla para cargar gastos',bucket:'apps'}, {id:'i2',ic:'📲',name:'Formulario móvil para el equipo',bucket:'apps'}, {id:'i3',ic:'📦',name:'App de inventario',bucket:'apps'}, {id:'i4',ic:'🔔',name:'Avisar cuando llega un email',bucket:'flow'}, {id:'i5',ic:'✅',name:'Aprobar solicitudes automáticamente',bucket:'flow'}, {id:'i6',ic:'🔗',name:'Sincronizar dos sistemas',bucket:'flow'} ],
    win:{medal:['Low-code Pro','🧱'],xp:50,msg:'PowerApps = pantallas donde la gente interactúa. Power Automate = flujos que corren solos por detrás.'},
    fails:{ sort:'Casi. Si es una pantalla/app para usar = PowerApps. Si corre solo por detrás (avisos, aprobaciones, sync) = Power Automate.' } },
- 16:{ type:'sequence', title:'El pipeline de un documento (IDP)', intro:'Procesar una factura con IA es una línea de montaje. Ordénela (sobra 1 método del siglo pasado).',
+ 16:{ type:'sequence', title:'El pipeline de un documento (IDP)', intro:'Procesar una factura con IA es una línea de montaje. Ordénala (sobra 1 método del siglo pasado).',
    slots:[ {hint:'1',accept:'capturar'}, {hint:'2',accept:'leer'}, {hint:'3',accept:'clasificar'}, {hint:'4',accept:'extraer'}, {hint:'5',accept:'validar'} ],
    pieces:[ {id:'capturar',ic:'📥',name:'Capturar el documento'}, {id:'leer',ic:'👁️',name:'Leer con OCR/visión'}, {id:'clasificar',ic:'🗂️',name:'Clasificar el tipo'}, {id:'extraer',ic:'🔎',name:'Extraer los datos'}, {id:'validar',ic:'✅',name:'Validar y confirmar'}, {id:'x',ic:'⌨️',name:'Teclearlo todo a mano',distractor:true} ],
    win:{medal:['Maestro del IDP','🧾'],xp:60,msg:'Capturar → leer → clasificar → extraer → validar. Así una IA procesa miles de documentos sin teclear uno.'},
    fails:{ order:'Casi. Captura → lee (OCR) → clasifica → extrae → valida.', distractor:'Teclear a mano es justo lo que venimos a eliminar. Fuera.' } },
- 17:{ type:'match', title:'Pull, Push o Conector', intro:'Cada forma de integrar sistemas tiene su firma. Empareje el mecanismo con lo que lo define.',
+ 17:{ type:'match', title:'Pull, Push o Conector', intro:'Cada forma de integrar sistemas tiene su firma. Empareja el mecanismo con lo que lo define.',
    pairs:[
-     {l:{ic:'🔌',txt:'API (pull)'}, r:{ic:'🕐',txt:'Usted consulta el dato cuando quiere'}},
-     {l:{ic:'📡',txt:'Webhook (push)'}, r:{ic:'⚡',txt:'El sistema le avisa al instante'}},
+     {l:{ic:'🔌',txt:'API (pull)'}, r:{ic:'🕐',txt:'Tú consultas el dato cuando quieres'}},
+     {l:{ic:'📡',txt:'Webhook (push)'}, r:{ic:'⚡',txt:'El sistema te avisa al instante'}},
      {l:{ic:'🧩',txt:'Conector'}, r:{ic:'📦',txt:'Integración ya empaquetada'}},
      {l:{ic:'🗄️',txt:'Base de datos'}, r:{ic:'🔍',txt:'Lee/escribe directo en la tabla'}}
    ],
-   win:{medal:['Integrador','🔗'],xp:55,msg:'API=usted pide; webhook=le avisan; conector=ya viene hecho; base de datos=directo a la tabla. Elige según urgencia y esfuerzo.'},
-   fails:{ match:'Casi. Usted consulta=API; le avisan al instante=webhook; ya viene hecho=conector; leer una tabla=base de datos. Lo rojo no coincide.' } },
- 18:{ type:'scenario', title:'Está diseñando el bot de atención', intro:'Un cliente escribe a su negocio a las 3am. Cada decisión define si el bot ayuda o ahuyenta.',
+   win:{medal:['Integrador','🔗'],xp:55,msg:'API=tú pides; webhook=te avisan; conector=ya viene hecho; base de datos=directo a la tabla. Elige según urgencia y esfuerzo.'},
+   fails:{ match:'Casi. Tú consultas=API; te avisan al instante=webhook; ya viene hecho=conector; leer una tabla=base de datos. Lo rojo no coincide.' } },
+ 18:{ type:'scenario', title:'Está diseñando el bot de atención', intro:'Un cliente escribe a tu negocio a las 3am. Cada decisión define si el bot ayuda o ahuyenta.',
    rounds:[
      {ic:'🤔', q:'El cliente pregunta algo que el bot NO sabe con certeza. ¿Qué hace?', options:[
        {t:'Avisa que no está seguro y deriva a un humano', ok:true, fb:'Correcto: un bot honesto que deriva construye confianza.'},
        {t:'Inventa una respuesta que suena convincente', ok:false, fb:'Alucinar es lo peor que puede hacer un bot: destruye la confianza y puede costar caro.'} ]},
-     {ic:'📚', q:'Antes de responder sobre su horario y precios, ¿de dónde saca el dato?', options:[
+     {ic:'📚', q:'Antes de responder sobre tu horario y precios, ¿de dónde saca el dato?', options:[
        {t:'De una base de conocimiento/FAQ conectada', ok:true, fb:'Sí: el bot consulta datos reales, no improvisa.'},
-       {t:'De lo que "recuerde" del entrenamiento general', ok:false, fb:'Ese dato puede estar viejo o inventado. Conecte una fuente real.'} ]},
+       {t:'De lo que "recuerde" del entrenamiento general', ok:false, fb:'Ese dato puede estar viejo o inventado. Conecta una fuente real.'} ]},
      {ic:'😤', q:'El cliente está enojado y el bot no resuelve. ¿Mejor jugada?', options:[
        {t:'Escala a un humano de forma rápida y clara', ok:true, fb:'Exacto: saber cuándo salir de escena es señal de un bot bien diseñado.'},
        {t:'Insiste con respuestas automáticas hasta que se rinda', ok:false, fb:'Eso multiplica la frustración. Un buen bot sabe cuándo pasar la posta.'} ]}
    ],
    win:{medal:['Diseñador de Bots','💬'],xp:55,msg:'Honesto cuando no sabe, apoyado en datos reales y capaz de escalar a un humano. Ese es un bot en el que la gente confía.'}, fails:{} },
- 19:{ type:'scenario', title:'Produzca un video con avatar IA', intro:'Necesita un video de presentación para mañana. Sin cámara, sin estudio, sin actor. Decida bien.',
+ 19:{ type:'scenario', title:'Produce un video con avatar IA', intro:'Necesitas un video de presentación para mañana. Sin cámara, sin estudio, sin actor. Decide bien.',
    rounds:[
      {ic:'✍️', q:'Lo primero para que el video no salga vacío es…', options:[
        {t:'Escribir un guion claro y con gancho', ok:true, fb:'Sí: sin guion, el avatar más realista dice puras vaguedades. El mensaje manda.'},
        {t:'Elegir el avatar más bonito y arrancar', ok:false, fb:'La cara vende, pero sin guion no hay mensaje. Primero qué dice, luego quién lo dice.'} ]},
-     {ic:'🎙️', q:'Quiere que suene profesional y creíble. ¿Qué cuida?', options:[
+     {ic:'🎙️', q:'Quieres que suene profesional y creíble. ¿Qué cuidas?', options:[
        {t:'Una voz natural y bien sincronizada con el guion', ok:true, fb:'Correcto: una voz robótica o desincronizada rompe la magia al instante.'},
        {t:'Que hable rapidísimo para meter más info', ok:false, fb:'Atropellado no convence. Ritmo natural y pausas: así se escucha creíble.'} ]},
-     {ic:'🌍', q:'El cliente lo quiere también en inglés y portugués. ¿Qué hace?', options:[
+     {ic:'🌍', q:'El cliente lo quiere también en inglés y portugués. ¿Qué haces?', options:[
        {t:'Traduce el guion y regenera el video con la IA', ok:true, fb:'Exacto: la gran ventaja de la IA es clonar el video en varios idiomas en minutos.'},
-       {t:'Contrata a dos actores nativos', ok:false, fb:'Justo lo que la IA le ahorra. Traduzca el guion y regenere: minutos, no semanas.'} ]}
+       {t:'Contrata a dos actores nativos', ok:false, fb:'Justo lo que la IA te ahorra. Traduce el guion y regenera: minutos, no semanas.'} ]}
    ],
-   win:{medal:['Creador de Avatares','🎭'],xp:50,msg:'Guion primero, voz natural, y multiplíquelo a otros idiomas regenerando. Video profesional sin cámara, set ni actores.'}, fails:{} },
- 20:{ type:'scenario', title:'Dirija un equipo de agentes IA', intro:'Tiene que generar un informe de mercado completo: investigar, analizar y redactar. Usted es el orquestador.',
+   win:{medal:['Creador de Avatares','🎭'],xp:50,msg:'Guion primero, voz natural, y multiplícalo a otros idiomas regenerando. Video profesional sin cámara, set ni actores.'}, fails:{} },
+ 20:{ type:'scenario', title:'Dirige un equipo de agentes IA', intro:'Tienes que generar un informe de mercado completo: investigar, analizar y redactar. Tú eres el orquestador.',
    rounds:[
-     {ic:'🧭', q:'La tarea es grande y variada. ¿Cómo la encara?', options:[
+     {ic:'🧭', q:'La tarea es grande y variada. ¿Cómo la encaras?', options:[
        {t:'La divide en subtareas y asigna un agente especialista a cada una', ok:true, fb:'Correcto: dividir y coordinar vence siempre al “superagente” que lo hace todo.'},
-       {t:'Le pide a un solo agente que lo haga todo de una', ok:false, fb:'Un solo agente para todo se satura y baja la calidad. Especialice y reparta.'} ]},
-     {ic:'🔧', q:'El agente investigador necesita datos actuales de la web. ¿Qué le da?', options:[
+       {t:'Le pide a un solo agente que lo haga todo de una', ok:false, fb:'Un solo agente para todo se satura y baja la calidad. Especializa y reparte.'} ]},
+     {ic:'🔧', q:'El agente investigador necesita datos actuales de la web. ¿Qué le das?', options:[
        {t:'Herramientas: búsqueda web y acceso a fuentes', ok:true, fb:'Sí: un agente sin herramientas solo “opina”. Con herramientas, actúa sobre datos reales.'},
-       {t:'Nada, que responda con lo que ya sabe', ok:false, fb:'Sin herramientas repite conocimiento viejo. Dele acceso a datos frescos.'} ]},
+       {t:'Nada, que responda con lo que ya sabe', ok:false, fb:'Sin herramientas repite conocimiento viejo. Dale acceso a datos frescos.'} ]},
      {ic:'🧩', q:'Cada agente terminó su parte. ¿Último paso?', options:[
-       {t:'Un agente consolida todo en un informe coherente', ok:true, fb:'Exacto: sin consolidación tiene piezas sueltas, no un resultado. La síntesis cierra el sistema.'},
+       {t:'Un agente consolida todo en un informe coherente', ok:true, fb:'Exacto: sin consolidación tienes piezas sueltas, no un resultado. La síntesis cierra el sistema.'},
        {t:'Entrega las 3 salidas por separado y listo', ok:false, fb:'Eso es dejar el trabajo a medias. Alguien debe unir las piezas en un todo.'} ]}
    ],
    win:{medal:['Arquitecto de Agentes','🏛️'],xp:65,msg:'Divide, asigna a especialistas con herramientas y consolida. Así un sistema multiagente resuelve lo que un solo agente no puede.'}, fails:{} },
- 21:{ type:'sort', title:'¿Buena práctica o riesgo?', intro:'Automatizar sin cuidar lo legal y la seguridad es jugar con fuego. Clasifique cada acción.',
+ 21:{ type:'sort', title:'¿Buena práctica o riesgo?', intro:'Automatizar sin cuidar lo legal y la seguridad es jugar con fuego. Clasifica cada acción.',
    buckets:[ {id:'ok',ic:'✅',label:'Buena práctica'}, {id:'riesgo',ic:'⛔',label:'Riesgo / evitar'} ],
    items:[ {id:'i1',ic:'📝',name:'Pedir consentimiento para usar datos',bucket:'ok'}, {id:'i2',ic:'🔐',name:'Cifrar los datos personales',bucket:'ok'}, {id:'i3',ic:'📋',name:'Registrar quién accede a qué',bucket:'ok'}, {id:'i4',ic:'🌐',name:'Subir datos de clientes a una IA pública sin permiso',bucket:'riesgo'}, {id:'i5',ic:'🗝️',name:'Guardar contraseñas en texto plano',bucket:'riesgo'}, {id:'i6',ic:'🤖',name:'Decidir sin supervisión ni aviso',bucket:'riesgo'} ],
    win:{medal:['Guardián del Cumplimiento','⚖️'],xp:55,msg:'Consentimiento, cifrado y trazabilidad: sí. Datos al aire, contraseñas en claro y decisiones a ciegas: no. La automatización también responde ante la ley.'},
    fails:{ sort:'Casi. Consentir, cifrar y registrar = bien. Exponer datos, contraseñas en texto plano y decidir a ciegas = riesgo.' } },
  22:{ type:'swipe', title:'IA responsable: ¿mito o realidad?',
-   intro:'La IA potente exige ética. Decida carta por carta si cada afirmación es un mito peligroso o una realidad que debe respetar.',
+   intro:'La IA potente exige ética. Decide carta por carta si cada afirmación es un mito peligroso o una realidad que debes respetar.',
    cards:[
      {t:'Puede usar un deepfake de una persona real sin su permiso mientras sea “solo marketing”.', real:false, fb:'Mito peligroso. Suplantar a alguien sin consentimiento es engaño y puede ser ilegal. La transparencia no es opcional.'},
      {t:'Está bien decidir despidos automáticamente con IA, sin que un humano revise.', real:false, fb:'Mito. Decisiones que afectan la vida de la gente exigen supervisión humana. La IA asiste, no sentencia a ciegas.'},
      {t:'Conviene avisar a la persona cuando está hablando con una IA y no con un humano.', real:true, fb:'Realidad. La transparencia genera confianza y en muchos países ya es obligación legal.'},
-     {t:'Revisar el modelo en busca de sesgos es parte de un uso responsable.', real:true, fb:'Realidad. Un modelo sesgado discrimina sin querer. Auditarlo es su responsabilidad.'},
+     {t:'Revisar el modelo en busca de sesgos es parte de un uso responsable.', real:true, fb:'Realidad. Un modelo sesgado discrimina sin querer. Auditarlo es tu responsabilidad.'},
      {t:'Siempre conviene dejar una salida para escalar a un humano.', real:true, fb:'Realidad. El humano al mando es la última red de seguridad de todo sistema automatizado.'}
    ],
    win:{medal:['IA Responsable','🕊️'],xp:55,msg:'Transparencia, revisar sesgos y humano al mando: eso es uso responsable. Engañar, decidir a ciegas u ocultar el uso de IA cruza la línea. La automatización también responde ante la ley.'},
@@ -2777,6 +2745,9 @@ const YTMAP={1:"UjBJJuxo5C4",2:"-VBmFYQR6ss",3:"wM1NrkwJrvU",4:"4j5Za97fSqI",5:"
  16:"oxZLNHlLUAI",17:"T4Et1bk3UDI",18:"654BzA_c4Zs",19:"xWlOXkYsR3g",20:"8d2ZIwMmoDY",
  21:"nvO-_tXqk9M",22:"NqBajgT6yj0"};
 
+/* ---- Lecciones audiovisuales propias (reemplazan el video de YouTube por episodio) ---- */
+const OWNLESSON={1:"piloto/leccion/"};
+
 /* Audio de LOCUTOR (voz neuronal Álvaro es-ES, generada con Edge-TTS, gratis).
    Cada episodio: array de clips MP3 (data URI) alineado a las diapositivas de la clase.
    Si un episodio tiene audio pregenerado (voz IA Edge-TTS), suena ese; si no, cae a la voz del navegador. */
@@ -2787,137 +2758,137 @@ function hasLocutor(n){return AUDIO[n]&&AUDIO[n].length;}
    Cada beat: t = titular en pantalla · s = narración (voz IA + subtítulo) */
 const SCRIPTS={
  1:[
-  {t:"Bienvenido a la Temporada 1",s:"Bienvenido. Durante los próximos minutos va a entender por qué la hiperautomatización es la habilidad más rentable de esta década. No le voy a dar teoría de manual: le voy a dar el criterio que usan los consultores que cobran miles por un proyecto."},
+  {t:"Bienvenido a la Temporada 1",s:"Bienvenido. Durante los próximos minutos vas a entender por qué la hiperautomatización es la habilidad más rentable de esta década. No te voy a dar teoría de manual: te voy a dar el criterio que usan los consultores que cobran miles por un proyecto."},
   {t:"¿Qué es la hiperautomatización?",s:"Automatizar una tarea es enseñarle a una máquina a hacer un paso. Hiperautomatizar es orquestar muchas tecnologías (inteligencia artificial, robots, reglas de negocio y análisis) para automatizar un proceso completo de principio a fin. La diferencia no es de grado, es de ambición."},
-  {t:"RPA no es suficiente",s:"El RPA clásico imita clics y teclas. Funciona, pero es frágil y solo cubre tareas estructuradas. Cuando le suma inteligencia artificial, el sistema empieza a leer documentos, entender lenguaje y decidir. Ahí deja de tener un robot y empieza a tener un empleado digital."},
-  {t:"El dinero está en el proceso correcto",s:"El error número uno es automatizar lo que se ve bonito. El acierto es automatizar lo repetitivo, de alto volumen y basado en reglas. Ese es el proceso que se paga solo en semanas. Aprenda a calcular horas ahorradas y errores evitados: ese número es su propuesta de venta."},
-  {t:"Recapitulación",s:"Recuerde tres cosas: hiperautomatizar es orquestar, la inteligencia artificial es lo que multiplica el valor, y el ROI manda. En el próximo episodio, La Mente, abrimos la caja negra de la inteligencia artificial generativa. Supere el reto y nos vemos ahí."}],
+  {t:"RPA no es suficiente",s:"El RPA clásico imita clics y teclas. Funciona, pero es frágil y solo cubre tareas estructuradas. Cuando le sumas inteligencia artificial, el sistema empieza a leer documentos, entender lenguaje y decidir. Ahí dejas de tener un robot y empiezas a tener un empleado digital."},
+  {t:"El dinero está en el proceso correcto",s:"El error número uno es automatizar lo que se ve bonito. El acierto es automatizar lo repetitivo, de alto volumen y basado en reglas. Ese es el proceso que se paga solo en semanas. Aprende a calcular horas ahorradas y errores evitados: ese número es tu propuesta de venta."},
+  {t:"Recapitulación",s:"Recuerda tres cosas: hiperautomatizar es orquestar, la inteligencia artificial es lo que multiplica el valor, y el ROI manda. En el próximo episodio, La Mente, abrimos la caja negra de la inteligencia artificial generativa. Supera el reto y nos vemos ahí."}],
  2:[
-  {t:"La Mente detrás de todo",s:"Todo lo que va a construir en este curso se apoya en un motor: los modelos de lenguaje. Si entiende cómo piensan, dejará de tenerles miedo y empezará a mandarles con precisión."},
-  {t:"Cómo piensa un modelo",s:"Un modelo de lenguaje no busca en internet ni razona como usted. Predice el siguiente fragmento de texto, llamado token, basándose en patrones que aprendió. Por eso es brillante redactando y peligroso inventando datos. A eso último lo llamamos alucinación."},
+  {t:"La Mente detrás de todo",s:"Todo lo que vas a construir en este curso se apoya en un motor: los modelos de lenguaje. Si entiendes cómo piensan, dejarás de tenerles miedo y empezarás a mandarles con precisión."},
+  {t:"Cómo piensa un modelo",s:"Un modelo de lenguaje no busca en internet ni razona como tú. Predice el siguiente fragmento de texto, llamado token, basándose en patrones que aprendió. Por eso es brillante redactando y peligroso inventando datos. A eso último lo llamamos alucinación."},
   {t:"De chatbot a agente",s:"Un chatbot responde. Un agente actúa. La diferencia es que el agente tiene tres cosas: memoria para recordar, herramientas para ejecutar acciones, y un bucle de razonamiento para decidir qué hacer a continuación hasta cumplir un objetivo."},
   {t:"Dónde brilla y dónde falla",s:"La inteligencia artificial generativa brilla resumiendo, clasificando, redactando y conversando. Falla en cálculos exactos y en datos que no tiene. La clave profesional es darle contexto y herramientas, no pedirle que adivine."},
-  {t:"Recapitulación",s:"Los modelos predicen texto, los agentes ejecutan objetivos, y las alucinaciones se controlan con contexto. En el siguiente episodio, El Lenguaje Secreto, aprenderá a hablarle a la máquina para que haga exactamente lo que quiere."}],
+  {t:"Recapitulación",s:"Los modelos predicen texto, los agentes ejecutan objetivos, y las alucinaciones se controlan con contexto. En el siguiente episodio, El Lenguaje Secreto, aprenderás a hablarle a la máquina para que haga exactamente lo que quieres."}],
  3:[
-  {t:"El Lenguaje Secreto",s:"El prompt es el volante de la inteligencia artificial. La mayoría escribe pedidos vagos y culpa al modelo. Usted va a aprender a escribir instrucciones que producen resultados consistentes, una y otra vez."},
-  {t:"La estructura que nunca falla",s:"Un buen prompt tiene rol, contexto, tarea, restricciones y formato. Le dice quién es, qué situación hay, qué debe hacer, qué límites tiene y cómo quiere la respuesta. Con esa estructura pasa de respuestas aleatorias a respuestas de calidad profesional."},
-  {t:"Piense paso a paso",s:"Cuando la tarea es compleja, pídale al modelo que razone paso a paso antes de responder. Esta técnica, llamada cadena de pensamiento, mejora enormemente la precisión en lógica y cálculo. Y si necesita datos estructurados, exija el formato: por ejemplo, un JSON válido."},
-  {t:"Blinde su agente",s:"Si un usuario puede escribirle a su agente, alguien intentará manipularlo. Se llama inyección de prompt. La defensa es separar las instrucciones del sistema de los datos del usuario y dar al agente solo los permisos mínimos que necesita."},
-  {t:"Recapitulación",s:"Estructura, razonamiento paso a paso y seguridad. Con esto ya escribe prompts de nivel profesional. En el próximo episodio recorremos el arsenal de herramientas de inteligencia artificial que va a usar en el mundo real."}],
+  {t:"El Lenguaje Secreto",s:"El prompt es el volante de la inteligencia artificial. La mayoría escribe pedidos vagos y culpa al modelo. Vas a aprender a escribir instrucciones que producen resultados consistentes, una y otra vez."},
+  {t:"La estructura que nunca falla",s:"Un buen prompt tiene rol, contexto, tarea, restricciones y formato. Le dice quién es, qué situación hay, qué debe hacer, qué límites tiene y cómo quieres la respuesta. Con esa estructura pasas de respuestas aleatorias a respuestas de calidad profesional."},
+  {t:"Piensa paso a paso",s:"Cuando la tarea es compleja, pídele al modelo que razone paso a paso antes de responder. Esta técnica, llamada cadena de pensamiento, mejora enormemente la precisión en lógica y cálculo. Y si necesitas datos estructurados, exige el formato: por ejemplo, un JSON válido."},
+  {t:"Blinda tu agente",s:"Si un usuario puede escribirle a tu agente, alguien intentará manipularlo. Se llama inyección de prompt. La defensa es separar las instrucciones del sistema de los datos del usuario y dar al agente solo los permisos mínimos que necesita."},
+  {t:"Recapitulación",s:"Estructura, razonamiento paso a paso y seguridad. Con esto ya escribes prompts de nivel profesional. En el próximo episodio recorremos el arsenal de herramientas de inteligencia artificial que vas a usar en el mundo real."}],
  4:[
-  {t:"El Arsenal Creativo",s:"No existe la mejor herramienta de inteligencia artificial. Existe la herramienta correcta para cada trabajo. En este episodio le doy el mapa para elegir sin perderse."},
-  {t:"Texto, imagen, voz y video",s:"Hoy puede generar texto, imágenes, voz y video con inteligencia artificial. Cada familia de modelos tiene fortalezas distintas. Su ventaja no es dominar una, sino saber combinarlas para producir en minutos lo que antes tomaba días."},
-  {t:"Los tres criterios que importan",s:"Elija según tres variables: costo, calidad y privacidad. Si trabaja con datos sensibles de empresa, la privacidad y el cumplimiento mandan sobre todo lo demás. A veces la respuesta correcta es un modelo que corre dentro de su propia infraestructura."},
-  {t:"Todo se conecta por API",s:"La magia real aparece cuando conecta estas herramientas a sus flujos mediante sus interfaces de programación, las APIs. Una clave, una llamada, y su automatización ya piensa. Eso es lo que construiremos en las próximas temporadas."},
-  {t:"Recapitulación",s:"Combine modalidades, decida por costo, calidad y privacidad, y conéctelo todo por API. Cierra la Temporada 1. En la Temporada 2, El Arsenal, empieza a construir agentes de verdad con n8n."}],
+  {t:"El Arsenal Creativo",s:"No existe la mejor herramienta de inteligencia artificial. Existe la herramienta correcta para cada trabajo. En este episodio te doy el mapa para elegir sin perderte."},
+  {t:"Texto, imagen, voz y video",s:"Hoy puedes generar texto, imágenes, voz y video con inteligencia artificial. Cada familia de modelos tiene fortalezas distintas. Tu ventaja no es dominar una, sino saber combinarlas para producir en minutos lo que antes tomaba días."},
+  {t:"Los tres criterios que importan",s:"Elige según tres variables: costo, calidad y privacidad. Si trabajas con datos sensibles de empresa, la privacidad y el cumplimiento mandan sobre todo lo demás. A veces la respuesta correcta es un modelo que corre dentro de tu propia infraestructura."},
+  {t:"Todo se conecta por API",s:"La magia real aparece cuando conectas estas herramientas a tus flujos mediante sus interfaces de programación, las APIs. Una clave, una llamada, y tu automatización ya piensa. Eso es lo que construiremos en las próximas temporadas."},
+  {t:"Recapitulación",s:"Combina modalidades, decide por costo, calidad y privacidad, y conéctalo todo por API. Cierra la Temporada 1. En la Temporada 2, El Arsenal, empieza a construir agentes de verdad con n8n."}],
  5:[
-  {t:"El Constructor",s:"Se acabó la teoría. En este episodio construye su primer agente funcional con n8n, una de las plataformas más potentes y flexibles que existen, y además de código abierto."},
-  {t:"Nodos, disparadores y datos",s:"En n8n todo es un flujo de nodos. Un disparador inicia el proceso, ya sea un webhook, un horario o un evento. Luego los nodos transforman datos y ejecutan acciones. Pensar en flujos de datos es el cambio mental que necesita."},
-  {t:"El nodo de agente",s:"n8n incluye un nodo de agente de inteligencia artificial al que le conecta un modelo, una memoria y herramientas. Con eso monta un asistente que consulta, decide y responde dentro de su propio flujo, sin escribir apenas código."},
-  {t:"Pensar en producción",s:"Construir es fácil; mantener es lo profesional. Diseñe desde el inicio el manejo de errores: reintentos, un flujo de error que le avise, y registros para diagnosticar. Un agente que falla en silencio es peor que no tener agente."},
-  {t:"Recapitulación",s:"Disparador, nodos, agente y robustez. Ya tiene su primer empleado digital. En el próximo episodio construimos lo mismo desde otro ángulo con Make, y aprenderá cuándo conviene cada uno."}],
+  {t:"El Constructor",s:"Se acabó la teoría. En este episodio construyes tu primer agente funcional con n8n, una de las plataformas más potentes y flexibles que existen, y además de código abierto."},
+  {t:"Nodos, disparadores y datos",s:"En n8n todo es un flujo de nodos. Un disparador inicia el proceso, ya sea un webhook, un horario o un evento. Luego los nodos transforman datos y ejecutan acciones. Pensar en flujos de datos es el cambio mental que necesitas."},
+  {t:"El nodo de agente",s:"n8n incluye un nodo de agente de inteligencia artificial al que le conecta un modelo, una memoria y herramientas. Con eso montas un asistente que consulta, decide y responde dentro de tu propio flujo, sin escribir apenas código."},
+  {t:"Pensar en producción",s:"Construir es fácil; mantener es lo profesional. Diseña desde el inicio el manejo de errores: reintentos, un flujo de error que te avise, y registros para diagnosticar. Un agente que falla en silencio es peor que no tener agente."},
+  {t:"Recapitulación",s:"Disparador, nodos, agente y robustez. Ya tienes tu primer empleado digital. En el próximo episodio construimos lo mismo desde otro ángulo con Make, y aprenderás cuándo conviene cada uno."}],
  6:[
-  {t:"El Conector",s:"Make, antes Integromat, es la herramienta visual más elegante para automatizar. Si n8n es un taller flexible, Make es una línea de montaje clara y visual. Dominar ambas le vuelve imparable."},
-  {t:"Escenarios y módulos",s:"En Make construye escenarios formados por módulos. Cada módulo ejecuta una acción y consume una operación. Entender ese modelo de operaciones es clave, porque de él depende su costo mensual."},
-  {t:"Rutas y colecciones",s:"Con routers divide el flujo en varios caminos según condiciones. Con iteradores procesa listas elemento por elemento. Estas dos piezas le permiten modelar prácticamente cualquier lógica de negocio."},
-  {t:"n8n o Make",s:"Regla práctica: elija Make por rapidez, catálogo de aplicaciones y facilidad visual. Elija n8n por control total, código abierto y ejecuciones ilimitadas cuando lo aloja usted. No hay ganador absoluto, hay contexto."},
-  {t:"Recapitulación",s:"Escenarios, operaciones, routers e iteradores. Ya maneja las dos grandes plataformas no-code. En el próximo episodio damos un salto: automatizar y programar con Claude usando vibe coding."}],
+  {t:"El Conector",s:"Make, antes Integromat, es la herramienta visual más elegante para automatizar. Si n8n es un taller flexible, Make es una línea de montaje clara y visual. Dominar ambas te vuelve imparable."},
+  {t:"Escenarios y módulos",s:"En Make construyes escenarios formados por módulos. Cada módulo ejecuta una acción y consume una operación. Entender ese modelo de operaciones es clave, porque de él depende tu costo mensual."},
+  {t:"Rutas y colecciones",s:"Con routers divides el flujo en varios caminos según condiciones. Con iteradores procesas listas elemento por elemento. Estas dos piezas te permiten modelar prácticamente cualquier lógica de negocio."},
+  {t:"n8n o Make",s:"Regla práctica: elige Make por rapidez, catálogo de aplicaciones y facilidad visual. Elige n8n por control total, código abierto y ejecuciones ilimitadas cuando lo alojas tú. No hay ganador absoluto, hay contexto."},
+  {t:"Recapitulación",s:"Escenarios, operaciones, routers e iteradores. Ya manejas las dos grandes plataformas no-code. En el próximo episodio damos un salto: automatizar y programar con Claude usando vibe coding."}],
  7:[
-  {t:"El Copiloto",s:"Y si le dijera que puede construir software y automatizaciones describiendo lo que quiere en español. Eso es el vibe coding, y Claude es uno de los mejores copilotos para lograrlo."},
-  {t:"Qué es el vibe coding",s:"Vibe coding es programar por intención: describe el resultado y la inteligencia artificial escribe el código. Acelera todo de forma brutal, pero tiene una regla de oro: nunca acepte código que no entiende ni verifica. Velocidad sin control es deuda técnica."},
-  {t:"Claude como copiloto",s:"Use Claude para generar scripts, transformar datos, crear integraciones y depurar errores. El secreto está en iterar en pasos pequeños y verificar cada salida. Pequeños pasos verificados vencen a un gran salto sin revisar."},
-  {t:"Conecte con el mundo real",s:"Con el protocolo de contexto, conocido como MCP, Claude puede acceder a archivos, APIs y servicios. Ahí deja de ser un chat y se convierte en un agente que opera sobre sus sistemas reales."},
-  {t:"Recapitulación",s:"Programe por intención, verifique siempre y conecte con MCP. Cierra la Temporada 2. En la Temporada 3, El Método, aprende a detectar qué vale la pena automatizar antes de tocar una sola herramienta."}],
+  {t:"El Copiloto",s:"Y si te dijera que puedes construir software y automatizaciones describiendo lo que quieres en español. Eso es el vibe coding, y Claude es uno de los mejores copilotos para lograrlo."},
+  {t:"Qué es el vibe coding",s:"Vibe coding es programar por intención: describe el resultado y la inteligencia artificial escribe el código. Acelera todo de forma brutal, pero tiene una regla de oro: nunca aceptes código que no entiendes ni verificas. Velocidad sin control es deuda técnica."},
+  {t:"Claude como copiloto",s:"Usa Claude para generar scripts, transformar datos, crear integraciones y depurar errores. El secreto está en iterar en pasos pequeños y verificar cada salida. Pequeños pasos verificados vencen a un gran salto sin revisar."},
+  {t:"Conecta con el mundo real",s:"Con el protocolo de contexto, conocido como MCP, Claude puede acceder a archivos, APIs y servicios. Ahí deja de ser un chat y se convierte en un agente que opera sobre tus sistemas reales."},
+  {t:"Recapitulación",s:"Programa por intención, verifica siempre y conecta con MCP. Cierra la Temporada 2. En la Temporada 3, El Método, aprende a detectar qué vale la pena automatizar antes de tocar una sola herramienta."}],
  8:[
-  {t:"El Cazador de Procesos",s:"Las mejores automatizaciones no empiezan en una herramienta, empiezan en una libreta. En este episodio aprende a cazar oportunidades de oro dentro de cualquier empresa."},
-  {t:"El proceso real, no el ideal",s:"Cuando pregunta cómo funciona un proceso, le cuentan el ideal. La realidad tiene atajos, excepciones y parches. Su trabajo es documentar el proceso tal como es de verdad, el estado actual, con entrevistas y observación directa."},
-  {t:"Deje que los datos hablen",s:"Los sistemas guardan registros de todo. Con técnicas de process mining reconstruye el proceso real a partir de esos datos y descubre los cuellos de botella que nadie le iba a confesar."},
-  {t:"Priorice como consultor",s:"No todo se automatiza primero. Ordene las oportunidades en una matriz de impacto contra complejidad. Los que dan alto impacto con baja complejidad son sus victorias rápidas: haga esas primero y ganará credibilidad."},
-  {t:"Recapitulación",s:"Documente la realidad, deje hablar a los datos y priorice por impacto. Ya tiene ojo de consultor. En el próximo episodio convertimos esa oportunidad en una solución bien diseñada."}],
+  {t:"El Cazador de Procesos",s:"Las mejores automatizaciones no empiezan en una herramienta, empiezan en una libreta. En este episodio aprendes a cazar oportunidades de oro dentro de cualquier empresa."},
+  {t:"El proceso real, no el ideal",s:"Cuando preguntas cómo funciona un proceso, te cuentan el ideal. La realidad tiene atajos, excepciones y parches. Tu trabajo es documentar el proceso tal como es de verdad, el estado actual, con entrevistas y observación directa."},
+  {t:"Deja que los datos hablen",s:"Los sistemas guardan registros de todo. Con técnicas de process mining reconstruyes el proceso real a partir de esos datos y descubres los cuellos de botella que nadie te iba a confesar."},
+  {t:"Prioriza como consultor",s:"No todo se automatiza primero. Ordena las oportunidades en una matriz de impacto contra complejidad. Los que dan alto impacto con baja complejidad son tus victorias rápidas: haz esas primero y ganarás credibilidad."},
+  {t:"Recapitulación",s:"Documenta la realidad, deja hablar a los datos y prioriza por impacto. Ya tienes ojo de consultor. En el próximo episodio convertimos esa oportunidad en una solución bien diseñada."}],
  9:[
-  {t:"El Arquitecto",s:"Una idea sin diseño es un caos garantizado. En este episodio aprende a convertir una oportunidad en una solución documentada que cualquier equipo puede construir sin malentendidos."},
-  {t:"Los documentos que salvan proyectos",s:"Dos documentos evitan el noventa por ciento de los desastres: el que define el proceso, y el que define la solución. Uno describe qué hace el proceso; el otro, cómo lo va a resolver la automatización. Escríbalos y dormirá tranquilo."},
-  {t:"No automatice el desorden",s:"Antes de automatizar, rediseñe. Automatizar un proceso ineficiente solo acelera el error. Diseñe primero el estado deseado, límpielo, y recién entonces constrúyalo. Esta sola idea justifica el curso entero."},
+  {t:"El Arquitecto",s:"Una idea sin diseño es un caos garantizado. En este episodio aprendes a convertir una oportunidad en una solución documentada que cualquier equipo puede construir sin malentendidos."},
+  {t:"Los documentos que salvan proyectos",s:"Dos documentos evitan el noventa por ciento de los desastres: el que define el proceso, y el que define la solución. Uno describe qué hace el proceso; el otro, cómo lo va a resolver la automatización. Escríbelos y dormirás tranquilo."},
+  {t:"No automatices el desorden",s:"Antes de automatizar, rediseña. Automatizar un proceso ineficiente solo acelera el error. Diseña primero el estado deseado, límpialo, y recién entonces constrúyelo. Esta sola idea justifica el curso entero."},
   {t:"El ciclo de vida",s:"Todo proyecto sigue un ciclo: análisis, diseño, desarrollo, pruebas con el usuario y puesta en marcha. Saltarse la validación del negocio es la forma más rápida de fracasar en producción."},
-  {t:"Recapitulación",s:"Documente, rediseñe antes de automatizar y respete el ciclo de vida. Ya piensa como arquitecto de soluciones. En el próximo episodio aprende el idioma universal de los procesos: BPMN."}],
+  {t:"Recapitulación",s:"Documenta, rediseña antes de automatizar y respeta el ciclo de vida. Ya piensas como arquitecto de soluciones. En el próximo episodio aprendes el idioma universal de los procesos: BPMN."}],
  10:[
-  {t:"El Cartógrafo",s:"Necesita un idioma que entiendan por igual el negocio y la tecnología. Ese idioma se llama BPMN, y es el mapa que ordena cualquier proceso por complejo que sea."},
-  {t:"Tres símbolos que lo explican todo",s:"BPMN se apoya en pocos símbolos: eventos, que son círculos y marcan inicios y fines; actividades, que son rectángulos y representan tareas; y compuertas, que son rombos y controlan las decisiones. Con eso ya modela el ochenta por ciento."},
+  {t:"El Cartógrafo",s:"Necesitas un idioma que entiendan por igual el negocio y la tecnología. Ese idioma se llama BPMN, y es el mapa que ordena cualquier proceso por complejo que sea."},
+  {t:"Tres símbolos que lo explican todo",s:"BPMN se apoya en pocos símbolos: eventos, que son círculos y marcan inicios y fines; actividades, que son rectángulos y representan tareas; y compuertas, que son rombos y controlan las decisiones. Con eso ya modelas el ochenta por ciento."},
   {t:"Quién hace qué",s:"Los carriles y piscinas muestran quién ejecuta cada paso: qué hace una persona, qué hace un sistema, qué hace otra área. Ver el proceso repartido por responsables revela dónde se pierde el tiempo."},
-  {t:"Del mapa a la máquina",s:"Un buen diagrama BPMN no es decoración: es la especificación que guía su automatización. Modele las excepciones y los caminos alternativos, porque ahí es donde los procesos reales se rompen."},
-  {t:"Recapitulación",s:"Eventos, actividades, compuertas y carriles. Ya sabe cartografiar procesos. Cierra la Temporada 3. En la Temporada 4, La Fuerza, entra al mundo del RPA empresarial."}],
+  {t:"Del mapa a la máquina",s:"Un buen diagrama BPMN no es decoración: es la especificación que guía tu automatización. Modela las excepciones y los caminos alternativos, porque ahí es donde los procesos reales se rompen."},
+  {t:"Recapitulación",s:"Eventos, actividades, compuertas y carriles. Ya sabes cartografiar procesos. Cierra la Temporada 3. En la Temporada 4, La Fuerza, entra al mundo del RPA empresarial."}],
  11:[
-  {t:"La Máquina",s:"Bienvenido al RPA, la tecnología que pone robots de software a trabajar veinticuatro horas sin quejarse. En este episodio entiende cómo funciona por dentro."},
+  {t:"La Máquina",s:"Bienvenido al RPA, la tecnología que pone robots de software a trabajar veinticuatro horas sin quejarse. En este episodio entiendes cómo funciona por dentro."},
   {t:"Cómo ve el robot",s:"Un robot interactúa con las pantallas usando selectores, que son la dirección de cada botón y cada campo. El secreto de un robot que no se rompe está en usar selectores dinámicos, que toleran los cambios de la interfaz."},
   {t:"Atendido o desatendido",s:"Hay dos tipos de robot. El atendido trabaja junto a una persona, en su computadora, ayudándola en el momento. El desatendido corre solo en servidores, sin supervisión, procesando volumen de noche y de día. Cada uno resuelve un problema distinto."},
   {t:"Datos bajo control",s:"Un robot maneja variables, condiciones y bucles igual que un programa. Dominar el flujo de datos y las tablas es lo que separa un robot de juguete de uno que procesa miles de transacciones sin errores."},
-  {t:"Recapitulación",s:"Selectores robustos, el tipo de robot correcto y control de datos. Ya entiende la fuerza bruta de la automatización. En el próximo episodio la apuntamos a documentos, datos y la web."}],
+  {t:"Recapitulación",s:"Selectores robustos, el tipo de robot correcto y control de datos. Ya entiendes la fuerza bruta de la automatización. En el próximo episodio la apuntamos a documentos, datos y la web."}],
  12:[
-  {t:"El Extractor",s:"El ochenta por ciento de la información valiosa está atrapada en documentos y páginas web. En este episodio aprende a liberarla y convertirla en datos que sus sistemas puedan usar."},
+  {t:"El Extractor",s:"El ochenta por ciento de la información valiosa está atrapada en documentos y páginas web. En este episodio aprendes a liberarla y convertirla en datos que tus sistemas puedan usar."},
   {t:"Documentos a escala",s:"Leer y escribir Excel, CSV y PDF de forma automática es pan de cada día en la automatización. La clave no es solo extraer, sino validar: datos sucios que entran producen decisiones equivocadas que salen."},
-  {t:"Limpie antes de usar",s:"El proceso se llama ETL: extraer, transformar y cargar. Entre la fuente y el destino, normaliza, elimina duplicados y valida. Ese paso invisible es el que hace confiable a todo el sistema."},
-  {t:"Scraping con criterio",s:"Cuando no hay una API, el web scraping extrae datos directamente de las páginas. Pero hágalo con criterio: respete los términos del sitio y el archivo robots. Y recuerde la regla: si existe una API oficial, úsela siempre antes que raspar HTML."},
-  {t:"Recapitulación",s:"Procese documentos, limpie con ETL y raspe la web con responsabilidad. Ya alimenta de datos a sus automatizaciones. En el próximo episodio las hacemos a prueba de balas."}],
+  {t:"Limpia antes de usar",s:"El proceso se llama ETL: extraer, transformar y cargar. Entre la fuente y el destino, normaliza, elimina duplicados y valida. Ese paso invisible es el que hace confiable a todo el sistema."},
+  {t:"Scraping con criterio",s:"Cuando no hay una API, el web scraping extrae datos directamente de las páginas. Pero hazlo con criterio: respeta los términos del sitio y el archivo robots. Y recuerda la regla: si existe una API oficial, úsala siempre antes que raspar HTML."},
+  {t:"Recapitulación",s:"Procesa documentos, limpia con ETL y raspa la web con responsabilidad. Ya alimentas de datos a tus automatizaciones. En el próximo episodio las hacemos a prueba de balas."}],
  13:[
-  {t:"El Guardián",s:"La diferencia entre un aficionado y un profesional no es lo que pasa cuando todo funciona, sino lo que pasa cuando algo falla. En este episodio blinda sus automatizaciones."},
+  {t:"El Guardián",s:"La diferencia entre un aficionado y un profesional no es lo que pasa cuando todo funciona, sino lo que pasa cuando algo falla. En este episodio blindas tus automatizaciones."},
   {t:"Dos tipos de error",s:"Existen dos fallos distintos. El de negocio es una regla que no se cumple, como un dato inválido, y se resuelve con lógica. El de sistema es técnico, como una aplicación caída, y se resuelve reintentando o recuperando. Confundirlos es un error de novato."},
-  {t:"Reintentar sin romper",s:"Cuando reintenta una operación, necesita que sea idempotente: que repetirla no genere efectos duplicados, como crear dos pedidos. La idempotencia es la base de todo reintento seguro."},
-  {t:"Registre para diagnosticar",s:"Un buen registro le deja resolver un incidente en minutos en lugar de horas. Registre hitos, decisiones y contexto suficiente para reproducir el problema, sin ahogarse en ruido."},
-  {t:"Recapitulación",s:"Distinga los errores, hágalo idempotente y registre con criterio. Sus automatizaciones ya resisten el mundo real. En el próximo episodio las desplegamos a escala con UiPath Orchestrator."}],
+  {t:"Reintentar sin romper",s:"Cuando reintentas una operación, necesitas que sea idempotente: que repetirla no genere efectos duplicados, como crear dos pedidos. La idempotencia es la base de todo reintento seguro."},
+  {t:"Registra para diagnosticar",s:"Un buen registro te deja resolver un incidente en minutos en lugar de horas. Registra hitos, decisiones y contexto suficiente para reproducir el problema, sin ahogarse en ruido."},
+  {t:"Recapitulación",s:"Distingue los errores, hazlo idempotente y registra con criterio. Tus automatizaciones ya resisten el mundo real. En el próximo episodio las desplegamos a escala con UiPath Orchestrator."}],
  14:[
-  {t:"El Orquestador",s:"Un robot está bien. Cien robots coordinados es una fábrica. En este episodio aprende a gobernar su fuerza robótica con UiPath Orchestrator."},
+  {t:"El Orquestador",s:"Un robot está bien. Cien robots coordinados es una fábrica. En este episodio aprendes a gobernar tu fuerza robótica con UiPath Orchestrator."},
   {t:"El centro de mando",s:"Orchestrator es la torre de control: organiza robots, entornos y procesos desde un solo lugar. Publica, versiona y controla todo de forma centralizada, como un director de orquesta frente a sus músicos."},
-  {t:"Colas para escalar",s:"El secreto de la escala son las colas. Carga el trabajo en una cola y varios robots lo procesan en paralelo, con reintentos automáticos. Así pasa de un robot lento a un enjambre que devora volumen."},
-  {t:"Secretos y disparadores",s:"Nunca escriba contraseñas dentro de un proceso. Guárdelas como activos protegidos. Y programe disparadores para que los procesos arranquen solos, por horario o cuando llega trabajo a una cola."},
-  {t:"Recapitulación",s:"Centralice, escale con colas y automatice el arranque con disparadores. Cierra la Temporada 4. En la Temporada 5, La Expansión, entra al mundo low-code de Microsoft."}],
+  {t:"Colas para escalar",s:"El secreto de la escala son las colas. Carga el trabajo en una cola y varios robots lo procesan en paralelo, con reintentos automáticos. Así pasas de un robot lento a un enjambre que devora volumen."},
+  {t:"Secretos y disparadores",s:"Nunca escribas contraseñas dentro de un proceso. Guárdalas como activos protegidos. Y programa disparadores para que los procesos arranquen solos, por horario o cuando llega trabajo a una cola."},
+  {t:"Recapitulación",s:"Centraliza, escala con colas y automatiza el arranque con disparadores. Cierra la Temporada 4. En la Temporada 5, La Expansión, entra al mundo low-code de Microsoft."}],
  15:[
-  {t:"El Alquimista",s:"Y si pudiera crear una aplicación empresarial completa casi sin programar. Con la Power Platform de Microsoft, eso es exactamente lo que va a hacer."},
-  {t:"Cuatro piezas, infinitas soluciones",s:"La plataforma tiene cuatro piezas: Power Apps para crear aplicaciones, Power Automate para los flujos, Dataverse como base de datos, y los conectores para unirlo todo. Con ellas resuelve problemas reales de negocio en horas."},
-  {t:"Del lienzo a la app",s:"Con una aplicación de lienzo diseña la interfaz arrastrando controles y conectándolos a sus datos. En una tarde tiene una app que su equipo puede usar en el móvil. Esa velocidad es la promesa del low-code."},
-  {t:"Nube y escritorio",s:"Power Automate tiene dos caras: los flujos en la nube conectan servicios y APIs, y Power Automate Desktop hace RPA sobre aplicaciones de su computadora. Juntos cubren casi cualquier automatización dentro del ecosistema Microsoft."},
-  {t:"Recapitulación",s:"Cuatro piezas, apps de lienzo y automatización en nube y escritorio. Ya construye soluciones low-code. En el próximo episodio le damos ojos a la máquina con visión artificial."}],
+  {t:"El Alquimista",s:"Y si pudieras crear una aplicación empresarial completa casi sin programar. Con la Power Platform de Microsoft, eso es exactamente lo que vas a hacer."},
+  {t:"Cuatro piezas, infinitas soluciones",s:"La plataforma tiene cuatro piezas: Power Apps para crear aplicaciones, Power Automate para los flujos, Dataverse como base de datos, y los conectores para unirlo todo. Con ellas resuelves problemas reales de negocio en horas."},
+  {t:"Del lienzo a la app",s:"Con una aplicación de lienzo diseñas la interfaz arrastrando controles y conectándolos a tus datos. En una tarde tienes una app que tu equipo puede usar en el móvil. Esa velocidad es la promesa del low-code."},
+  {t:"Nube y escritorio",s:"Power Automate tiene dos caras: los flujos en la nube conectan servicios y APIs, y Power Automate Desktop hace RPA sobre aplicaciones de tu computadora. Juntos cubren casi cualquier automatización dentro del ecosistema Microsoft."},
+  {t:"Recapitulación",s:"Cuatro piezas, apps de lienzo y automatización en nube y escritorio. Ya construyes soluciones low-code. En el próximo episodio le damos ojos a la máquina con visión artificial."}],
  16:[
-  {t:"Los Ojos de la Máquina",s:"Hasta ahora sus automatizaciones leían datos limpios. En este episodio aprenden a ver: a entender documentos desordenados e imágenes como lo haría una persona."},
+  {t:"Los Ojos de la Máquina",s:"Hasta ahora tus automatizaciones leían datos limpios. En este episodio aprenden a ver: a entender documentos desordenados e imágenes como lo haría una persona."},
   {t:"De píxeles a datos",s:"El OCR convierte una imagen en texto. Pero el procesamiento inteligente de documentos va mucho más allá: comprende el documento, clasifica su tipo y extrae los campos que importan, ya sea una factura, un contrato o un formulario."},
-  {t:"El humano en el bucle",s:"Ningún modelo acierta el cien por ciento. Por eso cada extracción trae un nivel de confianza. Cuando la confianza es baja, el caso pasa a revisión de una persona. Así combina la velocidad de la máquina con el criterio humano."},
+  {t:"El humano en el bucle",s:"Ningún modelo acierta el cien por ciento. Por eso cada extracción trae un nivel de confianza. Cuando la confianza es baja, el caso pasa a revisión de una persona. Así combinas la velocidad de la máquina con el criterio humano."},
   {t:"Visión más allá del texto",s:"La visión artificial también clasifica imágenes, detecta objetos y controla la calidad en una línea de producción. Donde hay una cámara, hay una oportunidad de automatizar una inspección."},
-  {t:"Recapitulación",s:"OCR, procesamiento inteligente con humano en el bucle y visión artificial. Sus automatizaciones ya ven. En el próximo episodio conectamos todos los sistemas entre sí."}],
+  {t:"Recapitulación",s:"OCR, procesamiento inteligente con humano en el bucle y visión artificial. Tus automatizaciones ya ven. En el próximo episodio conectamos todos los sistemas entre sí."}],
  17:[
-  {t:"El Puente",s:"Ninguna automatización vive sola. Todo lo que ha construido necesita hablar con otros sistemas, y el idioma de esa conversación son las APIs. Este es el pegamento de todo."},
-  {t:"Qué es una API",s:"Una API es la puerta por la que dos sistemas intercambian datos. Con métodos sencillos pide información o envía órdenes, y recibe respuestas en un formato ordenado, normalmente JSON. Entender esto abre miles de integraciones."},
-  {t:"El webhook, al revés",s:"Un webhook invierte la lógica. En vez de preguntar una y otra vez si pasó algo, el sistema le avisa en el instante en que ocurre. Es la diferencia entre revisar el buzón cada hora y recibir una notificación al momento."},
+  {t:"El Puente",s:"Ninguna automatización vive sola. Todo lo que has construido necesita hablar con otros sistemas, y el idioma de esa conversación son las APIs. Este es el pegamento de todo."},
+  {t:"Qué es una API",s:"Una API es la puerta por la que dos sistemas intercambian datos. Con métodos sencillos pides información o envías órdenes, y recibes respuestas en un formato ordenado, normalmente JSON. Entender esto abre miles de integraciones."},
+  {t:"El webhook, al revés",s:"Un webhook invierte la lógica. En vez de preguntar una y otra vez si pasó algo, el sistema te avisa en el instante en que ocurre. Es la diferencia entre revisar el buzón cada hora y recibir una notificación al momento."},
   {t:"Seguridad primero",s:"Conectar sistemas exige cuidar el acceso. Se usan claves y protocolos como OAuth para autorizar sin exponer contraseñas. Y siempre, el principio de mínimo privilegio: cada conexión accede solo a lo que necesita."},
   {t:"Recapitulación",s:"APIs para conectar, webhooks para reaccionar en tiempo real y seguridad como base. Cierra la Temporada 5. En la Temporada 6, El Dominio, llevamos los agentes al máximo nivel."}],
  18:[
-  {t:"La Voz",s:"Imagine un asistente que atiende a sus clientes por chat y por teléfono, veinticuatro horas, sin perder la paciencia. En este episodio lo construye."},
+  {t:"La Voz",s:"Imagina un asistente que atiende a tus clientes por chat y por teléfono, veinticuatro horas, sin perder la paciencia. En este episodio lo construyes."},
   {t:"Diseñar la conversación",s:"Un buen agente conversacional no improvisa. Se diseña alrededor de las intenciones del usuario: lo que realmente quiere lograr. Detectar la intención y mantener el contexto es lo que separa una conversación fluida de una frustrante."},
-  {t:"Chat y también voz",s:"En chat integra el agente en WhatsApp, la web o redes. En voz da un salto: la máquina transcribe lo que oye, razona y responde hablando. El reto técnico es la latencia, porque en una llamada cada segundo de silencio incomoda."},
+  {t:"Chat y también voz",s:"En chat integras el agente en WhatsApp, la web o redes. En voz da un salto: la máquina transcribe lo que oye, razona y responde hablando. El reto técnico es la latencia, porque en una llamada cada segundo de silencio incomoda."},
   {t:"Saber cuándo pasar la posta",s:"El mejor agente conoce sus límites. Cuando un caso lo supera, lo deriva a un humano con todo el contexto de la conversación, para que el cliente no tenga que repetir nada. Ese traspaso elegante define la calidad del servicio."},
-  {t:"Recapitulación",s:"Diseñe por intenciones, atienda en chat y voz, y derive con contexto. Ya crea asistentes conversacionales. En el próximo episodio les damos un rostro con avatares inteligentes."}],
+  {t:"Recapitulación",s:"Diseña por intenciones, atiende en chat y voz, y deriva con contexto. Ya creas asistentes conversacionales. En el próximo episodio les damos un rostro con avatares inteligentes."}],
  19:[
-  {t:"El Rostro Sintético",s:"El texto informa, pero un rostro conecta. En este episodio aprende a crear presentadores y asistentes con cara y voz generados por inteligencia artificial."},
-  {t:"De guion a video",s:"Con las herramientas actuales, escribe un guion y obtiene un video con un avatar que lo narra, con la boca sincronizada y en varios idiomas. Puede producir y actualizar formación a escala sin volver a grabar una cámara."},
-  {t:"Avatares que responden",s:"El siguiente nivel es conectar un avatar a un agente conversacional en tiempo real. El resultado es un asistente con rostro que escucha, piensa y le responde mirándole. Es el futuro de la atención digital."},
+  {t:"El Rostro Sintético",s:"El texto informa, pero un rostro conecta. En este episodio aprendes a crear presentadores y asistentes con cara y voz generados por inteligencia artificial."},
+  {t:"De guion a video",s:"Con las herramientas actuales, escribes un guion y obtienes un video con un avatar que lo narra, con la boca sincronizada y en varios idiomas. Puedes producir y actualizar formación a escala sin volver a grabar una cámara."},
+  {t:"Avatares que responden",s:"El siguiente nivel es conectar un avatar a un agente conversacional en tiempo real. El resultado es un asistente con rostro que escucha, piensa y te responde mirándote. Es el futuro de la atención digital."},
   {t:"Poder con responsabilidad",s:"Esta tecnología exige ética. Usar la imagen o la voz de una persona requiere su consentimiento explícito y ser transparente sobre el uso de inteligencia artificial. El límite entre innovación y engaño es el permiso."},
-  {t:"Recapitulación",s:"Produzca video desde un guion, conecte avatares a agentes y actúe con ética. En el próximo episodio orquestamos muchos agentes trabajando juntos."}],
+  {t:"Recapitulación",s:"Produce video desde un guion, conecta avatares a agentes y actúa con ética. En el próximo episodio orquestamos muchos agentes trabajando juntos."}],
  20:[
-  {t:"El Director",s:"Un agente resuelve una tarea. Los problemas grandes necesitan varios agentes especializados trabajando en equipo. En este episodio aprende a dirigir esa orquesta."},
-  {t:"Cuando uno no basta",s:"En lugar de un agente que lo hace todo mal, usa varios que hacen una cosa bien. El patrón más común es orquestador y trabajadores: un agente coordina y reparte, y agentes especializados ejecutan. Luego el coordinador integra los resultados."},
-  {t:"Desacople con eventos",s:"Los sistemas robustos se comunican por eventos y colas, no por conexiones directas. Así cada pieza reacciona a su ritmo, escala por separado y tolera fallos. A esto se le llama arquitectura orientada a eventos."},
-  {t:"Ver lo invisible",s:"Cuando muchos agentes interactúan, el comportamiento emerge y se vuelve difícil de seguir. Por eso necesita observabilidad: trazas y métricas de extremo a extremo que le muestren qué está pasando por dentro."},
-  {t:"Recapitulación",s:"Divida en especialistas, desacople con eventos y observe todo. Ya diseña sistemas multiagente. En el próximo episodio aterrizamos lo legal y la ciberseguridad."}],
+  {t:"El Director",s:"Un agente resuelve una tarea. Los problemas grandes necesitan varios agentes especializados trabajando en equipo. En este episodio aprendes a dirigir esa orquesta."},
+  {t:"Cuando uno no basta",s:"En lugar de un agente que lo hace todo mal, usas varios que hacen una cosa bien. El patrón más común es orquestador y trabajadores: un agente coordina y reparte, y agentes especializados ejecutan. Luego el coordinador integra los resultados."},
+  {t:"Desacopla con eventos",s:"Los sistemas robustos se comunican por eventos y colas, no por conexiones directas. Así cada pieza reacciona a su ritmo, escala por separado y tolera fallos. A esto se le llama arquitectura orientada a eventos."},
+  {t:"Ver lo invisible",s:"Cuando muchos agentes interactúan, el comportamiento emerge y se vuelve difícil de seguir. Por eso necesitas observabilidad: trazas y métricas de extremo a extremo que te muestren qué está pasando por dentro."},
+  {t:"Recapitulación",s:"Divide en especialistas, desacopla con eventos y observa todo. Ya diseñas sistemas multiagente. En el próximo episodio aterrizamos lo legal y la ciberseguridad."}],
  21:[
-  {t:"El Centinela",s:"Automatizar sin cumplir la ley es construir sobre arena. En este episodio protege su trabajo y a su empresa conociendo el marco legal y de seguridad."},
-  {t:"Proteja los datos",s:"La protección de datos exige un principio clave: minimización. Trate solo los datos estrictamente necesarios para su finalidad. Menos datos significa menos riesgo y menos responsabilidad si algo sale mal."},
-  {t:"La ley de la inteligencia artificial",s:"La nueva regulación clasifica los sistemas de inteligencia artificial por su nivel de riesgo. A mayor riesgo, más obligaciones de transparencia, control y documentación. Saber en qué categoría cae su solución ya no es opcional."},
-  {t:"Seguridad por diseño",s:"Sus robots manejan credenciales y acceden a sistemas críticos. Gestione los secretos con cuidado, aplique el mínimo privilegio y deje rastro de auditoría de quién hizo qué. Un bot comprometido es una puerta abierta a toda la empresa."},
-  {t:"Recapitulación",s:"Minimice datos, clasifique por riesgo y asegure por diseño. Ya automatiza dentro de la ley. En el episodio final hablamos de lo más humano de todo: la ética."}],
+  {t:"El Centinela",s:"Automatizar sin cumplir la ley es construir sobre arena. En este episodio proteges tu trabajo y a tu empresa conociendo el marco legal y de seguridad."},
+  {t:"Protege los datos",s:"La protección de datos exige un principio clave: minimización. Trate solo los datos estrictamente necesarios para su finalidad. Menos datos significa menos riesgo y menos responsabilidad si algo sale mal."},
+  {t:"La ley de la inteligencia artificial",s:"La nueva regulación clasifica los sistemas de inteligencia artificial por su nivel de riesgo. A mayor riesgo, más obligaciones de transparencia, control y documentación. Saber en qué categoría cae tu solución ya no es opcional."},
+  {t:"Seguridad por diseño",s:"Tus robots manejan credenciales y acceden a sistemas críticos. Gestiona los secretos con cuidado, aplica el mínimo privilegio y deja rastro de auditoría de quién hizo qué. Un bot comprometido es una puerta abierta a toda la empresa."},
+  {t:"Recapitulación",s:"Minimiza datos, clasifica por riesgo y asegura por diseño. Ya automatizas dentro de la ley. En el episodio final hablamos de lo más humano de todo: la ética."}],
  22:[
-  {t:"La Conciencia",s:"Llegó al último episodio. Toda esta potencia que ahora domina exige algo más que técnica: exige criterio. En este episodio cierra el círculo con la ética."},
-  {t:"El sesgo vive en los datos",s:"La inteligencia artificial aprende de datos, y los datos cargan los sesgos del pasado. Si no los detecta y corrige, su sistema puede discriminar sin que nadie lo decida. Vigilar el sesgo es responsabilidad de quien construye."},
+  {t:"La Conciencia",s:"Llegaste al último episodio. Toda esta potencia que ahora dominas exige algo más que técnica: exige criterio. En este episodio cierras el círculo con la ética."},
+  {t:"El sesgo vive en los datos",s:"La inteligencia artificial aprende de datos, y los datos cargan los sesgos del pasado. Si no los detectas y corriges, tu sistema puede discriminar sin que nadie lo decida. Vigilar el sesgo es responsabilidad de quien construye."},
   {t:"Transparencia real",s:"Las personas tienen derecho a saber cuándo interactúan con una inteligencia artificial y, en lo posible, a entender por qué se tomó una decisión que les afecta. Ocultarlo destruye la confianza que tanto cuesta ganar."},
   {t:"Supervisión que importa",s:"Una supervisión humana significativa no es un botón decorativo de aprobar. Es dar a la persona información y poder reales para cuestionar y revertir lo que hace la máquina. La última palabra siempre debe poder ser humana."},
-  {t:"Fin de la serie",s:"Detecte el sesgo, sea transparente y mantenga al humano al mando. Y con esto completa la serie. Ha recorrido de los fundamentos al dominio. Ahora vaya, automatice el mundo con responsabilidad, y reclame su certificado de Arquitecto. Felicitaciones."}]
+  {t:"Fin de la serie",s:"Detecta el sesgo, sé transparente y mantén al humano al mando. Y con esto completas la serie. Has recorrido de los fundamentos al dominio. Ahora ve, automatiza el mundo con responsabilidad, y reclama tu certificado de Arquitecto. Felicitaciones."}]
 };
 
 /* ---- AI VIDEO PLAYER (narración por IA + slides, 100% navegador) ---- */
@@ -2964,29 +2935,37 @@ function buildSlides(m){
   if(SCRIPTS[m.n]){
     SCRIPTS[m.n].forEach((b,i)=>sl.push({k:'lesson',kick:'Parte '+pad2(i+1),title:b.t,text:b.s,say:b.s}));
   }else{
-    sl.push({k:'obj',kick:'Objetivos',title:'Lo que va a dominar',bullets:m.obj,say:'En este episodio va a lograr lo siguiente. '+m.obj.join('. ')+'.'});
+    sl.push({k:'obj',kick:'Objetivos',title:'Lo que vas a dominar',bullets:m.obj,say:'En este episodio vas a lograr lo siguiente. '+m.obj.join('. ')+'.'});
     m.lessons.forEach((l,i)=>sl.push({k:'lesson',kick:'Escena '+pad2(i+1)+' · '+l.d,title:l.t,text:l.desc,say:l.t+'. '+l.desc}));
-    sl.push({k:'end',kick:'Cierre',title:'Ahora le toca a usted',text:'Supere el reto del episodio para ganar su XP.',say:'Excelente. Ahora supere el reto del episodio para ganar su experiencia.'});
+    sl.push({k:'end',kick:'Cierre',title:'Ahora te toca a ti',text:'Supera el reto del episodio para ganar tu XP.',say:'Excelente. Ahora supera el reto del episodio para ganar tu experiencia.'});
   }
   return sl;
 }
 function renderPlayer(m){
   const yt=YTMAP[m.n];
+  const own=OWNLESSON[m.n];
   const beats=(SCRIPTS[m.n]?SCRIPTS[m.n].length:m.lessons.length)+1;
-  return `<div class="vplayer">
-    <div class="vtabs">
-      <button class="vtab active" data-vm="yt" onclick="vpMode(${m.n},'yt')">🎬 Video</button>
-      <button class="vtab" data-vm="ia" onclick="vpMode(${m.n},'ia')">🎙️ Clase narrada por IA</button>
-      <a class="vtab vlink" href="https://youtu.be/${yt}" target="_blank" rel="noopener">Abrir en YouTube ↗</a>
-    </div>
-    <div id="vmYt">
+  const firstTab = own
+    ? `<button class="vtab active" data-vm="own" onclick="vpMode(${m.n},'own')">🎬 Lección audiovisual</button>`
+    : `<button class="vtab active" data-vm="yt" onclick="vpMode(${m.n},'yt')">🎬 Video</button>`;
+  const ytLink = own ? '' : `<a class="vtab vlink" href="https://youtu.be/${yt}" target="_blank" rel="noopener">Abrir en YouTube ↗</a>`;
+  const firstPanel = own
+    ? `<div id="vmOwn"><iframe class="ownframe" src="${own}?embed=1" title="Lección audiovisual del episodio" allow="autoplay; fullscreen" loading="lazy"></iframe></div>`
+    : `<div id="vmYt">
       <div class="ytfacade" id="ytFacade" onclick="loadYt('${yt}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter')loadYt('${yt}')">
         <div class="vwm">Video de la clase</div>
         <button class="vplay" aria-label="Reproducir video"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
         <div class="ytfTitle">${m.title}</div>
-        <div class="ytfNote">▶ Toque para reproducir · vía YouTube</div>
+        <div class="ytfNote">▶ Toca para reproducir · vía YouTube</div>
       </div>
+    </div>`;
+  return `<div class="vplayer">
+    <div class="vtabs">
+      ${firstTab}
+      <button class="vtab" data-vm="ia" onclick="vpMode(${m.n},'ia')">🎙️ Clase narrada por IA</button>
+      ${ytLink}
     </div>
+    ${firstPanel}
     <div id="vmIa" style="display:none">
       <audio id="vaudio" preload="none"></audio>
       <div class="vstage" id="vstage">
@@ -3005,13 +2984,13 @@ function renderPlayer(m){
         <button onclick="vpGo(vp.i+1)" title="Escena siguiente">⏭</button>
         <span class="vcount" id="vcount">–</span>
         <span class="vspacer"></span>
-        <select id="vvoice" onchange="vpSetVoice(this.value)" title="Voz de la narración (elija la mejor de su equipo)" style="max-width:170px"></select>
+        <select id="vvoice" onchange="vpSetVoice(this.value)" title="Voz de la narración (elige la mejor de tu equipo)" style="max-width:170px"></select>
         <select id="vrate" onchange="vp.rate=parseFloat(this.value)" title="Velocidad de la voz">
           <option value="0.9">0.9×</option><option value="1" selected>1×</option><option value="1.15">1.15×</option><option value="1.3">1.3×</option>
         </select>
       </div>
       <div class="vhint" id="vhint" style="display:none">
-        <span>🎧 <b>¿La voz suena robótica?</b> Abra este curso en <b>Microsoft Edge</b> para activar gratis una voz IA más natural (Álvaro, castellano). O elija el modo 🎬 Video arriba.</span>
+        <span>🎧 <b>¿La voz suena robótica?</b> Abre este curso en <b>Microsoft Edge</b> para activar gratis una voz IA más natural (Álvaro, castellano). O elige el modo 🎬 Video arriba.</span>
       </div>
     </div>
   </div>`;
@@ -3028,9 +3007,10 @@ function loadYt(id){
 }
 function vpMode(n,mode){
   document.querySelectorAll('.vtab[data-vm]').forEach(t=>t.classList.toggle('active',t.dataset.vm===mode));
-  const yt=document.getElementById('vmYt'),ia=document.getElementById('vmIa');
-  if(mode==='ia'){yt.style.display='none';ia.style.display='';}
-  else{ia.style.display='none';yt.style.display='';vpStop();vpIcon(false);}
+  const yt=document.getElementById('vmYt'),ia=document.getElementById('vmIa'),own=document.getElementById('vmOwn');
+  [yt,ia,own].forEach(el=>{if(el)el.style.display='none';});
+  if(mode==='ia'){if(ia)ia.style.display='';}
+  else{if(mode==='own'){if(own)own.style.display='';}else if(yt){yt.style.display='';}vpStop();vpIcon(false);}
 }
 function vpInit(m){
   vp.mod=m;vp.slides=buildSlides(m);vp.i=0;vp.playing=false;
@@ -3092,7 +3072,7 @@ function speakTTS(i,s){
 }
 function vpNextAuto(){
   if(vp.i<vp.slides.length-1){vpGo(vp.i+1);}
-  else{vp.playing=false;vpIcon(false);const cap=document.getElementById('vcapTxt');if(cap)cap.textContent='Fin de la clase. Pase al reto del episodio para ganar su XP. ▸';}
+  else{vp.playing=false;vpIcon(false);const cap=document.getElementById('vcapTxt');if(cap)cap.textContent='Fin de la clase. Pasa al reto del episodio para ganar tu XP. ▸';}
 }
 function vpGo(i){
   if(i<0)i=0;if(i>vp.slides.length-1)i=vp.slides.length-1;
@@ -3128,7 +3108,7 @@ function showCertificate(){
     cv.innerHTML=`<div class="locked-note">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
       <h2 style="margin-bottom:10px">Certificado bloqueado</h2>
-      <p>Complete los ${total} episodios de la serie para desbloquear su certificado.<br>Progreso actual: <b style="color:var(--text)">${done}/${total}</b> (${Math.round(done/total*100)}%).</p>
+      <p>Completa los ${total} episodios de la serie para desbloquear tu certificado.<br>Progreso actual: <b style="color:var(--text)">${done}/${total}</b> (${Math.round(done/total*100)}%).</p>
       <button class="btn btn-primary" style="margin-top:24px" onclick="loadModule(${Math.min(total,done+1)})">Continuar la serie →</button>
     </div>`;
     return;
@@ -3148,11 +3128,11 @@ function showCertificate(){
       </div>
     </div>
     <div style="text-align:center;margin-top:24px">
-      <input id="certInput" placeholder="Escriba su nombre para el certificado" value="${progress.name||''}"
+      <input id="certInput" placeholder="Escribe tu nombre para el certificado" value="${progress.name||''}"
         style="padding:13px 16px;background:var(--ink-3);border:1px solid var(--line-2);border-radius:11px;color:var(--text);width:320px;max-width:100%;font-size:14px"
         oninput="updateCertName(this.value)">
       <div style="margin-top:16px"><button class="btn btn-amber" onclick="downloadCert()">📥 Descargar certificado (PNG)</button></div>
-      <p class="muted" style="font-size:12px;margin-top:12px">🎓 ¡Felicidades! Ha completado el programa completo.</p>
+      <p class="muted" style="font-size:12px;margin-top:12px">🎓 ¡Felicidades! Has completado el programa completo.</p>
     </div>`;
   window.scrollTo(0,0);
 }
@@ -3162,26 +3142,26 @@ function updateCertName(v){progress.name=v;saveProgress(progress);const n=docume
    BÓVEDA DEL ACELERADOR (order-bump $27) — 20 automatizaciones copy-paste
    ================================================================= */
 const VAULT=[
- {id:'va-1', cat:'prompt', icon:'🔍', tool:'ChatGPT · Claude', title:'Auditor de procesos', solves:'Detecta qué automatizar en su empresa, con ROI y prioridad, a partir de su descripción.', saves:'~3 h de análisis', steps:['Abra ChatGPT o Claude','Pegue el prompt y describa su proceso donde dice [pega...]','Obtenga la tabla priorizada y empiece por el quick win']},
- {id:'va-2', cat:'prompt', icon:'📋', tool:'ChatGPT · Claude', title:'Generador de SOP', solves:'Convierte un proceso caótico en un procedimiento documentado y replicable.', saves:'~2 h por SOP', steps:['Pegue sus notas sueltas del proceso','Envíe el prompt a la IA','Copie el SOP y compártalo con su equipo']},
- {id:'va-3', cat:'prompt', icon:'🗂️', tool:'ChatGPT · Claude', title:'Clasificador de mensajes', solves:'Categoriza, prioriza y responde tickets o mensajes, con salida JSON automatizable.', saves:'~5 h/semana', steps:['Pegue el prompt en su IA o en un nodo de IA','Reemplace [pega el mensaje]','Use el JSON de salida en su automatización']},
- {id:'va-4', cat:'prompt', icon:'💸', tool:'ChatGPT · Claude', title:'Secuencia de cobranza', solves:'4 emails de follow-up firmes y cordiales para cobrar facturas o propuestas.', saves:'~1 h por caso', steps:['Rellene cliente, monto y contexto','Pídaselo a la IA','Programe los 4 envíos (día 1 / 4 / 8 / 12)']},
- {id:'va-5', cat:'prompt', icon:'🗺️', tool:'ChatGPT · Claude', title:'Modelador BPMN', solves:'Genera el diagrama de su proceso en Mermaid, listo para pegar.', saves:'~90 min', steps:['Describa su proceso en el prompt','Copie el bloque Mermaid que devuelve','Péguelo en mermaid.live o Notion']},
- {id:'va-6', cat:'prompt', icon:'🧾', tool:'ChatGPT · Claude', title:'Extractor de datos (IDP)', solves:'Extrae datos estructurados de facturas o contratos en JSON limpio.', saves:'~4 h/semana', steps:['Pegue el texto del documento','Ejecute el prompt','Reciba el JSON normalizado para su sistema']},
- {id:'va-7', cat:'prompt', icon:'🤝', tool:'ChatGPT · Claude', title:'Agente de atención al cliente', solves:'System prompt completo para un bot de soporte con guardarraíles y escalado.', saves:'semanas de setup', steps:['Rellene negocio, sector y su base de FAQ','Péguelo como "system prompt" en su bot o GPT','Pruebe con preguntas reales y ajuste']},
- {id:'va-8', cat:'prompt', icon:'✨', tool:'ChatGPT · Claude', title:'Generador de prompts', solves:'Meta-prompt que convierte cualquier idea vaga en un prompt profesional.', saves:'en cada tarea de IA', steps:['Describa su idea, aunque sea imprecisa','Envíe el meta-prompt','Copie el prompt optimizado que devuelve']},
- {id:'va-9', cat:'flow', icon:'📧', tool:'n8n', title:'Facturas email → IA → Sheets', solves:'Cada factura que llega por email se lee con IA y se guarda en Google Sheets.', saves:'~6 h/semana', steps:['En n8n: Workflows → Import from Clipboard','Pegue este JSON','Conecte sus credenciales de Gmail, OpenAI y Sheets']},
- {id:'va-10', cat:'flow', icon:'🎯', tool:'n8n', title:'Lead → IA cualifica → Sheet + Slack', solves:'Cada lead del formulario se cualifica con IA y avisa a ventas en Slack.', saves:'~4 h/semana', steps:['Importe el JSON en n8n','Apunte su formulario al webhook','Conecte OpenAI, Sheets y Slack']},
- {id:'va-11', cat:'flow', icon:'📁', tool:'n8n', title:'Drive → resumen IA → email', solves:'Cada archivo nuevo en Drive se resume con IA y le llega por email.', saves:'~3 h/semana', steps:['Importe el JSON en n8n','Conecte Google Drive, OpenAI y Gmail','Elija la carpeta a vigilar']},
- {id:'va-12', cat:'flow', icon:'💬', tool:'Make', title:'Bot Telegram FAQ con IA', solves:'Bot de Telegram que responde las preguntas frecuentes de su negocio con IA.', saves:'~5 h/semana', steps:['En Make: Crear escenario → ⋯ → Import Blueprint','Pegue este JSON','Conecte su bot de Telegram y OpenAI']},
- {id:'va-13', cat:'flow', icon:'📰', tool:'Make', title:'RSS → resumen → publicar', solves:'Convierte noticias de un RSS en posts resumidos y los publica solo.', saves:'~3 h/semana', steps:['Importe el blueprint en Make','Ponga su feed RSS y conecte LinkedIn','Active el escenario']},
- {id:'va-14', cat:'flow', icon:'🔌', tool:'n8n', title:'Plantilla de integración', solves:'Base reutilizable: recibe un webhook, enriquece con una API y responde.', saves:'punto de partida', steps:['Importe el JSON en n8n','Cambie la URL de la API por la suya','Ajuste el formato de la respuesta']},
- {id:'va-15', cat:'code', icon:'🕷️', tool:'Python', title:'Scraper de precios → CSV', solves:'Vigila los precios de la competencia y los exporta a un CSV.', saves:'~4 h/semana', steps:['pip install requests beautifulsoup4','Edite OBJETIVOS con sus URLs y selectores','python scraper.py → genera precios.csv']},
- {id:'va-16', cat:'code', icon:'📄', tool:'Python', title:'PDFs → Excel', solves:'Extrae el texto de facturas en PDF a un archivo Excel.', saves:'~5 h/semana', steps:['pip install pdfplumber openpyxl','Ponga sus PDFs en la carpeta ./facturas','python script.py → genera facturas.xlsx']},
- {id:'va-17', cat:'code', icon:'📬', tool:'Apps Script', title:'Organizar Gmail solo', solves:'Etiqueta y archiva su Gmail por reglas, cada hora, sin tocar nada.', saves:'~2 h/semana', steps:['script.google.com → Nuevo proyecto → pegue el código','Ajuste las REGLAS a su bandeja','Activadores → cada 1 hora']},
- {id:'va-18', cat:'code', icon:'📊', tool:'Google Sheets', title:'Calculadora de ROI', solves:'Calcula el ROI y el payback de cualquier automatización antes de montarla.', saves:'decisiones claras', steps:['Cree una hoja nueva','Pegue rótulos y fórmulas como se indica','Cambie los números de entrada por los suyos']},
- {id:'va-19', cat:'code', icon:'🧮', tool:'Google Sheets', title:'Matriz de priorización', solves:'Ordena qué automatizar primero por impacto vs esfuerzo.', saves:'foco', steps:['Cree la hoja con las columnas indicadas','Pegue las fórmulas de las columnas E y F','Ordene por prioridad y empiece por los quick wins']},
- {id:'va-20', cat:'code', icon:'🛡️', tool:'Plantilla RPA', title:'Manejo de excepciones', solves:'Patrón Try/Catch/Retry para que sus bots no mueran en silencio.', saves:'evita fallos en producción', steps:['Lea el patrón','Aplíquelo en UiPath, Power Automate o n8n','Separe error transitorio de error de negocio']}
+ {id:'va-1', cat:'prompt', icon:'🔍', tool:'ChatGPT · Claude', title:'Auditor de procesos', solves:'Detecta qué automatizar en tu empresa, con ROI y prioridad, a partir de tu descripción.', saves:'~3 h de análisis', steps:['Abre ChatGPT o Claude','Pega el prompt y describe tu proceso donde dice [pega...]','Obtén la tabla priorizada y empieza por el quick win']},
+ {id:'va-2', cat:'prompt', icon:'📋', tool:'ChatGPT · Claude', title:'Generador de SOP', solves:'Convierte un proceso caótico en un procedimiento documentado y replicable.', saves:'~2 h por SOP', steps:['Pega tus notas sueltas del proceso','Envía el prompt a la IA','Copia el SOP y compártelo con tu equipo']},
+ {id:'va-3', cat:'prompt', icon:'🗂️', tool:'ChatGPT · Claude', title:'Clasificador de mensajes', solves:'Categoriza, prioriza y responde tickets o mensajes, con salida JSON automatizable.', saves:'~5 h/semana', steps:['Pega el prompt en tu IA o en un nodo de IA','Reemplaza [pega el mensaje]','Usa el JSON de salida en tu automatización']},
+ {id:'va-4', cat:'prompt', icon:'💸', tool:'ChatGPT · Claude', title:'Secuencia de cobranza', solves:'4 emails de follow-up firmes y cordiales para cobrar facturas o propuestas.', saves:'~1 h por caso', steps:['Rellena cliente, monto y contexto','Pídeselo a la IA','Programa los 4 envíos (día 1 / 4 / 8 / 12)']},
+ {id:'va-5', cat:'prompt', icon:'🗺️', tool:'ChatGPT · Claude', title:'Modelador BPMN', solves:'Genera el diagrama de tu proceso en Mermaid, listo para pegar.', saves:'~90 min', steps:['Describe tu proceso en el prompt','Copia el bloque Mermaid que devuelve','Pégalo en mermaid.live o Notion']},
+ {id:'va-6', cat:'prompt', icon:'🧾', tool:'ChatGPT · Claude', title:'Extractor de datos (IDP)', solves:'Extrae datos estructurados de facturas o contratos en JSON limpio.', saves:'~4 h/semana', steps:['Pega el texto del documento','Ejecuta el prompt','Recibe el JSON normalizado para tu sistema']},
+ {id:'va-7', cat:'prompt', icon:'🤝', tool:'ChatGPT · Claude', title:'Agente de atención al cliente', solves:'System prompt completo para un bot de soporte con guardarraíles y escalado.', saves:'semanas de setup', steps:['Rellena negocio, sector y tu base de FAQ','Pégalo como "system prompt" en tu bot o GPT','Prueba con preguntas reales y ajusta']},
+ {id:'va-8', cat:'prompt', icon:'✨', tool:'ChatGPT · Claude', title:'Generador de prompts', solves:'Meta-prompt que convierte cualquier idea vaga en un prompt profesional.', saves:'en cada tarea de IA', steps:['Describe tu idea, aunque sea imprecisa','Envía el meta-prompt','Copia el prompt optimizado que devuelve']},
+ {id:'va-9', cat:'flow', icon:'📧', tool:'n8n', title:'Facturas email → IA → Sheets', solves:'Cada factura que llega por email se lee con IA y se guarda en Google Sheets.', saves:'~6 h/semana', steps:['En n8n: Workflows → Import from Clipboard','Pega este JSON','Conecta tus credenciales de Gmail, OpenAI y Sheets']},
+ {id:'va-10', cat:'flow', icon:'🎯', tool:'n8n', title:'Lead → IA cualifica → Sheet + Slack', solves:'Cada lead del formulario se cualifica con IA y avisa a ventas en Slack.', saves:'~4 h/semana', steps:['Importa el JSON en n8n','Apunta tu formulario al webhook','Conecta OpenAI, Sheets y Slack']},
+ {id:'va-11', cat:'flow', icon:'📁', tool:'n8n', title:'Drive → resumen IA → email', solves:'Cada archivo nuevo en Drive se resume con IA y te llega por email.', saves:'~3 h/semana', steps:['Importa el JSON en n8n','Conecta Google Drive, OpenAI y Gmail','Elige la carpeta a vigilar']},
+ {id:'va-12', cat:'flow', icon:'💬', tool:'Make', title:'Bot Telegram FAQ con IA', solves:'Bot de Telegram que responde las preguntas frecuentes de tu negocio con IA.', saves:'~5 h/semana', steps:['En Make: Crear escenario → ⋯ → Import Blueprint','Pega este JSON','Conecta tu bot de Telegram y OpenAI']},
+ {id:'va-13', cat:'flow', icon:'📰', tool:'Make', title:'RSS → resumen → publicar', solves:'Convierte noticias de un RSS en posts resumidos y los publica solo.', saves:'~3 h/semana', steps:['Importa el blueprint en Make','Pon tu feed RSS y conecta LinkedIn','Activa el escenario']},
+ {id:'va-14', cat:'flow', icon:'🔌', tool:'n8n', title:'Plantilla de integración', solves:'Base reutilizable: recibe un webhook, enriquece con una API y responde.', saves:'punto de partida', steps:['Importa el JSON en n8n','Cambia la URL de la API por la tuya','Ajusta el formato de la respuesta']},
+ {id:'va-15', cat:'code', icon:'🕷️', tool:'Python', title:'Scraper de precios → CSV', solves:'Vigila los precios de la competencia y los exporta a un CSV.', saves:'~4 h/semana', steps:['pip install requests beautifulsoup4','Edita OBJETIVOS con tus URLs y selectores','python scraper.py → genera precios.csv']},
+ {id:'va-16', cat:'code', icon:'📄', tool:'Python', title:'PDFs → Excel', solves:'Extrae el texto de facturas en PDF a un archivo Excel.', saves:'~5 h/semana', steps:['pip install pdfplumber openpyxl','Pon tus PDFs en la carpeta ./facturas','python script.py → genera facturas.xlsx']},
+ {id:'va-17', cat:'code', icon:'📬', tool:'Apps Script', title:'Organizar Gmail solo', solves:'Etiqueta y archiva tu Gmail por reglas, cada hora, sin tocar nada.', saves:'~2 h/semana', steps:['script.google.com → Nuevo proyecto → pega el código','Ajusta las REGLAS a tu bandeja','Activadores → cada 1 hora']},
+ {id:'va-18', cat:'code', icon:'📊', tool:'Google Sheets', title:'Calculadora de ROI', solves:'Calcula el ROI y el payback de cualquier automatización antes de montarla.', saves:'decisiones claras', steps:['Crea una hoja nueva','Pega rótulos y fórmulas como se indica','Cambia los números de entrada por los tuyos']},
+ {id:'va-19', cat:'code', icon:'🧮', tool:'Google Sheets', title:'Matriz de priorización', solves:'Ordena qué automatizar primero por impacto vs esfuerzo.', saves:'foco', steps:['Crea la hoja con las columnas indicadas','Pega las fórmulas de las columnas E y F','Ordena por prioridad y empieza por los quick wins']},
+ {id:'va-20', cat:'code', icon:'🛡️', tool:'Plantilla RPA', title:'Manejo de excepciones', solves:'Patrón Try/Catch/Retry para que tus bots no mueran en silencio.', saves:'evita fallos en producción', steps:['Lee el patrón','Aplícalo en UiPath, Power Automate o n8n','Separa error transitorio de error de negocio']}
 ];
 function vaultUnlocked(){ return ADMIN || _P.has('acelerador') || progress.acelerador===true; }
 function openVault(){
@@ -3202,7 +3182,7 @@ function renderVault(){
     {k:'flow',label:'⚙️ Workflows n8n / Make (importables)'},
     {k:'code',label:'🐍 Scripts y plantillas'}
   ];
-  let h='<div id="vaultView"><div class="vault-wrap"><div class="vtop"><div><h2>🔓 Bóveda del Acelerador</h2><p>20 automatizaciones listas para copiar y pegar. Cópiela o descárguela, siga los 3 pasos y en marcha. Cada una le ahorra horas.</p></div><div class="vkpi">20 activos<br>desbloqueados</div></div><div class="vtools"><button class="vdlall" id="dlAllBtn" onclick="downloadAllVault()">⬇ Descargar todo (.zip)</button></div>';
+  let h='<div id="vaultView"><div class="vault-wrap"><div class="vtop"><div><h2>🔓 Bóveda del Acelerador</h2><p>20 automatizaciones listas para copiar y pegar. Cópiala o descárgala, sigue los 3 pasos y en marcha. Cada una te ahorra horas.</p></div><div class="vkpi">20 activos<br>desbloqueados</div></div><div class="vtools"><button class="vdlall" id="dlAllBtn" onclick="downloadAllVault()">⬇ Descargar todo (.zip)</button></div>';
   groups.forEach(g=>{
     const items=VAULT.filter(v=>v.cat===g.k);
     h+='<div class="vgroup">'+g.label+' · '+items.length+'</div><div class="vgrid">';
@@ -3225,7 +3205,7 @@ function vaultLockedHTML(){
   const names=VAULT.map(v=>'<div>'+v.icon+' '+v.title+'</div>').join('');
   const cta = progress.enrolled
     ? '<button class="btn btn-amber" onclick="openVaultCheckout()">🔓 Desbloquear por $27</button>'
-    : '<button class="btn btn-amber" onclick="openCheckout(\'unico\')">Inscríbase y añádalo (+$27)</button>';
+    : '<button class="btn btn-amber" onclick="openCheckout(\'unico\')">Inscríbete y añádelo (+$27)</button>';
   return '<div id="vaultView"><div class="vlock"><div class="lk">🔒</div><h2>Bóveda del Acelerador</h2>'
     +'<p><b>20 automatizaciones ya montadas</b> para copiar y pegar: prompts maestros de IA, workflows de n8n y Make importables, y scripts listos. Ahorra semanas de trabajo.</p>'
     +'<div class="vlist">'+names+'</div>'
@@ -3275,7 +3255,7 @@ function downloadAllVault(){
       +'· .txt = plantilla o guía paso a paso\n';
     files.unshift({name:'LEEME.txt', content:readme});
     downloadBlob(makeZipBlob(files),'boveda-acelerador.zip');
-  }catch(e){ alert('No se pudo generar el .zip. Use el botón Descargar de cada tarjeta.'); }
+  }catch(e){ alert('No se pudo generar el .zip. Usa el botón Descargar de cada tarjeta.'); }
   if(btn){setTimeout(()=>{btn.classList.remove('busy'); btn.textContent='⬇ Descargar todo (.zip)';},600);}
 }
 /* ZIP (método store, sin compresión) — cero dependencias */
@@ -3330,7 +3310,7 @@ function closeCheckout(){document.getElementById('checkoutModal').classList.remo
 function fakeCheckout(){
   const name=document.getElementById('coName').value.trim();
   const email=document.getElementById('coEmail').value.trim();
-  if(!name||!email){alert('Complete nombre y email para continuar.');return;}
+  if(!name||!email){alert('Completa nombre y email para continuar.');return;}
   progress.name=name;
   const bump=document.getElementById('coBump');
   if(bump&&bump.checked) progress.acelerador=true;   // desbloquea la Bóveda del Acelerador
@@ -3343,7 +3323,7 @@ function fakeCheckout(){
   }
   progress.enrolled=true;saveProgress(progress);
   closeCheckout();
-  alert('✓ ¡Inscripción confirmada! (demostración)\n\nPara cobrar de verdad: pegue su Payment Link de Stripe en STRIPE_LINKS dentro del código. Con eso, este botón lleva al checkout real y Stripe confirma el pago.\n\nAbriendo su campus...');
+  alert('✓ ¡Inscripción confirmada! (demostración)\n\nPara cobrar de verdad: pegue su Payment Link de Stripe en STRIPE_LINKS dentro del código. Con eso, este botón lleva al checkout real y Stripe confirma el pago.\n\nAbriendo tu campus...');
   openCampus();
 }
 document.getElementById('checkoutModal').addEventListener('click',e=>{if(e.target.id==='checkoutModal')closeCheckout();});
@@ -3378,12 +3358,12 @@ function initNet(){
 
 /* ---- LO QUE VAS A LOGRAR (resultados reales, sin testimonios fingidos) ---- */
 const TESTI=[
- {ic:'🤖',r:'Al terminar la Temporada 1',t:'Monta su primer agente funcional con n8n y con Make, sin saber programar. Sale de sus propias manos en los retos interactivos.',a:'#FFB454'},
- {ic:'🔎',r:'Levantamiento de procesos',t:'Sabe detectar qué tarea de su día conviene automatizar y cuál no — el criterio que cobra un consultor.',a:'#6674FF'},
- {ic:'⚡',r:'Vibe coding con Claude',t:'Dirige a la IA para que le construya herramientas a medida. Produce el doble sin escribir código desde cero.',a:'#8B7BFF'},
- {ic:'🗃️',r:'Bóveda del Acelerador',t:'Se lleva 20 automatizaciones copy-paste listas para instalar: prompts, flujos de n8n/Make y scripts. Aplicables el mismo día.',a:'#3FD07F'},
- {ic:'⏱️',r:'Ahorro de tiempo real',t:'El objetivo del curso: que ese reporte o esa tarea repetitiva que le roba horas pase a correr sola.',a:'#FF9A3D'},
- {ic:'🏛️',r:'Al completar las 6 temporadas',t:'Domina IA generativa, agentes, RPA e integración empresarial de punta a punta. De novato a Arquitecto de Hiperautomatización.',a:'#5AC8FA'}
+ {ic:'🤖',r:'Al terminar la Temporada 1',t:'Montas tu primer agente funcional con n8n y con Make, sin saber programar. Sale de tus propias manos en los retos interactivos.',a:'#FFB454'},
+ {ic:'🔎',r:'Levantamiento de procesos',t:'Sabes detectar qué tarea de tu día conviene automatizar y cuál no — el criterio que cobra un consultor.',a:'#6674FF'},
+ {ic:'⚡',r:'Vibe coding con Claude',t:'Diriges a la IA para que te construya herramientas a medida. Produces el doble sin escribir código desde cero.',a:'#8B7BFF'},
+ {ic:'🗃️',r:'Bóveda del Acelerador',t:'Te llevas 20 automatizaciones copy-paste listas para instalar: prompts, flujos de n8n/Make y scripts. Aplicables el mismo día.',a:'#3FD07F'},
+ {ic:'⏱️',r:'Ahorro de tiempo real',t:'El objetivo del curso: que ese reporte o esa tarea repetitiva que te roba horas pase a correr sola.',a:'#FF9A3D'},
+ {ic:'🏛️',r:'Al completar las 6 temporadas',t:'Dominas IA generativa, agentes, RPA e integración empresarial de punta a punta. De novato a Arquitecto de Hiperautomatización.',a:'#5AC8FA'}
 ];
 function renderTesti(){
   const el=document.getElementById('testiList');if(!el)return;
@@ -3397,7 +3377,7 @@ function renderTesti(){
 /* ---- LEGAL ---- */
 const LEGAL={
  terminos:{title:'Términos y condiciones',body:`
-  <p>Al inscribirse en Hyperflow Academy acepta estos términos. Este es un texto base de ejemplo; adáptelo con su asesor legal antes de vender.</p>
+  <p>Al inscribirte en Hyperflow Academy aceptas estos términos. Este es un texto base de ejemplo; adáptelo con su asesor legal antes de vender.</p>
   <h4>1. Objeto</h4><p>El curso otorga acceso a contenidos formativos (videos, textos, evaluaciones y materiales) sobre hiperautomatización, IA y RPA, con fines educativos.</p>
   <h4>2. Licencia de uso</h4><p>El acceso es personal e intransferible. No está permitido revender, redistribuir ni compartir públicamente el material sin autorización.</p>
   <h4>3. Marcas de terceros</h4><p>Las herramientas mencionadas (n8n, Make, UiPath, Microsoft, Anthropic, YouTube, entre otras) pertenecen a sus respectivos titulares y se citan con fines educativos.</p>
@@ -3409,7 +3389,7 @@ const LEGAL={
   <h4>3. Pagos</h4><p>Los pagos se procesan mediante Stripe, conforme a su propia política de privacidad. No se almacenan datos de la tarjeta.</p>
   <h4>4. Datos locales</h4><p>Como el progreso se guarda en el navegador, puede eliminarse en cualquier momento borrando los datos del sitio desde el propio navegador.</p>`},
  reembolso:{title:'Política de compra',body:`
-  <p>Compra informada, sin sorpresas y sin letra chica.</p>
+  <p>El temario completo, el formato y las condiciones están a la vista antes de pagar.</p>
   <h4>Ventas finales · sin reembolso</h4><p>Por tratarse de un producto digital de acceso inmediato e ilimitado de por vida, todas las compras son finales y no admiten reembolso una vez realizada la transacción. Al completar el pago se acepta esta condición. Por eso se muestra todo el temario y el formato antes de comprar: la decisión de adquirirlo es responsabilidad de quien compra.</p>
   <h4>Acceso</h4><p>El pago es único: da acceso completo y permanente a las 6 temporadas y a todas las actualizaciones futuras, sin suscripción ni cuotas adicionales. El curso empieza por el Episodio 1 y cada módulo se desbloquea al superar el anterior.</p>
   <h4>Producto autoguiado</h4><p>Es un producto formativo digital de acceso inmediato y 100% autoguiado: no incluye atención al cliente ni soporte personalizado. Los resultados dependen de la aplicación de cada persona; no se garantizan ingresos ni resultados económicos específicos.</p>`}
@@ -3465,7 +3445,7 @@ function downloadCert(){
   x.fillStyle='#6E739A';x.font='400 15px Georgia, serif';
   x.fillText('Entidad formadora',cx-380,y1+28);x.fillText('Fecha de emisión',cx,y1+28);x.fillText('Código verificable',cx+380,y1+28);
   x.fillStyle='#6E739A';x.font='400 13px Georgia, serif';
-  x.fillText('Certificación de programa profesional · no constituye un título oficial universitario · verifique el código en hyperflow-academy',cx,H-58);
+  x.fillText('Certificación de programa profesional · no constituye un título oficial universitario · verifica el código en hyperflow-academy',cx,H-58);
   // descargar
   try{
     const url=cv.toDataURL('image/png');const a=document.createElement('a');
@@ -3478,7 +3458,7 @@ function printCert(){ downloadCert(); }
 
 /* ---- OUTCOMES / TRANSFORMACIÓN ---- */
 const OUTCOMES=[
- {t:"Construir agentes de IA que trabajan solos",d:"Automatizaciones con n8n, Make y Claude que ejecutan tareas 24/7 sin usted."},
+ {t:"Construir agentes de IA que trabajan solos",d:"Automatizaciones con n8n, Make y Claude que ejecutan tareas 24/7 sin ti."},
  {t:"Detectar oportunidades rentables",d:"Identificar qué procesos automatizar primero para el máximo ROI, como un consultor."},
  {t:"Automatizar procesos de punta a punta",d:"De RPA con UiPath a Power Platform, con control de excepciones y robustez."},
  {t:"Vender automatización como servicio",d:"Levantar procesos, diseñar la solución y presentar una propuesta con ROI defendible."},
@@ -3509,7 +3489,7 @@ function downloadTemario(){
     s.eps.forEach(n=>{const m=COURSE.find(c=>c.n===n);
       md+='- **EP'+cd2(epInSeason(n))+' · “'+CODE[n]+'”** — '+m.title+'\n   '+m.desc+'\n';});
   });
-  md+='\n---\n¿Listo para empezar? Asegure su plaza en la oferta de lanzamiento.\n';
+  md+='\n---\n¿Listo para empezar? Asegura tu plaza en la oferta de lanzamiento.\n';
   const blob=new Blob([md],{type:'text/markdown;charset=utf-8'});
   const url=URL.createObjectURL(blob),a=document.createElement('a');
   a.href=url;a.download='Temario-Hyperflow-Academy.md';document.body.appendChild(a);a.click();a.remove();
@@ -3520,7 +3500,7 @@ function downloadTemario(){
 renderCurriculum();renderFaq();renderTesti();renderOutcomes();initNet();
 try{localStorage.removeItem('hf_deadline');}catch(e){}  // limpia rastro del countdown viejo
 /* Vuelta del pago exitoso de Stripe: entra directo al campus por el Episodio 1 */
-if(_P.has('enrolled')||_P.has('success')){ try{ if(typeof showToast==='function') showToast('🎉','¡Bienvenido al curso!','Su acceso está activo · empiece por el Episodio 1'); }catch(e){} currentModule=1; openCampus(); }
+if(_P.has('enrolled')||_P.has('success')){ try{ if(typeof showToast==='function') showToast('🎉','¡Bienvenido al curso!','Tu acceso está activo · empieza por el Episodio 1'); }catch(e){} currentModule=1; openCampus(); }
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCheckout();});
 /* ribbon de modo (visible en admin / alumno / preview) */
 (function(){
