@@ -272,10 +272,15 @@ function toggleSound(){ soundOn=!soundOn; const b=document.getElementById('sBtn'
 
 /* ===== voz ===== */
 let voiceOn=true, esVoice=null;
-const MALE=/(jorge|diego|pablo|ra[uú]l|carlos|miguel|juan|enrique|gonzalo|andr[eé]s|crist[oó]bal|male|hombre|masculino|\bf1\b)/i;
-const FEMALE=/(m[oó]nica|paulina|helena|laura|sabina|marisol|ang[eé]lica|esperanza|pen[eé]lope|female|mujer|elvira|luc[ií]a|ximena|dalia)/i;
-function pickVoice(){ if(!('speechSynthesis'in window))return; const vs=speechSynthesis.getVoices(); const es=vs.filter(v=>/es[-_]|spanish|espa/i.test(v.lang+' '+v.name));
-  esVoice = es.find(v=>MALE.test(v.name)) || es.find(v=>!FEMALE.test(v.name)) || es[0] || vs[0] || null; }
+const MALE=/(jorge|diego|pablo|ra[uú]l|carlos|miguel|juan|jos[eé]|fernando|ricardo|enrique|gonzalo|andr[eé]s|crist[oó]bal|male|hombre|masculino)/i;
+const FEMALE=/(m[oó]nica|paulina|helena|laura|sabina|marisol|ang[eé]lica|esperanza|pen[eé]lope|female|mujer|elvira|luc[ií]a|ximena|dalia|google\s+espa)/i;
+const SPAIN=/(es[-_]?es|es-419.*es|spain|espa[nñ]a|castilian|\(spain\))/i;
+function pickVoice(){ if(!('speechSynthesis'in window))return; const vs=speechSynthesis.getVoices();
+  const es=vs.filter(v=>/es[-_]|spanish|espa/i.test(v.lang+' '+v.name));
+  const neutro=es.filter(v=>!SPAIN.test(v.lang+' '+v.name)); // latino / no-España
+  const pool=neutro.length?neutro:es;
+  esVoice = pool.find(v=>MALE.test(v.name)) || pool.find(v=>!FEMALE.test(v.name))
+         || es.find(v=>MALE.test(v.name)) || es.find(v=>!FEMALE.test(v.name)) || es[0] || vs[0] || null; }
 if('speechSynthesis'in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
 function speak(txt){ if(!voiceOn||!('speechSynthesis'in window))return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(txt); if(esVoice)u.voice=esVoice; u.lang='es-ES'; u.rate=.98; u.pitch=.9; speechSynthesis.speak(u); }
 function toggleVoice(){ voiceOn=!voiceOn; document.getElementById('vBtn').classList.toggle('off',!voiceOn); if(!voiceOn&&'speechSynthesis'in window)speechSynthesis.cancel(); else if(playing&&curScene>=0)speak(SCENES[curScene].narr); }
