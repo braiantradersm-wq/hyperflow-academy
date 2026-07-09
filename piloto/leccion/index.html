@@ -288,16 +288,23 @@ const MALE=/(jorge|diego|pablo|ra[uú]l|carlos|miguel|juan|jos[eé]|fernando|ric
 const FEMALE=/(m[oó]nica|paulina|helena|laura|sabina|marisol|ang[eé]lica|esperanza|pen[eé]lope|female|mujer|elvira|luc[ií]a|ximena|dalia|google\s+espa)/i;
 const SPAIN=/(es[-_]?es|spain|espa[nñ]a|castilian|\(spain\))/i;
 const MX=/(es[-_]?mx|es[-_]?419|m[eé]xic|mexico)/i;
+const NEURAL=/(natural|online|neural|wavenet|premium|neuronal|multiling)/i; // voces humanas (Edge/Chrome online)
+function scoreVoice(v){ const id=v.lang+' '+v.name; let s=0;
+  if(NEURAL.test(v.name)) s+=1000;              // lo que más humaniza
+  if(!v.localService) s+=200;                    // voces "online" suelen ser neuronales
+  if(!SPAIN.test(id)) s+=40;                     // neutro/latino sobre España
+  if(MX.test(id)) s+=20;
+  if(MALE.test(v.name)) s+=15; if(FEMALE.test(v.name)) s-=15;
+  return s;
+}
 function pickVoice(){ if(!('speechSynthesis'in window))return; const vs=speechSynthesis.getVoices();
   const es=vs.filter(v=>/es[-_]|spanish|espa/i.test(v.lang+' '+v.name));
-  const neutro=es.filter(v=>!SPAIN.test(v.lang+' '+v.name));
-  const pool=neutro.length?neutro:es;
-  esVoice = pool.find(v=>MX.test(v.lang+' '+v.name)&&MALE.test(v.name))
-         || pool.find(v=>MX.test(v.lang+' '+v.name))
-         || pool.find(v=>MALE.test(v.name))
-         || pool.find(v=>!FEMALE.test(v.name))
-         || es.find(v=>MALE.test(v.name)) || es[0] || vs[0] || null;
-  const n=document.getElementById('voiceNote'); if(esVoice&&n) n.innerHTML='<b>Voz actual:</b> '+esVoice.name+' — demostración del formato; en el curso final va locución profesional. Guion y animación 100% propios.';
+  const pool=es.length?es:vs;
+  esVoice = pool.slice().sort((a,b)=>scoreVoice(b)-scoreVoice(a))[0] || null;
+  const n=document.getElementById('voiceNote'); if(esVoice&&n){ const humana=NEURAL.test(esVoice.name)||!esVoice.localService;
+    n.innerHTML = humana
+      ? '<b>Voz:</b> '+esVoice.name+' (neuronal). Demostración del formato; el curso final llevará locución profesional.'
+      : '<b>Voz:</b> '+esVoice.name+' — es una voz robótica del sistema. Para oírla natural, abrí este enlace en <b>Microsoft Edge</b> (tiene voces "Natural"), o se usará locución neuronal en el producto final.'; }
 }
 if('speechSynthesis'in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
 function mkUtter(txt){ const u=new SpeechSynthesisUtterance(txt); if(esVoice)u.voice=esVoice; u.lang=esVoice?esVoice.lang:'es-MX'; u.rate=1; u.pitch=1; return u; }
