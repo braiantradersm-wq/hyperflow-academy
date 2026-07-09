@@ -290,22 +290,23 @@ function toggleSound(){ soundOn=!soundOn; const b=document.getElementById('sBtn'
 /* voz — prioriza masculino neutro, y México primero */
 let voiceOn=true, esVoice=null;
 const MALE=/(jorge|diego|pablo|ra[uú]l|carlos|miguel|juan|jos[eé]|fernando|ricardo|enrique|gonzalo|andr[eé]s|crist[oó]bal|male|hombre|masculino)/i;
-const FEMALE=/(m[oó]nica|paulina|helena|laura|sabina|marisol|ang[eé]lica|esperanza|pen[eé]lope|female|mujer|elvira|luc[ií]a|ximena|dalia|google\s+espa)/i;
+const FEMALE=/(m[oó]nica|paulina|helena|laura|sabina|marisol|ang[eé]lica|esperanza|pen[eé]lope|female|mujer|femenin|elvira|luc[ií]a|ximena|dalia|montserrat|catalina|soledad|renata|google\s+espa[nñ]ol$)/i;
 const SPAIN=/(es[-_]?es|spain|espa[nñ]a|castilian|\(spain\))/i;
 const MX=/(es[-_]?mx|es[-_]?419|m[eé]xic|mexico)/i;
 const NEURAL=/(natural|online|neural|wavenet|premium|neuronal|multiling)/i; // voces humanas (Edge/Chrome online)
 function scoreVoice(v){ const id=v.lang+' '+v.name; let s=0;
-  if(NEURAL.test(v.name)) s+=1000;              // lo que más humaniza
-  if(!v.localService) s+=200;                    // voces "online" suelen ser neuronales
+  if(MALE.test(v.name)) s+=2000;                 // PRIORIDAD: locutor hombre
+  else if(FEMALE.test(v.name)) s-=2000;          // evitar voz femenina salvo que no haya otra
+  if(NEURAL.test(v.name)||!v.localService) s+=800; // humaniza (neuronal/online)
   if(!SPAIN.test(id)) s+=40;                     // neutro/latino sobre España
   if(MX.test(id)) s+=20;
-  if(MALE.test(v.name)) s+=15; if(FEMALE.test(v.name)) s-=15;
   return s;
 }
 function pickVoice(){ if(!('speechSynthesis'in window))return; const vs=speechSynthesis.getVoices();
   const es=vs.filter(v=>/es[-_]|spanish|espa/i.test(v.lang+' '+v.name));
   const pool=es.length?es:vs;
-  esVoice = pool.slice().sort((a,b)=>scoreVoice(b)-scoreVoice(a))[0] || null;
+  let saved=null; try{ saved=localStorage.getItem('hf_voice'); }catch(e){}
+  esVoice = (saved && pool.find(v=>v.name===saved)) || pool.slice().sort((a,b)=>scoreVoice(b)-scoreVoice(a))[0] || null;
   fillVoiceSel();
 }
 function fillVoiceSel(){
@@ -319,7 +320,7 @@ function fillVoiceSel(){
 }
 function updateVoiceHint(){ const h=document.getElementById('voiceHint'); if(!h||!esVoice)return; const humana=NEURAL.test(esVoice.name)||!esVoice.localService;
   h.innerHTML = humana ? 'Voz neuronal: suena natural. (⭐ = las más humanas de tu equipo.)' : 'Voz del sistema (robótica). Para oírla natural, abre este enlace en <b>Microsoft Edge</b> y elige una voz con ⭐.'; }
-function setVoiceByIndex(ix){ if(!window.__esV)return; esVoice=window.__esV[+ix]||esVoice; updateVoiceHint(); if('speechSynthesis'in window){ speechSynthesis.cancel(); try{ speechSynthesis.speak(mkUtter('Así sonará la narración de la lección.')); }catch(e){} } }
+function setVoiceByIndex(ix){ if(!window.__esV)return; esVoice=window.__esV[+ix]||esVoice; try{ localStorage.setItem('hf_voice',esVoice.name); }catch(e){} updateVoiceHint(); if('speechSynthesis'in window){ speechSynthesis.cancel(); try{ speechSynthesis.speak(mkUtter('Así sonará la narración de la lección.')); }catch(e){} } }
 if('speechSynthesis'in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
 function mkUtter(txt){ const u=new SpeechSynthesisUtterance(txt); if(esVoice)u.voice=esVoice; u.lang=esVoice?esVoice.lang:'es-MX'; u.rate=.96; u.pitch=1; return u; }
 function stopSpeak(){ if('speechSynthesis'in window)speechSynthesis.cancel(); }
