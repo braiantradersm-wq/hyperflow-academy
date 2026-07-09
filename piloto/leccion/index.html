@@ -306,10 +306,10 @@ function stopSpeak(){ if('speechSynthesis'in window)speechSynthesis.cancel(); }
 function toggleVoice(){ voiceOn=!voiceOn; document.getElementById('vBtn').classList.toggle('off',!voiceOn); stopSpeak(); if(playing)goScene(idx); }
 
 /* motor dirigido por la narración: la escena avanza cuando la voz TERMINA (no por reloj) */
-let idx=-1, playing=false, token=0, sceneStart=0, watchdog=null, safety=null;
+let idx=-1, playing=false, token=0, sceneStart=0, safety=null;
 function hasVoice(){ return voiceOn && ('speechSynthesis'in window); }
-function estMs(txt){ return Math.max(3500, Math.round(txt.split(/\s+/).length/2.35*1000)); }
-function clearTimers(){ if(watchdog){clearInterval(watchdog);watchdog=null;} if(safety){clearTimeout(safety);safety=null;} }
+function estMs(txt){ return Math.max(2500, Math.round(txt.split(/\s+/).length/2.35*1000)); }
+function clearTimers(){ if(safety){clearTimeout(safety);safety=null;} }
 function goScene(i){
   token++; const my=token; clearTimers(); stopSpeak();
   if(i>=SCENES.length){ idx=SCENES.length; playing=false; setPP(); showEnd(); paintBars(SCENES.length,0); return; }
@@ -317,16 +317,33 @@ function goScene(i){
   [...document.querySelectorAll('.scene')].forEach(s=>s.classList.toggle('active',+s.dataset.i===i));
   document.getElementById('cap').textContent=SCENES[i].cap; chime();
   if(!playing){ paintBars(i,0); return; }
-  if(hasVoice()){
-    const u=mkUtter(SCENES[i].narr);
-    u.onend=()=>{ if(playing&&my===token){ clearTimers(); setTimeout(()=>{ if(playing&&my===token)goScene(i+1); },520); } };
-    u.onerror=()=>{ if(playing&&my===token){ clearTimers(); setTimeout(()=>{ if(playing&&my===token)goScene(i+1); },260); } };
-    speechSynthesis.speak(u);
-    watchdog=setInterval(()=>{ if(speechSynthesis.speaking){ try{speechSynthesis.pause();speechSynthesis.resume();}catch(e){} } },9000); // anti-corte Chrome
-    safety=setTimeout(()=>{ if(playing&&my===token){ clearTimers(); goScene(i+1); } }, estMs(SCENES[i].narr)+6000); // por si onend no dispara
-  } else {
-    safety=setTimeout(()=>{ if(playing&&my===token)goScene(i+1); }, SCENES[i].dur*1000);
-  }
+  if(hasVoice()){ setTimeout(()=>{ if(playing&&my===token) speakScene(i,my); }, 70); } // separa cancel() de speak() (bug Chrome)
+  else { safety=setTimeout(()=>{ if(playing&&my===token)goScene(i+1); }, SCENES[i].dur*1000); }
+}
+/* divide en fragmentos cortos (≤~20 palabras) por . ! ? … ; : y, si aún largos, por comas */
+function splitParts(txt){
+  const raw=txt.match(/[^.!?…;:]+[.!?…;:]*/g)||[txt];
+  const out=[];
+  raw.forEach(seg=>{ seg=seg.trim(); if(!seg)return;
+    if(seg.split(/\s+/).length<=20){ out.push(seg); return; }
+    let buf=''; seg.split(/,\s*/).forEach(pc=>{ const cand=buf?buf+', '+pc:pc; if(buf&&cand.split(/\s+/).length>20){ out.push(buf); buf=pc; } else buf=cand; });
+    if(buf)out.push(buf);
+  });
+  return out.filter(Boolean);
+}
+/* narra la escena FRASE POR FRASE: utterances cortas nunca llegan al corte de ~15s de Chrome */
+function speakScene(i,my){
+  const parts=splitParts(SCENES[i].narr);
+  let k=0;
+  (function nextPart(){
+    if(!playing||my!==token)return;
+    if(k>=parts.length){ clearTimers(); safety=setTimeout(()=>{ if(playing&&my===token)goScene(i+1); },450); return; }
+    const u=mkUtter(parts[k]); let moved=false;
+    const go=()=>{ if(moved)return; moved=true; if(playing&&my===token){ k++; nextPart(); } };
+    u.onend=go; u.onerror=go;
+    clearTimeout(safety); safety=setTimeout(go, estMs(parts[k])+7000); // si una frase se cuelga, pasa a la siguiente
+    try{ speechSynthesis.speak(u); }catch(e){ go(); }
+  })();
 }
 function paintBars(upto,frac){
   for(let k=0;k<SCENES.length;k++){ const seg=document.getElementById('seg'+k); if(seg)seg.style.width=(k<upto?100:k===upto?frac*100:0)+'%'; }
