@@ -2136,7 +2136,7 @@ function loadModule(n){
       : '// 🎬 Video: clase real curada de YouTube (verificada). 🎙️ Clase IA: narración con voz de IA + subtítulos, 100% gratis y sin depender de internet. Elige el modo arriba.'}</p>
     <div class="tabs">
       <button class="tab active" data-t="contenido" onclick="switchTab('contenido')">Contenido</button>
-      ${hasReto(n)?`<button class="tab" data-t="reto" onclick="switchTab('reto')">🎮 Reto interactivo</button>`:''}
+      ${hasReto(n)?`<button class="tab" data-t="reto" onclick="switchTab('reto')">🧩 Reto interactivo</button>`:''}
       <button class="tab" data-t="recursos" onclick="switchTab('recursos')">Recursos</button>
       <button class="tab" data-t="quiz" onclick="switchTab('quiz')">Cuestionario</button>
     </div>
@@ -2411,7 +2411,7 @@ function retoReady(n){ const c=INTERACT[n], st=RS[n]; if(!st||st.done)return fal
 function retoRender(n){ const host=document.getElementById('reto-'+n); if(host) host.innerHTML=retoBody(n); }
 function retoBody(n){
   const c=INTERACT[n], st=RS[n];
-  let h=`<div class="reto-head"><span class="reto-badge">🎮 Reto interactivo</span><h3>${rEsc(c.title)}</h3><p>${rEsc(c.intro)}</p></div>`;
+  let h=`<div class="reto-head"><span class="reto-badge">🧩 Reto interactivo</span><h3>${rEsc(c.title)}</h3><p>${rEsc(c.intro)}</p></div>`;
   if(c.type==='scenario') return h+scenarioBody(n);
   if(c.type==='swipe') return h+swipeBody(n);
   if(c.type==='sequence'){
@@ -2538,7 +2538,7 @@ function retoCheck(n){ const c=INTERACT[n], st=RS[n]; if(!retoReady(n))return;
 }
 function retoWin(n){ const c=INTERACT[n]; RS[n].done=true; try{ localStorage.setItem('hyperflow_reto_'+n,'1'); }catch(e){}
   retoRender(n); rWinSound();
-  if(typeof showToast==='function') showToast('🎮','Reto interactivo superado','¡Bien hecho! Ya puedes seguir.');
+  if(typeof showToast==='function') showToast('🧩','Reto interactivo superado','¡Bien hecho! Ya puedes seguir.');
 }
 /* API de test: resuelve el reto (bien o mal) y devuelve si gana */
 function retoSolveTEST(n,wrong){ const c=INTERACT[n]; if(!c)return null; if(!RS[n])retoInit(n); const st=RS[n]; st.done=false; st.marks=null;
