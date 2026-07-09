@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#090B16">
+</head>
+<body>
+<title>Lección EP1 · Qué es un flujo — Hyperflow Academy</title>
+<style>
+  :root{
+    --ink:#090B16; --ink-2:#10132A; --ink-3:#181C3A; --ink-4:#232852;
+    --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.16);
+    --text:#EDEEF9; --muted:#A6ABD1; --muted-2:#6B7099;
+    --indigo:#6C7BFF; --indigo-soft:#8b97ff; --cyan:#54D3F5; --gold:#F5C451; --green:#3FDBA0; --rose:#FF7A93;
+    --serif:'Iowan Old Style','Palatino Linotype',Palatino,'Book Antiqua',Georgia,serif;
+    --sans:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,'SF Mono','Cascadia Code','Segoe UI Mono',Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1100px 640px at 50% -10%,rgba(108,123,255,.16),transparent 60%),var(--ink);color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased;line-height:1.5}
+  .wrap{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+  ::selection{background:rgba(108,123,255,.35)}
+
+  .lesson-head{text-align:center;margin-bottom:18px}
+  .kick{font-family:var(--mono);letter-spacing:.32em;text-transform:uppercase;font-size:11px;color:var(--cyan)}
+  .lesson-head h1{font-family:var(--serif);font-weight:600;font-size:clamp(24px,5.5vw,34px);margin:10px 0 4px;text-wrap:balance}
+  .lesson-head p{color:var(--muted);font-size:14px;margin:0}
+
+  /* ---------- PLAYER ---------- */
+  .player{border:1px solid var(--line-2);border-radius:20px;overflow:hidden;background:#070914;box-shadow:0 40px 90px -50px rgba(108,123,255,.7)}
+  .stage{position:relative;width:100%;aspect-ratio:16/10;min-height:340px;overflow:hidden;background:radial-gradient(700px 400px at 50% 20%,rgba(108,123,255,.14),transparent 60%),#070914}
+  #bg{position:absolute;inset:0;z-index:0}
+  .scene{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px 26px 74px;opacity:0;visibility:hidden;transition:opacity .5s ease}
+  .scene.active{opacity:1;visibility:visible}
+  .scene .sc-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--cyan);opacity:0;transform:translateY(10px)}
+  .scene.active .sc-eyebrow{animation:up .6s .1s forwards}
+  .scene h2{font-family:var(--serif);font-weight:600;font-size:clamp(22px,4.4vw,32px);margin:12px 0 6px;line-height:1.12;text-wrap:balance;max-width:20ch;opacity:0;transform:translateY(12px)}
+  .scene.active h2{animation:up .7s .25s forwards}
+  .scene .sc-sub{color:var(--muted);font-size:clamp(14px,2vw,16px);max-width:40ch;opacity:0;transform:translateY(12px)}
+  .scene.active .sc-sub{animation:up .7s .45s forwards}
+  @keyframes up{to{opacity:1;transform:none}}
+
+  /* problema (s1) */
+  .tasks{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;justify-content:center}
+  .task{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:rgba(9,11,22,.6);border-radius:12px;padding:9px 13px;font-size:13px;color:var(--muted);opacity:0;transform:translateY(10px) scale(.95)}
+  .scene.active .task{animation:pop .5s forwards}
+  .scene.active .task:nth-child(1){animation-delay:.7s}.scene.active .task:nth-child(2){animation-delay:.95s}.scene.active .task:nth-child(3){animation-delay:1.2s}.scene.active .task:nth-child(4){animation-delay:1.45s}
+  @keyframes pop{to{opacity:1;transform:none}}
+  .counter{margin-top:18px;font-family:var(--mono);font-size:clamp(20px,5vw,30px);color:var(--rose);font-weight:600;opacity:0}
+  .scene.active .counter{animation:up .6s 1.7s forwards}
+
+  /* idea (s2) */
+  .bigword{font-family:var(--serif);font-weight:600;font-size:clamp(30px,8vw,58px);background:linear-gradient(120deg,var(--indigo),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent;margin-top:10px;opacity:0;transform:scale(.9)}
+  .scene.active .bigword{animation:zoom .8s .5s forwards}
+  @keyframes zoom{to{opacity:1;transform:none}}
+  .swap-line{margin-top:16px;font-family:var(--mono);font-size:16px;color:var(--muted);opacity:0}
+  .scene.active .swap-line{animation:up .6s 1.1s forwards}
+  .swap-line s{color:var(--rose);opacity:.7}.swap-line b{color:var(--green)}
+
+  /* piezas (s4/s5) */
+  .pieces{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap;justify-content:center;max-width:560px}
+  .piece{flex:1;min-width:118px;max-width:130px;border:1px solid var(--line);background:rgba(9,11,22,.55);border-radius:14px;padding:14px 10px;opacity:0;transform:translateY(14px)}
+  .scene.active .piece{animation:pop .55s forwards}
+  .scene.active .piece:nth-child(1){animation-delay:.6s}.scene.active .piece:nth-child(2){animation-delay:1.4s}.scene.active .piece:nth-child(3){animation-delay:2.2s}.scene.active .piece:nth-child(4){animation-delay:3.0s}
+  .piece .pic{width:44px;height:44px;margin:0 auto 8px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:linear-gradient(160deg,rgba(108,123,255,.3),rgba(84,211,245,.15));border:1px solid var(--line-2)}
+  .piece .pl{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan)}
+  .piece .pt{font-weight:650;font-size:14px;margin-top:3px}
+  .piece .pd{color:var(--muted);font-size:11.5px;margin-top:3px;line-height:1.35}
+  .pieces.fast .piece{animation-delay:.3s!important}
+  .pieces.fast .piece:nth-child(2){animation-delay:.5s!important}.pieces.fast .piece:nth-child(3){animation-delay:.7s!important}.pieces.fast .piece:nth-child(4){animation-delay:.9s!important}
+
+  /* definición (s3) */
+  .defbox{margin-top:16px;border:1px solid var(--line-2);border-radius:14px;background:rgba(16,19,42,.6);padding:16px 20px;max-width:44ch;opacity:0}
+  .scene.active .defbox{animation:up .7s .6s forwards}
+  .defbox b{color:var(--cyan)}
+
+  /* cierre (s6) */
+  .scene .sc-cta{margin-top:24px;opacity:0}
+  .scene.active .sc-cta{animation:up .7s .8s forwards}
+
+  /* captions */
+  .captions{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:14px 22px 16px;background:linear-gradient(transparent,rgba(5,6,15,.86)32%);text-align:center;pointer-events:none}
+  .captions p{margin:0 auto;max-width:52ch;font-size:14.5px;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.7);min-height:20px}
+
+  /* big play / end overlay */
+  .overlay{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:rgba(5,6,15,.55);backdrop-filter:blur(3px);cursor:pointer;transition:opacity .4s}
+  .overlay.hide{opacity:0;visibility:hidden;pointer-events:none}
+  .playbtn{width:76px;height:76px;border-radius:50%;background:linear-gradient(160deg,var(--indigo),#5563e6);display:grid;place-items:center;box-shadow:0 20px 50px -16px rgba(108,123,255,.9);transition:transform .2s}
+  .overlay:hover .playbtn{transform:scale(1.06)}
+  .playbtn svg{width:30px;height:30px;margin-left:4px;fill:#fff}
+  .overlay .ov-t{font-family:var(--serif);font-size:20px}.overlay .ov-s{color:var(--muted);font-size:13px;margin-top:-6px}
+  .endcard{position:absolute;inset:0;z-index:6;display:none;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;padding:24px;background:radial-gradient(600px 400px at 50% 40%,rgba(63,219,160,.14),transparent 60%),rgba(5,6,15,.92)}
+  .endcard.show{display:flex;animation:up .5s}
+  .endcard .em{font-size:44px}
+  .endcard h3{font-family:var(--serif);font-size:24px;margin:2px 0}
+  .endcard p{color:var(--muted);font-size:14px;max-width:40ch;margin:0 0 8px}
+
+  /* controls */
+  .controls{display:flex;align-items:center;gap:12px;padding:12px 16px;background:#0a0c1a;border-top:1px solid var(--line)}
+  .cbtn{width:38px;height:38px;flex:none;border-radius:10px;border:1px solid var(--line-2);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;display:grid;place-items:center;transition:.2s}
+  .cbtn:hover{border-color:var(--indigo);background:rgba(108,123,255,.12)}
+  .cbtn svg{width:16px;height:16px;fill:currentColor}
+  .bar{flex:1;display:flex;gap:4px;align-items:center;height:20px;cursor:pointer}
+  .seg{flex:1;height:5px;border-radius:99px;background:var(--ink-4);overflow:hidden}
+  .seg i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--indigo),var(--cyan))}
+  .time{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap;min-width:74px;text-align:right}
+  .toggles{display:flex;gap:6px}
+  .cbtn.off{opacity:.42}
+
+  .note{margin-top:14px;border:1px solid var(--line);border-radius:12px;background:rgba(9,11,22,.5);padding:13px 16px;font-size:12.5px;color:var(--muted-2);text-align:center}
+  .note b{color:var(--muted)}
+  .after{margin-top:22px;text-align:center}
+  .after .btn{font-family:var(--sans);font-weight:650;font-size:14.5px;border:0;border-radius:12px;padding:13px 22px;cursor:pointer;color:#fff;background:linear-gradient(160deg,var(--indigo),#5563e6);box-shadow:0 12px 30px -12px rgba(108,123,255,.9)}
+  @media(max-width:520px){
+    .stage{aspect-ratio:auto;height:auto;min-height:560px}
+    .scene{padding:24px 18px 96px}
+    .scene h2{font-size:22px;margin:8px 0 4px}
+    .pieces{gap:8px}
+    .piece{min-width:108px;max-width:150px;padding:11px 8px}
+    .piece .pic{width:38px;height:38px;font-size:19px}
+    .piece .pd{font-size:11px}
+    .tasks{gap:8px}.task{padding:7px 10px;font-size:12px}
+    .captions{padding:12px 16px 12px}.captions p{font-size:13.5px}
+    .time{min-width:64px}
+  }
+  @media (prefers-reduced-motion: reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+</style>
+
+<div class="wrap">
+  <div class="lesson-head">
+    <div class="kick">Temporada 1 · Episodio 1 · Lección</div>
+    <h1>Qué es un flujo — y por qué lo cambia todo</h1>
+    <p>Vea y aprenda el concepto. Después lo va a construir y aplicar.</p>
+  </div>
+
+  <div class="player">
+    <div class="stage" id="stage">
+      <canvas id="bg"></canvas>
+
+      <!-- S1 problema -->
+      <div class="scene s1" data-i="0">
+        <div class="sc-eyebrow">El problema</div>
+        <h2>Todos los lunes, el mismo trabajo</h2>
+        <div class="sc-sub">Una tarea repetitiva que consume horas, semana tras semana.</div>
+        <div class="tasks">
+          <div class="task">📋 Abrir la planilla</div>
+          <div class="task">📊 Resumir números</div>
+          <div class="task">✉️ Escribir el correo</div>
+          <div class="task">📤 Enviarlo</div>
+        </div>
+        <div class="counter">30 min × 52 semanas = 26 h al año</div>
+      </div>
+
+      <!-- S2 idea -->
+      <div class="scene s2" data-i="1">
+        <div class="sc-eyebrow">La idea</div>
+        <h2>¿Y si ese trabajo ocurriera solo?</h2>
+        <div class="bigword">Hiperautomatización</div>
+        <div class="swap-line">De <s>30 min cada semana</s> &nbsp;→&nbsp; <b>0 min, para siempre</b></div>
+      </div>
+
+      <!-- S3 definición -->
+      <div class="scene s3" data-i="2">
+        <div class="sc-eyebrow">El concepto</div>
+        <h2>Todo empieza por el flujo</h2>
+        <div class="defbox">Un <b>flujo</b> es una secuencia de pasos que se ejecutan <b>solos</b>, en orden, para lograr un resultado — sin que usted intervenga.</div>
+      </div>
+
+      <!-- S4 las 4 piezas -->
+      <div class="scene s4" data-i="3">
+        <div class="sc-eyebrow">La anatomía</div>
+        <h2>Todo flujo tiene 4 piezas</h2>
+        <div class="pieces">
+          <div class="piece"><div class="pic">⏰</div><div class="pl">1 · Detonante</div><div class="pt">Qué lo activa</div><div class="pd">Una hora, un correo, un formulario.</div></div>
+          <div class="piece"><div class="pic">📊</div><div class="pl">2 · Datos</div><div class="pt">De dónde saca</div><div class="pd">Una planilla, una base, un mensaje.</div></div>
+          <div class="piece"><div class="pic">🤖</div><div class="pl">3 · Criterio</div><div class="pt">Qué decide</div><div class="pd">Aquí entra la IA: resume, clasifica.</div></div>
+          <div class="piece"><div class="pic">📧</div><div class="pl">4 · Resultado</div><div class="pt">Qué entrega</div><div class="pd">Un correo, un registro, una alerta.</div></div>
+        </div>
+      </div>
+
+      <!-- S5 ejemplo -->
+      <div class="scene s5" data-i="4">
+        <div class="sc-eyebrow">El ejemplo</div>
+        <h2>El reporte del lunes, pieza por pieza</h2>
+        <div class="pieces fast">
+          <div class="piece"><div class="pic">⏰</div><div class="pl">Detonante</div><div class="pt">Lunes 9:00</div></div>
+          <div class="piece"><div class="pic">📊</div><div class="pl">Datos</div><div class="pt">Su planilla</div></div>
+          <div class="piece"><div class="pic">🤖</div><div class="pl">Criterio</div><div class="pt">IA resume</div></div>
+          <div class="piece"><div class="pic">📧</div><div class="pl">Resultado</div><div class="pt">Correo al equipo</div></div>
+        </div>
+        <div class="sc-sub" style="margin-top:18px">Cuatro piezas. Cero intervención.</div>
+      </div>
+
+      <!-- S6 cierre -->
+      <div class="scene s6" data-i="5">
+        <div class="sc-eyebrow">En resumen</div>
+        <h2>Un flujo no es magia: es criterio ordenado</h2>
+        <div class="sc-sub">Ya sabe qué es y de qué se compone. Ahora le toca construir uno con sus propias manos.</div>
+      </div>
+
+      <!-- captions -->
+      <div class="captions"><p id="cap"></p></div>
+
+      <!-- overlays -->
+      <div class="overlay" id="ov" onclick="play()">
+        <div class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+        <div class="ov-t">Lección · 1 min</div>
+        <div class="ov-s">Con voz. Puede silenciarla.</div>
+      </div>
+      <div class="endcard" id="end">
+        <div class="em">✅</div>
+        <h3>Lección completa</h3>
+        <p>Ya entiende qué es un flujo y sus 4 piezas. Siguiente: verlo construirse y practicarlo.</p>
+        <button class="btn" style="font-family:var(--sans);font-weight:650;border:0;border-radius:12px;padding:12px 22px;color:#fff;background:linear-gradient(160deg,var(--indigo),#5563e6);cursor:pointer" onclick="replay()">↺ Ver de nuevo</button>
+      </div>
+    </div>
+
+    <!-- controls -->
+    <div class="controls">
+      <button class="cbtn" id="pp" onclick="toggle()" aria-label="Reproducir o pausar"><svg id="ppi" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="bar" id="bar"></div>
+      <div class="time"><span id="tCur">0:00</span> / <span id="tTot">1:02</span></div>
+      <div class="toggles">
+        <button class="cbtn" id="vBtn" onclick="toggleVoice()" aria-label="Narración por voz" title="Narración">🗣️</button>
+        <button class="cbtn" id="sBtn" onclick="toggleSound()" aria-label="Sonido" title="Sonido">🔊</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="note"><b>Nota:</b> este es el formato del video-lección generado por IA. La narración usa una voz masculina del navegador como demostración; en el curso final va una locución profesional de locutor hombre. La animación y el guion son 100% propios.</div>
+
+  <div class="after">
+    <button class="btn" onclick="document.getElementById('end').classList.contains('show')?replay():play()">▶ Reproducir la lección</button>
+  </div>
+</div>
+
+<script>
+/* ===== escenas: duración (s), narración, subtítulos ===== */
+const SCENES = [
+  {dur:9,  cap:'Todos los lunes, alguien de su equipo repite la misma tarea: abrir la planilla, resumir los números, escribir el correo y enviarlo.',
+           narr:'Todos los lunes, alguien de su equipo repite la misma tarea: abrir la planilla, resumir los números, escribir el correo y enviarlo. Media hora, cada semana, para siempre.'},
+  {dur:9,  cap:'¿Y si ese trabajo ocurriera solo? Eso propone la hiperautomatización: no hacerlo más rápido, sino que ocurra sin que usted lo toque.',
+           narr:'¿Y si ese trabajo ocurriera solo? Eso propone la hiperautomatización: no hacerlo más rápido, sino que ocurra sin que usted lo toque.'},
+  {dur:8,  cap:'Para lograrlo, todo empieza por entender qué es un flujo: una secuencia de pasos que se ejecutan solos, en orden, para lograr un resultado.',
+           narr:'Para lograrlo, todo empieza por entender qué es un flujo: una secuencia de pasos que se ejecutan solos, en orden, para lograr un resultado.'},
+  {dur:18, cap:'Todo flujo tiene cuatro piezas. Un detonante, que lo activa. Los datos, de dónde saca la información. El criterio, qué decide o transforma —aquí entra la IA—. Y el resultado, qué entrega.',
+           narr:'Todo flujo tiene cuatro piezas. Primero, un detonante: qué lo activa. Segundo, los datos: de dónde saca la información. Tercero, el criterio: qué decide o transforma. Aquí entra la inteligencia artificial. Y cuarto, el resultado: qué entrega.'},
+  {dur:10, cap:'Volvamos al lunes. Detonante: lunes a las 9. Datos: su planilla. Criterio: la IA resume. Resultado: el correo sale al equipo. Cuatro piezas, cero intervención.',
+           narr:'Volvamos al lunes. El detonante: cada lunes a las nueve. Los datos: su planilla de ventas. El criterio: la IA la resume en tres líneas. El resultado: el correo sale al equipo. Cuatro piezas, cero intervención.'},
+  {dur:8,  cap:'Eso es un flujo: no es magia, es criterio bien ordenado. Ya sabe qué es. Ahora le toca construir uno con sus propias manos.',
+           narr:'Eso es un flujo: no es magia, es criterio bien ordenado. Ya sabe qué es y de qué se compone. Ahora le toca construir uno con sus propias manos.'}
+];
+const TOTAL = SCENES.reduce((a,s)=>a+s.dur,0);
+let t=0, playing=false, last=null, curScene=-1, ended=false;
+
+/* ===== barra segmentada ===== */
+const bar=document.getElementById('bar');
+SCENES.forEach((s,i)=>{ const seg=document.createElement('div'); seg.className='seg'; seg.style.flex=s.dur; seg.innerHTML='<i id="seg'+i+'"></i>'; bar.appendChild(seg); });
+bar.onclick=(e)=>{ const r=bar.getBoundingClientRect(); const frac=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)); seek(frac*TOTAL); };
+document.getElementById('tTot').textContent=fmt(TOTAL);
+
+function fmt(s){ s=Math.max(0,Math.round(s)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+
+/* ===== audio (transiciones suaves) ===== */
+let AC=null,master=null,verb=null,soundOn=true;
+function initAudio(){ if(AC)return; try{ AC=new(window.AudioContext||window.webkitAudioContext)(); master=AC.createGain(); master.gain.value=.4; master.connect(AC.destination);
+  verb=AC.createConvolver(); const L=AC.sampleRate*1.2, b=AC.createBuffer(2,L,AC.sampleRate); for(let c=0;c<2;c++){const d=b.getChannelData(c);for(let i=0;i<L;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/L,2.8);} verb.buffer=b; const vg=AC.createGain(); vg.gain.value=.18; verb.connect(vg); vg.connect(master);
+}catch(e){AC=null;} }
+function chime(){ if(!AC||!soundOn)return; const tt=AC.currentTime; [659.25,987.77].forEach((f,i)=>{ const o=AC.createOscillator(),g=AC.createGain(); o.type='sine'; o.frequency.value=f; g.gain.setValueAtTime(0,tt+i*.05); g.gain.linearRampToValueAtTime(.09,tt+i*.05+.02); g.gain.exponentialRampToValueAtTime(.0006,tt+i*.05+.5); o.connect(g); g.connect(master); g.connect(verb); o.start(tt+i*.05); o.stop(tt+i*.05+.6); }); }
+function toggleSound(){ soundOn=!soundOn; const b=document.getElementById('sBtn'); b.textContent=soundOn?'🔊':'🔇'; b.classList.toggle('off',!soundOn); if(soundOn){initAudio(); if(AC&&AC.state==='suspended')AC.resume();} }
+
+/* ===== voz ===== */
+let voiceOn=true, esVoice=null;
+const MALE=/(jorge|diego|pablo|ra[uú]l|carlos|miguel|juan|enrique|gonzalo|andr[eé]s|crist[oó]bal|male|hombre|masculino|\bf1\b)/i;
+const FEMALE=/(m[oó]nica|paulina|helena|laura|sabina|marisol|ang[eé]lica|esperanza|pen[eé]lope|female|mujer|elvira|luc[ií]a|ximena|dalia)/i;
+function pickVoice(){ if(!('speechSynthesis'in window))return; const vs=speechSynthesis.getVoices(); const es=vs.filter(v=>/es[-_]|spanish|espa/i.test(v.lang+' '+v.name));
+  esVoice = es.find(v=>MALE.test(v.name)) || es.find(v=>!FEMALE.test(v.name)) || es[0] || vs[0] || null; }
+if('speechSynthesis'in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
+function speak(txt){ if(!voiceOn||!('speechSynthesis'in window))return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(txt); if(esVoice)u.voice=esVoice; u.lang='es-ES'; u.rate=.98; u.pitch=.9; speechSynthesis.speak(u); }
+function toggleVoice(){ voiceOn=!voiceOn; document.getElementById('vBtn').classList.toggle('off',!voiceOn); if(!voiceOn&&'speechSynthesis'in window)speechSynthesis.cancel(); else if(playing&&curScene>=0)speak(SCENES[curScene].narr); }
+
+/* ===== reproducción ===== */
+function activateScene(i){
+  if(i===curScene)return;
+  curScene=i;
+  [...document.querySelectorAll('.scene')].forEach(s=>s.classList.toggle('active',+s.dataset.i===i));
+  const cap=document.getElementById('cap'); cap.textContent=SCENES[i].cap;
+  chime(); speak(SCENES[i].narr);
+}
+function sceneAt(time){ let acc=0; for(let i=0;i<SCENES.length;i++){ acc+=SCENES[i].dur; if(time<acc)return i; } return SCENES.length-1; }
+function updateBars(){
+  let acc=0;
+  for(let i=0;i<SCENES.length;i++){ const seg=document.getElementById('seg'+i); const startT=acc; acc+=SCENES[i].dur;
+    let w = t<=startT?0 : t>=acc?100 : ((t-startT)/SCENES[i].dur)*100; seg.style.width=w+'%'; }
+  document.getElementById('tCur').textContent=fmt(t);
+}
+function loop(ts){ if(last==null)last=ts; const dt=(ts-last)/1000; last=ts;
+  if(playing){ t+=dt; if(t>=TOTAL){ t=TOTAL; playing=false; setPP(); showEnd(); } activateScene(sceneAt(t)); updateBars(); }
+  requestAnimationFrame(loop); }
+requestAnimationFrame(loop);
+
+function play(){ ended=false; document.getElementById('end').classList.remove('show'); document.getElementById('ov').classList.add('hide'); initAudio(); if(AC&&AC.state==='suspended')AC.resume(); if(t>=TOTAL)t=0; playing=true; last=null; setPP(); activateScene(sceneAt(t)); }
+function pause(){ playing=false; setPP(); if('speechSynthesis'in window)speechSynthesis.cancel(); }
+function toggle(){ playing?pause():play(); }
+function seek(time){ t=Math.max(0,Math.min(TOTAL,time)); ended=false; document.getElementById('end').classList.remove('show'); const i=sceneAt(t); curScene=-1; activateScene(i); updateBars(); if(!playing){document.getElementById('ov').classList.add('hide');} }
+function setPP(){ const on=playing; document.getElementById('ppi').setAttribute('d', on?'M6 5h4v14H6zM14 5h4v14h-4z':'M8 5v14l11-7z'); }
+function showEnd(){ ended=true; document.getElementById('end').classList.add('show'); if('speechSynthesis'in window)speechSynthesis.cancel(); }
+function replay(){ t=0; curScene=-1; document.getElementById('end').classList.remove('show'); play(); }
+
+/* ===== fondo constelación ===== */
+(function(){ const cv=document.getElementById('bg'),x=cv.getContext('2d'); let W,H,pts; const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function rs(){ const r=cv.parentElement.getBoundingClientRect(); W=cv.width=r.width; H=cv.height=r.height; const n=Math.min(46,Math.floor(W*H/22000)); pts=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.2,vy:(Math.random()-.5)*.2})); }
+  rs(); addEventListener('resize',rs);
+  function fr(){ x.clearRect(0,0,W,H); for(let i=0;i<pts.length;i++){ const p=pts[i]; p.x+=p.vx;p.y+=p.vy; if(p.x<0||p.x>W)p.vx*=-1; if(p.y<0||p.y>H)p.vy*=-1; for(let j=i+1;j<pts.length;j++){ const q=pts[j],dx=p.x-q.x,dy=p.y-q.y,d=dx*dx+dy*dy; if(d<12000){ x.strokeStyle='rgba(108,123,255,'+(0.1*(1-d/12000))+')'; x.lineWidth=1; x.beginPath();x.moveTo(p.x,p.y);x.lineTo(q.x,q.y);x.stroke(); } } x.fillStyle='rgba(140,151,255,.45)'; x.beginPath();x.arc(p.x,p.y,1.1,0,7);x.fill(); } if(!reduce)requestAnimationFrame(fr); }
+  fr();
+})();
+</script>
+</body></html>
