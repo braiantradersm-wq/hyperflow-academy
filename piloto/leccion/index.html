@@ -143,12 +143,12 @@
       <div class="overlay" id="ov" onclick="play()">
         <div class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         <div class="ov-t">Lección 1</div>
-        <div class="ov-s">Con voz de locutor. Puede silenciarla.</div>
+        <div class="ov-s">Con voz de locutor. Puedes silenciarla.</div>
       </div>
       <div class="endcard" id="end">
         <div class="em">✅</div>
         <h3>Lección completa</h3>
-        <p>Ya entiende qué es la hiperautomatización, qué es un flujo y sus 4 piezas. Sigue: verlo construirse y practicarlo.</p>
+        <p>Ya entiendes qué es la hiperautomatización, qué es un flujo y sus 4 piezas. Sigue: verlo construirse y practicarlo.</p>
         <button class="cbtn" style="width:auto;padding:11px 20px;font-family:var(--sans);font-weight:650;color:#fff;background:linear-gradient(160deg,var(--indigo),#5563e6);border:0" onclick="replay()">↺ Ver de nuevo</button>
       </div>
     </div>
@@ -157,7 +157,6 @@
       <div class="bar" id="bar"></div>
       <div class="time"><span id="tCur">0:00</span> / <span id="tTot">0:00</span></div>
       <button class="cbtn" id="vBtn" onclick="toggleVoice()" aria-label="Narración por voz" title="Narración">🗣️</button>
-      <button class="cbtn" id="sBtn" onclick="toggleSound()" aria-label="Sonido" title="Sonido">🔊</button>
     </div>
   </div>
 
@@ -169,29 +168,29 @@
 const SCENES = [
   {type:'title', dur:20, eyeb:'Bienvenido', h2:'Todo equipo tiene un trabajo que alguien repite sin parar',
    sub:'Copiar datos, armar reportes, responder los mismos mensajes. Necesario, pero mecánico.',
-   cap:'En todo equipo hay tareas que alguien repite una y otra vez: necesario, pero mecánico. Esta lección trata de cómo liberarse de eso.',
-   narr:'Bienvenido a la primera lección. Empecemos por algo que seguramente reconoce: en todo equipo hay tareas que alguien repite una y otra vez. Copiar datos, armar reportes, responder los mismos mensajes. Trabajo necesario, pero mecánico. Esta lección trata de cómo liberarse de eso.'},
+   cap:'En todo equipo hay tareas que alguien repite una y otra vez: necesario, pero mecánico. Esta lección trata de cómo liberarte de eso.',
+   narr:'Bienvenido a la primera lección. Empecemos por algo que seguramente reconoce: en todo equipo hay tareas que alguien repite una y otra vez. Copiar datos, armar reportes, responder los mismos mensajes. Trabajo necesario, pero mecánico. Esta lección trata de cómo liberarte de eso.'},
 
   {type:'list', dur:16, eyeb:'Qué va a aprender', h2:'Tres cosas, en pocos minutos',
    items:[['1','Qué es la hiperautomatización','y en qué se diferencia de automatizar'],['2','Qué es un flujo','y de qué cuatro piezas está hecho'],['3','Un flujo real','funcionando, paso a paso']],
    cap:'En esta lección: qué es la hiperautomatización, qué es un flujo y sus piezas, y un flujo real paso a paso.',
-   narr:'En los próximos minutos va a entender tres cosas: qué es realmente la hiperautomatización, qué es un flujo y de qué está hecho, y cómo se ve un flujo funcionando en un caso real.'},
+   narr:'En los próximos minutos vas a entender tres cosas: qué es realmente la hiperautomatización, qué es un flujo y de qué está hecho, y cómo se ve un flujo funcionando en un caso real.'},
 
   {type:'compare', dur:19, eyeb:'La distinción', h2:'Automatizar no es lo mismo que hiperautomatizar',
    colA:['Automatización','Una tarea suelta','Que una acción puntual ocurra sola, con reglas fijas. Ej.: enviar un correo automático.'],
    colB:['Hiperautomatización','Procesos completos + IA','Conectar varias tareas y sumarles inteligencia artificial, para resolver un proceso entero con criterio.'],
    cap:'Automatizar = una tarea suelta con reglas fijas. Hiperautomatizar = procesos completos conectados, con IA y criterio.',
-   narr:'Primero, una distinción importante. Automatizar es hacer que una tarea puntual ocurra sola, con reglas fijas: por ejemplo, que un correo se envíe sin que usted lo escriba cada vez. La hiperautomatización va más allá: conecta varias de esas tareas y les suma inteligencia artificial, para que procesos enteros se resuelvan de principio a fin, con criterio, no solo con reglas rígidas.'},
+   narr:'Primero, una distinción importante. Automatizar es hacer que una tarea puntual ocurra sola, con reglas fijas: por ejemplo, que un correo se envíe sin que lo escribas cada vez. La hiperautomatización va más allá: conecta varias de esas tareas y les suma inteligencia artificial, para que procesos enteros se resuelvan de principio a fin, con criterio, no solo con reglas rígidas.'},
 
   {type:'list', dur:16, eyeb:'Por qué importa', h2:'No es moda: resuelve tres problemas reales',
    items:[['⏱','Recupera horas','El tiempo que hoy se va en tareas repetitivas'],['🎯','Menos errores','Se acaban las fallas de copiar y pegar a mano'],['📈','Escala sin más esfuerzo','Crece el trabajo, no su carga manual']],
-   cap:'Importa por tres razones: recupera horas, reduce errores humanos y le permite escalar sin sumar trabajo manual.',
-   narr:'¿Por qué molestarse con esto? Por tres razones muy concretas: recupera horas que hoy se pierden en tareas repetitivas, reduce los errores humanos de copiar y pegar, y le permite crecer sin sumar más trabajo manual cada vez.'},
+   cap:'Importa por tres razones: recupera horas, reduce errores humanos y te deja escalar sin sumar trabajo manual.',
+   narr:'¿Por qué molestarte con esto? Por tres razones muy concretas: recuperas horas que hoy se pierden en tareas repetitivas, reduces los errores humanos de copiar y pegar, y puedes crecer sin sumar más trabajo manual cada vez.'},
 
   {type:'define', dur:15, eyeb:'El concepto central', h2:'Todo se construye sobre una idea: el flujo',
-   def:'Un <b>flujo</b> es una secuencia de pasos que se ejecutan <b>solos</b>, en orden, para lograr un resultado — sin que usted intervenga.',
-   cap:'Un flujo es una secuencia de pasos que se ejecutan solos, en orden, para lograr un resultado, sin que usted intervenga.',
-   narr:'Toda hiperautomatización se construye sobre una idea simple: el flujo. Un flujo es una secuencia de pasos que se ejecutan solos, en orden, para lograr un resultado, sin que usted intervenga en el medio.'},
+   def:'Un <b>flujo</b> es una secuencia de pasos que se ejecutan <b>solos</b>, en orden, para lograr un resultado — sin que intervengas.',
+   cap:'Un flujo es una secuencia de pasos que se ejecutan solos, en orden, para lograr un resultado, sin que intervengas.',
+   narr:'Toda hiperautomatización se construye sobre una idea simple: el flujo. Un flujo es una secuencia de pasos que se ejecutan solos, en orden, para lograr un resultado, sin que intervengas en el medio.'},
 
   {type:'pieces', dur:15, eyeb:'La anatomía', h2:'Existen miles de flujos, pero todos tienen 4 piezas',
    pieces:[['⏰','Detonante','Qué lo activa'],['📊','Datos','De dónde saca'],['🤖','Criterio','Qué decide (IA)'],['📧','Resultado','Qué entrega']],
@@ -215,9 +214,9 @@ const SCENES = [
    narr:'Y la cuarta pieza es el resultado: lo que el flujo finalmente entrega, ya terminado. Un correo enviado, un registro guardado, una alerta que salta. El objetivo por el que existe todo el flujo.'},
 
   {type:'flow', dur:19, eyeb:'Ejemplo 1', h2:'El reporte del lunes, pieza por pieza',
-   nodes:[['⏰','Detonante','Lunes 9:00'],['📊','Datos','Su planilla'],['🤖','Criterio','IA resume'],['📧','Resultado','Correo al equipo']],
-   cap:'Ejemplo: cada lunes a las 9 (detonante) lee su planilla (datos), la IA resume (criterio) y envía el correo al equipo (resultado). Cero intervención.',
-   narr:'Juntemos las cuatro piezas en un caso real: el reporte de ventas de cada lunes. El detonante: lunes a las nueve. Los datos: su planilla de ventas. El criterio: la inteligencia artificial la resume en tres líneas. El resultado: el correo sale al equipo. Cuatro piezas, cero intervención suya.'},
+   nodes:[['⏰','Detonante','Lunes 9:00'],['📊','Datos','Tu planilla'],['🤖','Criterio','IA resume'],['📧','Resultado','Correo al equipo']],
+   cap:'Ejemplo: cada lunes a las 9 (detonante) lee tu planilla (datos), la IA resume (criterio) y envía el correo al equipo (resultado). Cero intervención.',
+   narr:'Juntemos las cuatro piezas en un caso real: el reporte de ventas de cada lunes. El detonante: lunes a las nueve. Los datos: tu planilla de ventas. El criterio: la inteligencia artificial la resume en tres líneas. El resultado: el correo sale al equipo. Cuatro piezas, cero intervención tuya.'},
 
   {type:'flow', dur:19, eyeb:'Ejemplo 2', h2:'El mismo esquema sirve para atención al cliente',
    nodes:[['💬','Detonante','Llega un mensaje'],['📇','Datos','Historial del cliente'],['🤖','Criterio','IA redacta respuesta'],['📤','Resultado','Respuesta enviada']],
@@ -226,23 +225,23 @@ const SCENES = [
 
   {type:'chips', dur:16, eyeb:'Dónde vive esto', h2:'Se arma conectando bloques, sin programar',
    chips:[['🔗','Make'],['⚙️','n8n'],['⚡','Zapier'],['🧠','GPT'],['➕','y más']],
-   cap:'Se construye en herramientas visuales (Make, n8n, Zapier) sumando modelos de IA. No necesita programar: necesita entender la lógica.',
-   narr:'Todo esto se arma en herramientas visuales donde se conectan bloques, como Make, n8n o Zapier, sumándoles modelos de inteligencia artificial. La buena noticia: no necesita programar. Necesita entender la lógica que acaba de ver.'},
+   cap:'Se construye en herramientas visuales (Make, n8n, Zapier) sumando modelos de IA. No necesitas programar: necesitas entender la lógica.',
+   narr:'Todo esto se arma en herramientas visuales donde se conectan bloques, como Make, n8n o Zapier, sumándoles modelos de inteligencia artificial. La buena noticia: no necesitas programar. Necesitas entender la lógica que acabas de ver.'},
 
-  {type:'myth', dur:18, eyeb:'Sin humo', h2:'Antes de seguir, seamos honestos',
-   myths:[['No es magia',' ni una fórmula para hacerse rico'],['No reemplaza su criterio',' lo potencia'],['No arregla el desorden',' primero se entiende el proceso, después se automatiza']],
-   cap:'Honestidad: esto no es magia ni fórmula de riqueza. No reemplaza su criterio, lo potencia. Y no automatiza el caos: primero se entiende el proceso.',
-   narr:'Antes de seguir, seamos claros, porque acá no vendemos humo. Esto no es magia ni una fórmula para hacerse rico. No reemplaza su criterio: lo potencia. Y no funciona automatizando el desorden: primero se entiende bien el proceso, y recién después se automatiza.'},
+  {type:'myth', dur:16, eyeb:'A tener en cuenta', h2:'Tres cosas que conviene entender bien',
+   myths:[['No es magia',' ni una fórmula para hacerse rico'],['No reemplaza tu criterio',' lo potencia'],['No arregla el desorden',' primero entiendes el proceso, después lo automatizas']],
+   cap:'La IA no es magia ni una fórmula de riqueza. No reemplaza tu criterio, lo potencia. Y no automatiza el caos: primero entiendes el proceso.',
+   narr:'Un punto importante antes de seguir. La hiperautomatización no es magia ni una fórmula para hacerse rico. No reemplaza tu criterio: lo potencia. Y no funciona automatizando el desorden: primero entiendes bien el proceso, y después lo automatizas.'},
 
   {type:'pieces', dur:14, eyeb:'Recapitulemos', h2:'Si reconoce estas 4 piezas, entiende cualquier flujo',
    pieces:[['⏰','Detonante','Qué lo activa'],['📊','Datos','De dónde saca'],['🤖','Criterio','Qué decide (IA)'],['📧','Resultado','Qué entrega']],
    cap:'Recap: todo flujo tiene detonante, datos, criterio y resultado. Reconocerlas es poder leer y diseñar cualquier automatización.',
-   narr:'Recapitulemos. Todo flujo tiene cuatro piezas: detonante, datos, criterio y resultado. Si reconoce esas cuatro, ya puede leer y diseñar cualquier automatización que se cruce en su camino.'},
+   narr:'Recapitulemos. Todo flujo tiene cuatro piezas: detonante, datos, criterio y resultado. Si reconoces esas cuatro, ya puedes leer y diseñar cualquier automatización que se cruce en tu camino.'},
 
   {type:'title', dur:15, eyeb:'En resumen', h2:'Un flujo no es magia: es criterio ordenado',
-   sub:'Ya sabe qué es. En un momento lo va a ver construirse, y después lo va a armar usted mismo.',
-   cap:'Un flujo es criterio bien ordenado. Ya sabe qué es. Sigue: verlo construirse y después armarlo usted mismo.',
-   narr:'Eso es un flujo, y ese es el corazón de todo el curso. No es magia: es criterio bien ordenado. En un momento va a ver uno construirse paso a paso, y después lo va a armar usted mismo. Nos vemos en la práctica.'}
+   sub:'Ya sabes qué es. En un momento lo vas a ver construirse, y después lo vas a armar tú mismo.',
+   cap:'Un flujo es criterio bien ordenado. Ya sabes qué es. Sigue: verlo construirse y después armarlo tú mismo.',
+   narr:'Eso es un flujo, y ese es el corazón de todo el curso. No es magia: es criterio bien ordenado. En un momento vas a ver uno construirse paso a paso, y después lo vas a armar tú mismo. Nos vemos en la práctica.'}
 ];
 
 /* =================== RENDER DE ESCENAS =================== */
@@ -315,7 +314,7 @@ function goScene(i){
   if(i>=SCENES.length){ idx=SCENES.length; playing=false; setPP(); showEnd(); paintBars(SCENES.length,0); return; }
   idx=i; sceneStart=performance.now();
   [...document.querySelectorAll('.scene')].forEach(s=>s.classList.toggle('active',+s.dataset.i===i));
-  document.getElementById('cap').textContent=SCENES[i].cap; chime();
+  document.getElementById('cap').textContent=SCENES[i].cap;
   if(!playing){ paintBars(i,0); return; }
   if(hasVoice()){ setTimeout(()=>{ if(playing&&my===token) speakScene(i,my); }, 70); } // separa cancel() de speak() (bug Chrome)
   else { safety=setTimeout(()=>{ if(playing&&my===token)goScene(i+1); }, SCENES[i].dur*1000); }
@@ -348,6 +347,7 @@ function speakScene(i,my){
   (function nextPart(){
     if(!playing||my!==token)return;
     if(k>=parts.length){ clearTimers(); safety=setTimeout(()=>{ if(playing&&my===token)goScene(i+1); },450); return; }
+    document.getElementById('cap').textContent=parts[k]; // subtítulo = lo que se dice ahora
     const u=mkUtter(parts[k]); let moved=false;
     const go=()=>{ if(moved)return; moved=true; if(playing&&my===token){ k++; nextPart(); } };
     u.onend=go; u.onerror=go;
@@ -362,7 +362,7 @@ function paintBars(upto,frac){
 }
 function tick(){ if(playing&&idx>=0&&idx<SCENES.length){ const est=hasVoice()?estMs(SCENES[idx].narr):SCENES[idx].dur*1000; paintBars(idx,Math.min(1,(performance.now()-sceneStart)/est)); } requestAnimationFrame(tick); }
 requestAnimationFrame(tick);
-function play(){ document.getElementById('end').classList.remove('show'); document.getElementById('ov').classList.add('hide'); initAudio(); if(AC&&AC.state==='suspended')AC.resume(); playing=true; setPP(); goScene((idx<0||idx>=SCENES.length)?0:idx); }
+function play(){ document.getElementById('end').classList.remove('show'); document.getElementById('ov').classList.add('hide'); playing=true; setPP(); goScene((idx<0||idx>=SCENES.length)?0:idx); }
 function pause(){ playing=false; setPP(); clearTimers(); stopSpeak(); }
 function toggle(){ playing?pause():play(); }
 function seekFrac(frac){ let target=frac*SUMDUR,acc=0,i=0; for(;i<SCENES.length;i++){ if(target<acc+SCENES[i].dur)break; acc+=SCENES[i].dur; } if(i>=SCENES.length)i=SCENES.length-1; document.getElementById('ov').classList.add('hide'); document.getElementById('end').classList.remove('show'); goScene(i); }
