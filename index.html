@@ -2834,7 +2834,8 @@ const YTMAP={1:"UjBJJuxo5C4",2:"-VBmFYQR6ss",3:"wM1NrkwJrvU",4:"4j5Za97fSqI",5:"
  21:"nvO-_tXqk9M",22:"NqBajgT6yj0"};
 
 /* ---- Lecciones audiovisuales propias (reemplazan el video de YouTube por episodio) ---- */
-const OWNLESSON={1:"piloto/leccion/"};
+/* Lección audiovisual propia (motor genérico es-MX): se añade cada episodio a medida que se produce su guion+audio. */
+const OWNLESSON={1:"leccion/?ep=1", 2:"leccion/?ep=2"};
 
 /* Audio de LOCUTOR (voz neuronal Jorge es-MX / español de México, generada con Edge-TTS, gratis).
    Cada episodio: array de clips MP3 (data URI) alineado a las diapositivas de la clase.
@@ -3042,7 +3043,7 @@ function renderPlayer(m){
     : `<button class="vtab active" data-vm="yt" onclick="vpMode(${m.n},'yt')">🎬 Video</button>`;
   const ytLink = own ? '' : `<a class="vtab vlink" href="https://youtu.be/${yt}" target="_blank" rel="noopener">Abrir en YouTube ↗</a>`;
   const firstPanel = own
-    ? `<div id="vmOwn"><iframe class="ownframe" src="${own}?embed=1" title="Lección audiovisual del episodio" allow="autoplay; fullscreen" loading="lazy"></iframe></div>`
+    ? `<div id="vmOwn"><iframe class="ownframe" src="${own}${own.includes('?')?'&':'?'}embed=1" title="Lección audiovisual del episodio" allow="autoplay; fullscreen" loading="lazy"></iframe></div>`
     : `<div id="vmYt">
       <div class="ytfacade" id="ytFacade" onclick="loadYt('${yt}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter')loadYt('${yt}')">
         <div class="vwm">Video de la clase</div>
