@@ -267,14 +267,13 @@ function renderScene(s,i){
 const scenesBox=document.getElementById('scenes');
 SCENES.forEach((s,i)=>scenesBox.appendChild(renderScene(s,i)));
 
-/* =================== MOTOR DE REPRODUCCIÓN =================== */
-const TOTAL=SCENES.reduce((a,s)=>a+s.dur,0);
-let t=0, playing=false, last=null, curScene=-1;
+/* =================== BARRA + TIEMPO =================== */
 const bar=document.getElementById('bar');
 SCENES.forEach((s,i)=>{ const seg=document.createElement('div'); seg.className='seg'; seg.style.flex=s.dur; seg.innerHTML='<i id="seg'+i+'"></i>'; bar.appendChild(seg); });
-bar.onclick=(e)=>{ const r=bar.getBoundingClientRect(); seek(Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*TOTAL); };
+bar.onclick=(e)=>{ const r=bar.getBoundingClientRect(); seekFrac(Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))); };
 function fmt(s){ s=Math.max(0,Math.round(s)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
-document.getElementById('tTot').textContent=fmt(TOTAL);
+const SUMDUR=SCENES.reduce((a,s)=>a+s.dur,0);
+document.getElementById('tTot').textContent='≈ '+fmt(SUMDUR);
 
 /* audio transición */
 let AC=null,master=null,verb=null,soundOn=true;
@@ -302,23 +301,47 @@ function pickVoice(){ if(!('speechSynthesis'in window))return; const vs=speechSy
   const n=document.getElementById('voiceNote'); if(esVoice&&n) n.innerHTML='<b>Voz actual:</b> '+esVoice.name+' — demostración del formato; en el curso final va locución profesional. Guion y animación 100% propios.';
 }
 if('speechSynthesis'in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
-function speak(txt){ if(!voiceOn||!('speechSynthesis'in window))return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(txt); if(esVoice)u.voice=esVoice; u.lang=esVoice?esVoice.lang:'es-MX'; u.rate=.98; u.pitch=.92; speechSynthesis.speak(u); }
-function toggleVoice(){ voiceOn=!voiceOn; document.getElementById('vBtn').classList.toggle('off',!voiceOn); if(!voiceOn&&'speechSynthesis'in window)speechSynthesis.cancel(); else if(playing&&curScene>=0)speak(SCENES[curScene].narr); }
+function mkUtter(txt){ const u=new SpeechSynthesisUtterance(txt); if(esVoice)u.voice=esVoice; u.lang=esVoice?esVoice.lang:'es-MX'; u.rate=.98; u.pitch=.92; return u; }
+function stopSpeak(){ if('speechSynthesis'in window)speechSynthesis.cancel(); }
+function toggleVoice(){ voiceOn=!voiceOn; document.getElementById('vBtn').classList.toggle('off',!voiceOn); stopSpeak(); if(playing)goScene(idx); }
 
-function activateScene(i){ if(i===curScene)return; curScene=i;
+/* motor dirigido por la narración: la escena avanza cuando la voz TERMINA (no por reloj) */
+let idx=-1, playing=false, token=0, sceneStart=0, watchdog=null, safety=null;
+function hasVoice(){ return voiceOn && ('speechSynthesis'in window); }
+function estMs(txt){ return Math.max(3500, Math.round(txt.split(/\s+/).length/2.35*1000)); }
+function clearTimers(){ if(watchdog){clearInterval(watchdog);watchdog=null;} if(safety){clearTimeout(safety);safety=null;} }
+function goScene(i){
+  token++; const my=token; clearTimers(); stopSpeak();
+  if(i>=SCENES.length){ idx=SCENES.length; playing=false; setPP(); showEnd(); paintBars(SCENES.length,0); return; }
+  idx=i; sceneStart=performance.now();
   [...document.querySelectorAll('.scene')].forEach(s=>s.classList.toggle('active',+s.dataset.i===i));
-  document.getElementById('cap').textContent=SCENES[i].cap; chime(); speak(SCENES[i].narr); }
-function sceneAt(time){ let acc=0; for(let i=0;i<SCENES.length;i++){ acc+=SCENES[i].dur; if(time<acc)return i; } return SCENES.length-1; }
-function updateBars(){ let acc=0; for(let i=0;i<SCENES.length;i++){ const seg=document.getElementById('seg'+i),startT=acc; acc+=SCENES[i].dur; seg.style.width=(t<=startT?0:t>=acc?100:((t-startT)/SCENES[i].dur)*100)+'%'; } document.getElementById('tCur').textContent=fmt(t); }
-function loop(ts){ if(last==null)last=ts; const dt=(ts-last)/1000; last=ts; if(playing){ t+=dt; if(t>=TOTAL){ t=TOTAL; playing=false; setPP(); showEnd(); } activateScene(sceneAt(t)); updateBars(); } requestAnimationFrame(loop); }
-requestAnimationFrame(loop);
-function play(){ document.getElementById('end').classList.remove('show'); document.getElementById('ov').classList.add('hide'); initAudio(); if(AC&&AC.state==='suspended')AC.resume(); if(t>=TOTAL)t=0; playing=true; last=null; setPP(); curScene=-1; activateScene(sceneAt(t)); }
-function pause(){ playing=false; setPP(); if('speechSynthesis'in window)speechSynthesis.cancel(); }
+  document.getElementById('cap').textContent=SCENES[i].cap; chime();
+  if(!playing){ paintBars(i,0); return; }
+  if(hasVoice()){
+    const u=mkUtter(SCENES[i].narr);
+    u.onend=()=>{ if(playing&&my===token){ clearTimers(); setTimeout(()=>{ if(playing&&my===token)goScene(i+1); },520); } };
+    u.onerror=()=>{ if(playing&&my===token){ clearTimers(); setTimeout(()=>{ if(playing&&my===token)goScene(i+1); },260); } };
+    speechSynthesis.speak(u);
+    watchdog=setInterval(()=>{ if(speechSynthesis.speaking){ try{speechSynthesis.pause();speechSynthesis.resume();}catch(e){} } },9000); // anti-corte Chrome
+    safety=setTimeout(()=>{ if(playing&&my===token){ clearTimers(); goScene(i+1); } }, estMs(SCENES[i].narr)+6000); // por si onend no dispara
+  } else {
+    safety=setTimeout(()=>{ if(playing&&my===token)goScene(i+1); }, SCENES[i].dur*1000);
+  }
+}
+function paintBars(upto,frac){
+  for(let k=0;k<SCENES.length;k++){ const seg=document.getElementById('seg'+k); if(seg)seg.style.width=(k<upto?100:k===upto?frac*100:0)+'%'; }
+  let acc=0,cap=Math.min(upto,SCENES.length); for(let k=0;k<cap;k++)acc+=SCENES[k].dur; if(upto<SCENES.length)acc+=frac*SCENES[upto].dur;
+  document.getElementById('tCur').textContent=fmt(acc);
+}
+function tick(){ if(playing&&idx>=0&&idx<SCENES.length){ const est=hasVoice()?estMs(SCENES[idx].narr):SCENES[idx].dur*1000; paintBars(idx,Math.min(1,(performance.now()-sceneStart)/est)); } requestAnimationFrame(tick); }
+requestAnimationFrame(tick);
+function play(){ document.getElementById('end').classList.remove('show'); document.getElementById('ov').classList.add('hide'); initAudio(); if(AC&&AC.state==='suspended')AC.resume(); playing=true; setPP(); goScene((idx<0||idx>=SCENES.length)?0:idx); }
+function pause(){ playing=false; setPP(); clearTimers(); stopSpeak(); }
 function toggle(){ playing?pause():play(); }
-function seek(time){ t=Math.max(0,Math.min(TOTAL,time)); document.getElementById('end').classList.remove('show'); document.getElementById('ov').classList.add('hide'); curScene=-1; activateScene(sceneAt(t)); updateBars(); }
+function seekFrac(frac){ let target=frac*SUMDUR,acc=0,i=0; for(;i<SCENES.length;i++){ if(target<acc+SCENES[i].dur)break; acc+=SCENES[i].dur; } if(i>=SCENES.length)i=SCENES.length-1; document.getElementById('ov').classList.add('hide'); document.getElementById('end').classList.remove('show'); goScene(i); }
 function setPP(){ document.getElementById('ppi').setAttribute('d', playing?'M6 5h4v14H6zM14 5h4v14h-4z':'M8 5v14l11-7z'); }
-function showEnd(){ document.getElementById('end').classList.add('show'); if('speechSynthesis'in window)speechSynthesis.cancel(); }
-function replay(){ t=0; curScene=-1; document.getElementById('end').classList.remove('show'); play(); }
+function showEnd(){ document.getElementById('end').classList.add('show'); clearTimers(); stopSpeak(); }
+function replay(){ idx=-1; document.getElementById('end').classList.remove('show'); play(); }
 
 /* fondo constelación */
 (function(){ const cv=document.getElementById('bg'),x=cv.getContext('2d'); let W,H,pts; const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
