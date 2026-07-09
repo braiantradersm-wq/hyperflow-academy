@@ -2762,14 +2762,14 @@ const YTMAP={1:"UjBJJuxo5C4",2:"-VBmFYQR6ss",3:"wM1NrkwJrvU",4:"4j5Za97fSqI",5:"
 /* ---- Lecciones audiovisuales propias (reemplazan el video de YouTube por episodio) ---- */
 const OWNLESSON={1:"piloto/leccion/"};
 
-/* Audio de LOCUTOR (voz neuronal Álvaro es-ES, generada con Edge-TTS, gratis).
+/* Audio de LOCUTOR (voz neuronal Jorge es-MX / español de México, generada con Edge-TTS, gratis).
    Cada episodio: array de clips MP3 (data URI) alineado a las diapositivas de la clase.
    Si un episodio tiene audio pregenerado (voz IA Edge-TTS), suena ese; si no, cae a la voz del navegador. */
 const AUDIO=/*AUDIO_JSON*/{"1":["audio/ep1/0.mp3","audio/ep1/1.mp3","audio/ep1/2.mp3","audio/ep1/3.mp3","audio/ep1/4.mp3","audio/ep1/5.mp3"],"2":["audio/ep2/0.mp3","audio/ep2/1.mp3","audio/ep2/2.mp3","audio/ep2/3.mp3","audio/ep2/4.mp3","audio/ep2/5.mp3"],"3":["audio/ep3/0.mp3","audio/ep3/1.mp3","audio/ep3/2.mp3","audio/ep3/3.mp3","audio/ep3/4.mp3","audio/ep3/5.mp3"],"4":["audio/ep4/0.mp3","audio/ep4/1.mp3","audio/ep4/2.mp3","audio/ep4/3.mp3","audio/ep4/4.mp3","audio/ep4/5.mp3"],"5":["audio/ep5/0.mp3","audio/ep5/1.mp3","audio/ep5/2.mp3","audio/ep5/3.mp3","audio/ep5/4.mp3","audio/ep5/5.mp3"],"6":["audio/ep6/0.mp3","audio/ep6/1.mp3","audio/ep6/2.mp3","audio/ep6/3.mp3","audio/ep6/4.mp3","audio/ep6/5.mp3"],"7":["audio/ep7/0.mp3","audio/ep7/1.mp3","audio/ep7/2.mp3","audio/ep7/3.mp3","audio/ep7/4.mp3","audio/ep7/5.mp3"],"8":["audio/ep8/0.mp3","audio/ep8/1.mp3","audio/ep8/2.mp3","audio/ep8/3.mp3","audio/ep8/4.mp3","audio/ep8/5.mp3"],"9":["audio/ep9/0.mp3","audio/ep9/1.mp3","audio/ep9/2.mp3","audio/ep9/3.mp3","audio/ep9/4.mp3","audio/ep9/5.mp3"],"10":["audio/ep10/0.mp3","audio/ep10/1.mp3","audio/ep10/2.mp3","audio/ep10/3.mp3","audio/ep10/4.mp3","audio/ep10/5.mp3"],"11":["audio/ep11/0.mp3","audio/ep11/1.mp3","audio/ep11/2.mp3","audio/ep11/3.mp3","audio/ep11/4.mp3","audio/ep11/5.mp3"],"12":["audio/ep12/0.mp3","audio/ep12/1.mp3","audio/ep12/2.mp3","audio/ep12/3.mp3","audio/ep12/4.mp3","audio/ep12/5.mp3"],"13":["audio/ep13/0.mp3","audio/ep13/1.mp3","audio/ep13/2.mp3","audio/ep13/3.mp3","audio/ep13/4.mp3","audio/ep13/5.mp3"],"14":["audio/ep14/0.mp3","audio/ep14/1.mp3","audio/ep14/2.mp3","audio/ep14/3.mp3","audio/ep14/4.mp3","audio/ep14/5.mp3"],"15":["audio/ep15/0.mp3","audio/ep15/1.mp3","audio/ep15/2.mp3","audio/ep15/3.mp3","audio/ep15/4.mp3","audio/ep15/5.mp3"],"16":["audio/ep16/0.mp3","audio/ep16/1.mp3","audio/ep16/2.mp3","audio/ep16/3.mp3","audio/ep16/4.mp3","audio/ep16/5.mp3"],"17":["audio/ep17/0.mp3","audio/ep17/1.mp3","audio/ep17/2.mp3","audio/ep17/3.mp3","audio/ep17/4.mp3","audio/ep17/5.mp3"],"18":["audio/ep18/0.mp3","audio/ep18/1.mp3","audio/ep18/2.mp3","audio/ep18/3.mp3","audio/ep18/4.mp3","audio/ep18/5.mp3"],"19":["audio/ep19/0.mp3","audio/ep19/1.mp3","audio/ep19/2.mp3","audio/ep19/3.mp3","audio/ep19/4.mp3","audio/ep19/5.mp3"],"20":["audio/ep20/0.mp3","audio/ep20/1.mp3","audio/ep20/2.mp3","audio/ep20/3.mp3","audio/ep20/4.mp3","audio/ep20/5.mp3"],"21":["audio/ep21/0.mp3","audio/ep21/1.mp3","audio/ep21/2.mp3","audio/ep21/3.mp3","audio/ep21/4.mp3","audio/ep21/5.mp3"],"22":["audio/ep22/0.mp3","audio/ep22/1.mp3","audio/ep22/2.mp3","audio/ep22/3.mp3","audio/ep22/4.mp3","audio/ep22/5.mp3"]}/*END_AUDIO*/;
-/* MP3 pregenerados eran Álvaro es-ES (España). Braian quiere voz es-MX (México), la que elegimos.
-   Hasta poder regenerarlos con Edge-TTS en es-MX, se desactivan y la clase narrada usa el TTS
-   del navegador con prioridad es-MX (igual que la lección audiovisual). */
-function hasLocutor(n){return false;}
+/* MP3 pregenerados con voz de LOCUTOR es-MX (Jorge Neural, Microsoft Edge TTS) — español de México
+   consistente en CUALQUIER navegador/dispositivo, sin cortes ni depender de voces instaladas.
+   Si un episodio tiene su audio, suena ese; si faltara, cae al TTS del navegador (con prioridad es-MX). */
+function hasLocutor(n){return AUDIO[n]&&AUDIO[n].length;}
 
 /* ================= GUIONES DE CLASE (escritos, tono instructor) =================
    Cada beat: t = titular en pantalla · s = narración (voz IA + subtítulo) */
@@ -2990,7 +2990,7 @@ function renderPlayer(m){
         <div class="vslide on"><div class="vposter">
           <div class="vwm">Hyperflow</div>
           <button class="vplay" onclick="vpToggle()" aria-label="Reproducir clase"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
-          <div class="vkick">${hasLocutor(m.n)?'🎙️ Narración con voz IA (Álvaro)':'Clase narrada por IA'} · ${beats} partes</div>
+          <div class="vkick">${hasLocutor(m.n)?'🎙️ Narración con voz IA · español de México':'Clase narrada por IA'} · ${beats} partes</div>
           <h3 style="max-width:80%">${m.title}</h3>
         </div></div>
       </div>
@@ -3066,8 +3066,10 @@ function vpPaintBar(i,frac){
 }
 function vpTick(){
   if(vp.playing&&vp.slides&&vp.slides.length&&vp.i>=0&&vp.i<vp.slides.length&&vp.durs){
-    const est=(vp.durs[vp.i]||3000);
-    const frac=Math.min(1,(performance.now()-(vp.sceneStart||performance.now()))/est);
+    const a=document.getElementById('vaudio');
+    let frac;
+    if(a&&!a.paused&&a.duration&&isFinite(a.duration)){ frac=Math.min(1,a.currentTime/a.duration); }  // MP3: progreso real
+    else { const est=(vp.durs[vp.i]||3000); frac=Math.min(1,(performance.now()-(vp.sceneStart||performance.now()))/est); } // TTS: estimado
     vpPaintBar(vp.i,frac);
   }
   requestAnimationFrame(vpTick);
@@ -3134,7 +3136,9 @@ function vpSpeak(i){
 function vpNarrate(i,my){
   if(!TTS){ vp.timer=setTimeout(()=>{ if(vp.playing&&vp.i===i&&my===vp.token)vpNextAuto(); }, (vp.durs&&vp.durs[i])||3000); return; }
   const parts=vpSplitParts(vp.slides[i].say); let k=0;
-  vp.timer=setTimeout(function nextPart(){   // separa cancel() de speak() (bug Chrome)
+  /* IMPORTANTE: la 1ª frase se habla SINCRÓNICAMENTE dentro del gesto de "play"
+     (móvil bloquea la voz si no arranca del gesto). Las siguientes van por onend. */
+  (function nextPart(){
     if(!vp.playing||my!==vp.token||vp.i!==i)return;
     if(k>=parts.length){ if(vp.timer)clearTimeout(vp.timer); vp.timer=setTimeout(()=>{ if(vp.playing&&my===vp.token&&vp.i===i)vpNextAuto(); },300); return; }
     const cap=document.getElementById('vcapTxt'); if(cap)cap.textContent=parts[k];
@@ -3145,7 +3149,7 @@ function vpNarrate(i,my){
     u.onend=go; u.onerror=go;
     if(vp.timer)clearTimeout(vp.timer); vp.timer=setTimeout(go, vpEstMs(parts[k])+7000); // si una frase se cuelga, sigue
     try{ TTS.speak(u); }catch(e){ go(); }
-  }, 60);
+  })();
 }
 function vpNextAuto(){
   if(vp.i<vp.slides.length-1){vpGo(vp.i+1);}
