@@ -322,12 +322,18 @@ function toggleSound(){ soundOn=!soundOn; document.getElementById('soundBtn').te
 
 /* ================= VOZ (opcional, demo) ================= */
 let voiceOn=false, esVoice=null;
-function pickVoice(){ const vs=speechSynthesis.getVoices(); esVoice = vs.find(v=>/es-|spanish|español/i.test(v.lang+v.name)) || vs[0] || null; }
+function pickVoice(){ const vs=speechSynthesis.getVoices(); const es=vs.filter(v=>/^es/i.test(v.lang));
+  const score=v=>{ let s=0; const id=(v.lang+' '+v.name).toLowerCase();
+    if(/es-mx|es-419|m[eé]xic/.test(id))s+=5000;          // PRIORIDAD: español de México
+    if(/es-es|spain|espa[nñ]a/.test(id))s-=3000;          // evitar España
+    if(/natural|neural|online|premium|enhanced/.test(id))s+=800;
+    if(/jorge|pablo|diego|carlos|juan|enrique|male|hombre/.test(id))s+=200; return s; };
+  esVoice = (es.length?es:vs).sort((a,b)=>score(b)-score(a))[0] || null; }
 if('speechSynthesis' in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
 function speak(txt){
   if(!voiceOn || !('speechSynthesis' in window)) return;
   speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(txt); if(esVoice)u.voice=esVoice; u.lang='es-ES'; u.rate=1; u.pitch=1;
+  const u=new SpeechSynthesisUtterance(txt); if(esVoice)u.voice=esVoice; u.lang='es-MX'; u.rate=1; u.pitch=1;   // siempre es-MX
   const spk=document.getElementById('spk'); spk.classList.add('live');
   u.onend=()=>spk.classList.remove('live');
   speechSynthesis.speak(u);

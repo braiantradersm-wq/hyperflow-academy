@@ -113,9 +113,10 @@
   .cbtn{width:38px;height:38px;flex:none;border-radius:10px;border:1px solid var(--line-2);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;display:grid;place-items:center;transition:.2s}
   .cbtn:hover{border-color:var(--indigo);background:rgba(108,123,255,.12)}
   .cbtn svg{width:16px;height:16px;fill:currentColor}
-  .bar{flex:1;display:flex;gap:3px;align-items:center;height:20px;cursor:pointer}
-  .seg{flex:1;height:5px;border-radius:99px;background:var(--ink-4);overflow:hidden}
-  .seg i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--indigo),var(--cyan))}
+  .bar{flex:1;display:flex;align-items:center;height:20px;cursor:pointer}
+  .btrack{flex:1;height:6px;border-radius:99px;background:var(--ink-4);overflow:hidden}
+  .btrack i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--indigo),var(--cyan));transition:width .12s linear}
+  .bar:hover .btrack{height:8px;transition:height .1s}
   .time{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap;min-width:76px;text-align:right}
   .cbtn.off{opacity:.42}
 
@@ -162,6 +163,7 @@
       <button class="cbtn" id="pp" onclick="toggle()" aria-label="Reproducir o pausar"><svg id="ppi" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="bar" id="bar"></div>
       <div class="time"><span id="tCur">0:00</span> / <span id="tTot">0:00</span></div>
+      <button class="cbtn" id="mBtn" onclick="toggleMusic()" aria-label="Música de estudio" title="Música de estudio: activa">🎵</button>
       <button class="cbtn" id="vBtn" onclick="toggleVoice()" aria-label="Narración por voz" title="Narración">🗣️</button>
     </div>
   </div>
@@ -284,7 +286,8 @@ SCENES.forEach((s,i)=>scenesBox.appendChild(renderScene(s,i)));
 
 /* =================== BARRA + TIEMPO =================== */
 const bar=document.getElementById('bar');
-SCENES.forEach((s,i)=>{ const seg=document.createElement('div'); seg.className='seg'; seg.style.flex=s.dur; seg.innerHTML='<i id="seg'+i+'"></i>'; bar.appendChild(seg); });
+bar.innerHTML='<span class="btrack"><i id="barFill"></i></span>';   // barra continua (igual que la clase narrada)
+bar.title='Toca la barra para adelantar o retroceder';
 bar.onclick=(e)=>{ const r=bar.getBoundingClientRect(); seekFrac(Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))); };
 function fmt(s){ s=Math.max(0,Math.round(s)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
 const SUMDUR=SCENES.reduce((a,s)=>a+s.dur,0);
@@ -297,6 +300,19 @@ function initAudio(){ if(AC)return; try{ AC=new(window.AudioContext||window.webk
 }catch(e){AC=null;} }
 function chime(){ if(!AC||!soundOn)return; const tt=AC.currentTime; [659.25,987.77].forEach((f,i)=>{ const o=AC.createOscillator(),g=AC.createGain(); o.type='sine'; o.frequency.value=f; g.gain.setValueAtTime(0,tt+i*.05); g.gain.linearRampToValueAtTime(.075,tt+i*.05+.02); g.gain.exponentialRampToValueAtTime(.0006,tt+i*.05+.5); o.connect(g); g.connect(master); g.connect(verb); o.start(tt+i*.05); o.stop(tt+i*.05+.6); }); }
 function toggleSound(){ soundOn=!soundOn; const b=document.getElementById('sBtn'); b.textContent=soundOn?'🔊':'🔇'; b.classList.toggle('off',!soundOn); if(soundOn){initAudio(); if(AC&&AC.state==='suspended')AC.resume();} }
+/* MELODÍA DE ESTUDIO: colchón cálido, lento y MUY bajo (de fondo, no distrae). Bajo la voz. */
+let musicOn=true, bedTimer=null, bedIx=0;
+const BED=[[164.81,220,261.63],[146.83,196,246.94],[130.81,174.61,220],[174.61,220,277.18]]; // Em C Am F, grave y cálido
+function bedChord(){ if(!AC||!musicOn||!playing)return;
+  const t=AC.currentTime, ch=BED[bedIx%BED.length]; bedIx++;
+  const g=AC.createGain(); g.gain.setValueAtTime(.0001,t); g.gain.linearRampToValueAtTime(.035,t+1.7); g.gain.setValueAtTime(.035,t+3.6); g.gain.exponentialRampToValueAtTime(.0005,t+6.4);
+  const lp=AC.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=760; lp.Q.value=.2; lp.connect(g); g.connect(master);
+  ch.forEach((f,i)=>{ const o=AC.createOscillator(); o.type=i===0?'triangle':'sine'; o.frequency.value=f; const og=AC.createGain(); og.gain.value=i===0?.55:.4; o.connect(og); og.connect(lp); o.start(t); o.stop(t+6.6); });
+  bedTimer=setTimeout(bedChord, 5000);
+}
+function startBed(){ if(!musicOn)return; initAudio(); if(!AC)return; if(AC.state==='suspended')AC.resume(); if(bedTimer)return; bedChord(); }
+function stopBed(){ if(bedTimer){clearTimeout(bedTimer);bedTimer=null;} }
+function toggleMusic(){ musicOn=!musicOn; const b=document.getElementById('mBtn'); if(b){ b.textContent=musicOn?'🎵':'🔇'; b.classList.toggle('off',!musicOn); b.title=musicOn?'Música de estudio: activa':'Música de estudio: silenciada'; } if(musicOn&&playing)startBed(); else stopBed(); }
 
 /* voz — LOCUTOR es-MX pre-generado (Jorge). TTS del navegador solo de respaldo. */
 let voiceOn=true, esVoice=null;
@@ -359,6 +375,9 @@ function goScene(i){
     const toTTS=()=>{ if(playing&&my===token){ if(hasVoice())speakScene(i,my); else safety=setTimeout(()=>{ if(playing&&my===token)goScene(i+1); }, SCENES[i].dur*1000); } };
     try{
       a.pause(); a.src=locSrc(i); a.currentTime=0; a.playbackRate=1;
+      const sa=seekAt; seekAt=0;   // consumir el seek una sola vez
+      const applySeek=()=>{ if(sa>0){ try{ const d=(a.duration&&isFinite(a.duration))?a.duration:sa+1; a.currentTime=Math.min(sa,Math.max(0,d-0.15)); }catch(_){} } };
+      a.onloadedmetadata=applySeek;
       a.onended=()=>{ if(playing&&my===token)goScene(i+1); };
       a.onerror=()=>{ locOff=true; showVoiceFallback(); toTTS(); };  // si el clip no carga, cae a TTS es-MX
       const p=a.play(); if(p&&p.catch)p.catch(()=>toTTS());
@@ -406,8 +425,8 @@ function speakScene(i,my){
   })();
 }
 function paintBars(upto,frac){
-  for(let k=0;k<SCENES.length;k++){ const seg=document.getElementById('seg'+k); if(seg)seg.style.width=(k<upto?100:k===upto?frac*100:0)+'%'; }
   let acc=0,cap=Math.min(upto,SCENES.length); for(let k=0;k<cap;k++)acc+=SCENES[k].dur; if(upto<SCENES.length)acc+=frac*SCENES[upto].dur;
+  const f=document.getElementById('barFill'); if(f)f.style.width=Math.min(100,acc/SUMDUR*100)+'%';
   document.getElementById('tCur').textContent=fmt(acc);
 }
 function tick(){ if(playing&&idx>=0&&idx<SCENES.length){
@@ -417,12 +436,13 @@ function tick(){ if(playing&&idx>=0&&idx<SCENES.length){
     paintBars(idx,frac);
   } requestAnimationFrame(tick); }
 requestAnimationFrame(tick);
-function play(){ document.getElementById('end').classList.remove('show'); document.getElementById('ov').classList.add('hide'); playing=true; setPP(); goScene((idx<0||idx>=SCENES.length)?0:idx); }
-function pause(){ playing=false; setPP(); clearTimers(); stopSpeak(); }
+function play(){ document.getElementById('end').classList.remove('show'); document.getElementById('ov').classList.add('hide'); playing=true; setPP(); startBed(); goScene((idx<0||idx>=SCENES.length)?0:idx); }
+function pause(){ playing=false; setPP(); clearTimers(); stopSpeak(); stopBed(); }
 function toggle(){ playing?pause():play(); }
-function seekFrac(frac){ let target=frac*SUMDUR,acc=0,i=0; for(;i<SCENES.length;i++){ if(target<acc+SCENES[i].dur)break; acc+=SCENES[i].dur; } if(i>=SCENES.length)i=SCENES.length-1; document.getElementById('ov').classList.add('hide'); document.getElementById('end').classList.remove('show'); goScene(i); }
+let seekAt=0;   // segundos dentro de la escena a la que se salta (seek fino)
+function seekFrac(frac){ let target=frac*SUMDUR,acc=0,i=0; for(;i<SCENES.length;i++){ if(target<acc+SCENES[i].dur)break; acc+=SCENES[i].dur; } if(i>=SCENES.length)i=SCENES.length-1; seekAt=Math.max(0,target-acc); document.getElementById('ov').classList.add('hide'); document.getElementById('end').classList.remove('show'); if(!playing){ playing=true; setPP(); startBed(); } goScene(i); }
 function setPP(){ document.getElementById('ppi').setAttribute('d', playing?'M6 5h4v14H6zM14 5h4v14h-4z':'M8 5v14l11-7z'); }
-function showEnd(){ document.getElementById('end').classList.add('show'); clearTimers(); stopSpeak(); try{ if(window.parent!==window)window.parent.postMessage({type:'hf-lesson-ended'},'*'); }catch(_){} }
+function showEnd(){ document.getElementById('end').classList.add('show'); clearTimers(); stopSpeak(); stopBed(); try{ if(window.parent!==window)window.parent.postMessage({type:'hf-lesson-ended'},'*'); }catch(_){} }
 function replay(){ idx=-1; document.getElementById('end').classList.remove('show'); play(); }
 
 /* fondo constelación */
