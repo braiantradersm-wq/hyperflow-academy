@@ -3024,8 +3024,10 @@ function loadYt(id){
 function vpMode(n,mode){
   document.querySelectorAll('.vtab[data-vm]').forEach(t=>t.classList.toggle('active',t.dataset.vm===mode));
   const yt=document.getElementById('vmYt'),ia=document.getElementById('vmIa'),own=document.getElementById('vmOwn');
+  // al salir de la Lección audiovisual (iframe), detener su narración para que no se solape
+  if(mode!=='own'){ const f=document.querySelector('.ownframe'); if(f&&f.contentWindow){ try{ f.contentWindow.postMessage({type:'hf-lesson-stop'},'*'); }catch(e){} } }
   [yt,ia,own].forEach(el=>{if(el)el.style.display='none';});
-  if(mode==='ia'){if(ia)ia.style.display='';}
+  if(mode==='ia'){if(ia)ia.style.display='';vpStop();vpIcon(false);}
   else{if(mode==='own'){if(own)own.style.display='';}else if(yt){yt.style.display='';}vpStop();vpIcon(false);}
 }
 function vpInit(m){

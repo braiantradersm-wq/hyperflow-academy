@@ -177,6 +177,8 @@
 <script>
 /* modo embebido: cuando la lección se carga dentro del curso con ?embed */
 if(/[?&]embed/.test(location.search)){document.body.classList.add('embed');}
+/* el curso (contenedor) puede pedir que la lección se detenga al cambiar de pestaña */
+window.addEventListener('message',function(e){ var d=e&&e.data; if(d&&d.type==='hf-lesson-stop'){ try{ pause(); }catch(_){} } });
 /* =================== GUION DE LA LECCIÓN (data-driven) =================== */
 const SCENES = [
   {type:'title', dur:20, eyeb:'Bienvenido', h2:'Todo equipo tiene un trabajo que alguien repite sin parar',
