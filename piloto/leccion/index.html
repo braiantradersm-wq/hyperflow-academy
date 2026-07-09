@@ -167,7 +167,8 @@
   </div>
 
   <div class="note" id="voiceNote">
-    <label style="display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center">Voz del narrador:
+    <div id="locNote">🎙️ Narración con voz de locutor en <b>español de México</b>.</div>
+    <label id="voiceFallback" style="display:none;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center">Voz del narrador:
       <select id="voiceSel" onchange="setVoiceByIndex(this.value)" style="background:var(--ink-2);color:var(--text);border:1px solid var(--line-2);border-radius:8px;padding:6px 9px;font-family:var(--sans);font-size:12.5px;max-width:100%"></select>
     </label>
     <div id="voiceHint" style="margin-top:8px"></div>
@@ -178,7 +179,7 @@
 /* modo embebido: cuando la lección se carga dentro del curso con ?embed */
 if(/[?&]embed/.test(location.search)){document.body.classList.add('embed');}
 /* el curso (contenedor) puede pedir que la lección se detenga al cambiar de pestaña */
-window.addEventListener('message',function(e){ var d=e&&e.data; if(d&&d.type==='hf-lesson-stop'){ try{ pause(); }catch(_){} } });
+window.addEventListener('message',function(e){ var d=e&&e.data; if(!d)return; if(d.type==='hf-lesson-stop'){ try{ pause(); }catch(_){} } else if(d.type==='hf-lesson-play'){ try{ if(!playing)play(); }catch(_){} } });
 /* =================== GUION DE LA LECCIÓN (data-driven) =================== */
 const SCENES = [
   {type:'title', dur:20, eyeb:'Bienvenido', h2:'Todo equipo tiene un trabajo que alguien repite sin parar',
@@ -297,19 +298,23 @@ function initAudio(){ if(AC)return; try{ AC=new(window.AudioContext||window.webk
 function chime(){ if(!AC||!soundOn)return; const tt=AC.currentTime; [659.25,987.77].forEach((f,i)=>{ const o=AC.createOscillator(),g=AC.createGain(); o.type='sine'; o.frequency.value=f; g.gain.setValueAtTime(0,tt+i*.05); g.gain.linearRampToValueAtTime(.075,tt+i*.05+.02); g.gain.exponentialRampToValueAtTime(.0006,tt+i*.05+.5); o.connect(g); g.connect(master); g.connect(verb); o.start(tt+i*.05); o.stop(tt+i*.05+.6); }); }
 function toggleSound(){ soundOn=!soundOn; const b=document.getElementById('sBtn'); b.textContent=soundOn?'🔊':'🔇'; b.classList.toggle('off',!soundOn); if(soundOn){initAudio(); if(AC&&AC.state==='suspended')AC.resume();} }
 
-/* voz — prioriza masculino neutro, y México primero */
+/* voz — LOCUTOR es-MX pre-generado (Jorge). TTS del navegador solo de respaldo. */
 let voiceOn=true, esVoice=null;
+let lecA=null, locOff=false;                          // locutor MP3 es-MX
+function lecAudioEl(){ if(!lecA){ lecA=new Audio(); lecA.preload='auto'; } return lecA; }
+function locSrc(i){ return 'audio/'+i+'.mp3'; }        // 16 clips es-MX-JorgeNeural
+function hasLoc(){ return !locOff; }                   // se apaga solo si un clip falla al cargar
 const MALE=/(jorge|diego|pablo|ra[uú]l|carlos|miguel|juan|jos[eé]|fernando|ricardo|enrique|gonzalo|andr[eé]s|crist[oó]bal|male|hombre|masculino)/i;
 const FEMALE=/(m[oó]nica|paulina|helena|laura|sabina|marisol|ang[eé]lica|esperanza|pen[eé]lope|female|mujer|femenin|elvira|luc[ií]a|ximena|dalia|montserrat|catalina|soledad|renata|google\s+espa[nñ]ol$)/i;
 const SPAIN=/(es[-_]?es|spain|espa[nñ]a|castilian|\(spain\))/i;
 const MX=/(es[-_]?mx|es[-_]?419|m[eé]xic|mexico)/i;
 const NEURAL=/(natural|online|neural|wavenet|premium|neuronal|multiling)/i; // voces humanas (Edge/Chrome online)
 function scoreVoice(v){ const id=v.lang+' '+v.name; let s=0;
-  if(MALE.test(v.name)) s+=2000;                 // PRIORIDAD: locutor hombre
+  if(MX.test(id)) s+=5000;                        // PRIORIDAD MÁXIMA: español de México
+  if(SPAIN.test(id)) s-=3000;                     // evitar España salvo que no haya otra
+  if(MALE.test(v.name)) s+=2000;                 // locutor hombre
   else if(FEMALE.test(v.name)) s-=2000;          // evitar voz femenina salvo que no haya otra
   if(NEURAL.test(v.name)||!v.localService) s+=800; // humaniza (neuronal/online)
-  if(!SPAIN.test(id)) s+=40;                     // neutro/latino sobre España
-  if(MX.test(id)) s+=20;
   return s;
 }
 function pickVoice(){ if(!('speechSynthesis'in window))return; const vs=speechSynthesis.getVoices();
@@ -332,8 +337,9 @@ function updateVoiceHint(){ const h=document.getElementById('voiceHint'); if(!h|
   h.innerHTML = humana ? 'Voz neuronal: suena natural. (⭐ = las más humanas de tu equipo.)' : 'Voz del sistema (robótica). Para oírla natural, abre este enlace en <b>Microsoft Edge</b> y elige una voz con ⭐.'; }
 function setVoiceByIndex(ix){ if(!window.__esV)return; esVoice=window.__esV[+ix]||esVoice; try{ localStorage.setItem('hf_voice',esVoice.name); }catch(e){} updateVoiceHint(); if('speechSynthesis'in window){ speechSynthesis.cancel(); try{ speechSynthesis.speak(mkUtter('Así sonará la narración de la lección.')); }catch(e){} } }
 if('speechSynthesis'in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
-function mkUtter(txt){ const u=new SpeechSynthesisUtterance(txt); if(esVoice)u.voice=esVoice; u.lang=esVoice?esVoice.lang:'es-MX'; u.rate=.96; u.pitch=1; return u; }
-function stopSpeak(){ if('speechSynthesis'in window)speechSynthesis.cancel(); }
+function showVoiceFallback(){ const n=document.getElementById('locNote'); if(n)n.innerHTML='🎙️ Narración con voz de IA en <b>español de México</b>.'; const fb=document.getElementById('voiceFallback'); if(fb)fb.style.display='inline-flex'; }
+function mkUtter(txt){ const u=new SpeechSynthesisUtterance(txt); if(esVoice)u.voice=esVoice; u.lang='es-MX'; u.rate=.96; u.pitch=1; return u; }  // respaldo: fuerza es-MX
+function stopSpeak(){ if('speechSynthesis'in window)speechSynthesis.cancel(); if(lecA){try{lecA.pause();}catch(e){}} }
 function toggleVoice(){ voiceOn=!voiceOn; document.getElementById('vBtn').classList.toggle('off',!voiceOn); stopSpeak(); if(playing)goScene(idx); }
 
 /* motor dirigido por la narración: la escena avanza cuando la voz TERMINA (no por reloj) */
@@ -348,7 +354,17 @@ function goScene(i){
   [...document.querySelectorAll('.scene')].forEach(s=>s.classList.toggle('active',+s.dataset.i===i));
   document.getElementById('cap').textContent=SCENES[i].cap;
   if(!playing){ paintBars(i,0); return; }
-  if(hasVoice()){ setTimeout(()=>{ if(playing&&my===token) speakScene(i,my); }, 70); } // separa cancel() de speak() (bug Chrome)
+  if(voiceOn && hasLoc()){                         // LOCUTOR es-MX (clip pre-generado)
+    const a=lecAudioEl();
+    const toTTS=()=>{ if(playing&&my===token){ if(hasVoice())speakScene(i,my); else safety=setTimeout(()=>{ if(playing&&my===token)goScene(i+1); }, SCENES[i].dur*1000); } };
+    try{
+      a.pause(); a.src=locSrc(i); a.currentTime=0; a.playbackRate=1;
+      a.onended=()=>{ if(playing&&my===token)goScene(i+1); };
+      a.onerror=()=>{ locOff=true; showVoiceFallback(); toTTS(); };  // si el clip no carga, cae a TTS es-MX
+      const p=a.play(); if(p&&p.catch)p.catch(()=>toTTS());
+    }catch(e){ toTTS(); }
+  }
+  else if(hasVoice()){ setTimeout(()=>{ if(playing&&my===token) speakScene(i,my); }, 70); } // separa cancel() de speak() (bug Chrome)
   else { safety=setTimeout(()=>{ if(playing&&my===token)goScene(i+1); }, SCENES[i].dur*1000); }
 }
 /* Agrupa en bloques fluidos ≤24 palabras (~10s), CONSERVANDO comas y puntos dentro
@@ -394,14 +410,19 @@ function paintBars(upto,frac){
   let acc=0,cap=Math.min(upto,SCENES.length); for(let k=0;k<cap;k++)acc+=SCENES[k].dur; if(upto<SCENES.length)acc+=frac*SCENES[upto].dur;
   document.getElementById('tCur').textContent=fmt(acc);
 }
-function tick(){ if(playing&&idx>=0&&idx<SCENES.length){ const est=hasVoice()?estMs(SCENES[idx].narr):SCENES[idx].dur*1000; paintBars(idx,Math.min(1,(performance.now()-sceneStart)/est)); } requestAnimationFrame(tick); }
+function tick(){ if(playing&&idx>=0&&idx<SCENES.length){
+    let frac;
+    if(lecA&&!lecA.paused&&lecA.duration&&isFinite(lecA.duration)){ frac=Math.min(1,lecA.currentTime/lecA.duration); } // MP3: real
+    else { const est=hasVoice()?estMs(SCENES[idx].narr):SCENES[idx].dur*1000; frac=Math.min(1,(performance.now()-sceneStart)/est); }
+    paintBars(idx,frac);
+  } requestAnimationFrame(tick); }
 requestAnimationFrame(tick);
 function play(){ document.getElementById('end').classList.remove('show'); document.getElementById('ov').classList.add('hide'); playing=true; setPP(); goScene((idx<0||idx>=SCENES.length)?0:idx); }
 function pause(){ playing=false; setPP(); clearTimers(); stopSpeak(); }
 function toggle(){ playing?pause():play(); }
 function seekFrac(frac){ let target=frac*SUMDUR,acc=0,i=0; for(;i<SCENES.length;i++){ if(target<acc+SCENES[i].dur)break; acc+=SCENES[i].dur; } if(i>=SCENES.length)i=SCENES.length-1; document.getElementById('ov').classList.add('hide'); document.getElementById('end').classList.remove('show'); goScene(i); }
 function setPP(){ document.getElementById('ppi').setAttribute('d', playing?'M6 5h4v14H6zM14 5h4v14h-4z':'M8 5v14l11-7z'); }
-function showEnd(){ document.getElementById('end').classList.add('show'); clearTimers(); stopSpeak(); }
+function showEnd(){ document.getElementById('end').classList.add('show'); clearTimers(); stopSpeak(); try{ if(window.parent!==window)window.parent.postMessage({type:'hf-lesson-ended'},'*'); }catch(_){} }
 function replay(){ idx=-1; document.getElementById('end').classList.remove('show'); play(); }
 
 /* fondo constelación */
