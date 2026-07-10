@@ -1951,6 +1951,7 @@ window.addEventListener('message',function(e){
   if(e.data.type==='hf-next'){ closeGame(); setTimeout(goQuiz,380); }      // terminó el juego → al reto para desbloquear
   else if(e.data.type==='hf-close'){ closeGame(); }                        // solo volver al curso
   else if(e.data.type==='hf-lesson-ended'){ classDone(); }                 // terminó la lección audiovisual → resalta "Continuar"
+  else if(e.data.type==='hf-lesson-next'){ classToInteractive(flowN); }     // botón "Siguiente" del end card → modo interactivo
 });
 function goQuiz(){ switchTab('quiz'); const q=document.getElementById('panel-quiz'); if(q)q.scrollIntoView({behavior:'smooth',block:'start'}); }
 function goReto(){ switchTab('reto'); const p=document.getElementById('panel-reto'); if(p)p.scrollIntoView({behavior:'smooth',block:'start'}); }
