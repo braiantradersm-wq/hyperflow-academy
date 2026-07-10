@@ -644,7 +644,7 @@
   @media(max-width:640px){ .class-deep .cdtxt{display:none} }
   .class-stage{flex:1;overflow-y:auto;overflow-x:hidden;display:flex;justify-content:center;align-items:flex-start;padding:22px 16px}
   .class-stage .vplayer{width:100%;max-width:880px;margin:0}
-  @media(max-width:640px){ .class-stage{padding:10px} .class-title{display:none} }
+  @media(max-width:640px){ .class-stage{padding:10px} .class-title{display:none} .class-bar{gap:8px;padding:9px 10px} .cnfull{display:none} .class-step{display:none} .class-next{padding:9px 13px} .class-deep{margin-left:auto} }
   .vnext-btn{margin-top:16px;padding:13px 26px;border-radius:12px;font-size:16px;font-weight:700;background:linear-gradient(135deg,var(--indigo),var(--indigo-2));border:0;color:#fff;box-shadow:0 12px 26px -10px var(--indigo);cursor:pointer;transition:.15s}
   .vnext-btn:hover{transform:translateY(-2px)}
   .cine .chint.cta{font-size:14px;color:var(--amber);opacity:1}
@@ -672,7 +672,7 @@
     <span class="class-step">▶ Clase</span>
     <span class="class-title" id="classTitle">La clase del episodio</span>
     <button class="class-deep" id="classDeep" onclick="classProfundizar()" title="Material externo de este episodio (YouTube)">📚 <span class="cdtxt">Profundizar</span></button>
-    <button class="class-next" id="classNext" style="display:none" onclick="classFlowNext()">Continuar al episodio →</button>
+    <button class="class-next" id="classNext" style="display:none" onclick="classFlowNext()">Continuar<span class="cnfull"> al episodio</span> →</button>
     <button class="class-x" onclick="exitClass()" aria-label="Salir de la clase">Salir ✕</button>
   </div>
   <div class="class-stage" id="classStage"></div>
