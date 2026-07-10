@@ -109,9 +109,9 @@
   .endcard .em{font-size:44px}.endcard h3{font-family:var(--serif);font-size:24px;margin:2px 0}
   .endcard p{color:var(--muted);font-size:14px;max-width:42ch;margin:0 0 10px}
   .endbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-  .endnext{padding:12px 22px;font-family:var(--sans);font-weight:700;font-size:15px;color:#fff;background:linear-gradient(135deg,var(--indigo),#5563e6);border:0;border-radius:11px;box-shadow:0 10px 24px -10px var(--indigo)}
+  .endnext{cursor:pointer;width:auto;height:auto;padding:12px 22px;font-family:var(--sans);font-weight:700;font-size:15px;color:#fff;background:linear-gradient(135deg,var(--indigo),#5563e6);border:0;border-radius:11px;box-shadow:0 10px 24px -10px var(--indigo)}
   .endnext:hover{transform:translateY(-1px)}
-  .endreplay{padding:12px 18px;font-family:var(--sans);font-weight:600;font-size:14px;color:var(--muted);background:rgba(15,17,32,.7);border:1px solid var(--line-2);border-radius:11px}
+  .endreplay{cursor:pointer;width:auto;height:auto;padding:12px 18px;font-family:var(--sans);font-weight:600;font-size:14px;color:var(--muted);background:rgba(15,17,32,.7);border:1px solid var(--line-2);border-radius:11px}
   .endreplay:hover{color:var(--text);border-color:var(--indigo)}
   body:not(.embed) #lessonNextBtn{display:none}   /* "Siguiente" solo tiene sentido dentro del curso */
 
@@ -163,8 +163,8 @@
         <h3>Lección completa</h3>
         <p>Completaste la clase de este episodio. Ahora sigue con el modo interactivo para aplicar lo aprendido.</p>
         <div class="endbtns">
-          <button class="cbtn endnext" id="lessonNextBtn" onclick="lessonNext()">Siguiente →</button>
-          <button class="cbtn endreplay" onclick="replay()">↺ Ver de nuevo</button>
+          <button class="endnext" id="lessonNextBtn" onclick="lessonNext()">Siguiente →</button>
+          <button class="endreplay" onclick="replay()">↺ Ver de nuevo</button>
         </div>
       </div>
     </div>
