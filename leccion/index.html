@@ -282,7 +282,9 @@ function fillVoiceSel(){
   const cur=window.__esV.indexOf(esVoice); sel.value=cur>=0?cur:0;
   updateVoiceHint();
 }
-function updateVoiceHint(){ const h=document.getElementById('voiceHint'); if(!h||!esVoice)return; const humana=NEURAL.test(esVoice.name)||!esVoice.localService;
+function updateVoiceHint(){ const h=document.getElementById('voiceHint'); if(!h)return;
+  if(!locOff){ h.innerHTML=''; return; }   // locutor es-MX activo: sin avisos de respaldo
+  if(!esVoice)return; const humana=NEURAL.test(esVoice.name)||!esVoice.localService;
   h.innerHTML = humana ? 'Voz neuronal: suena natural. (⭐ = las más humanas de tu equipo.)' : 'Voz del sistema (robótica). Para oírla natural, abre este enlace en <b>Microsoft Edge</b> y elige una voz con ⭐.'; }
 function setVoiceByIndex(ix){ if(!window.__esV)return; esVoice=window.__esV[+ix]||esVoice; try{ localStorage.setItem('hf_voice',esVoice.name); }catch(e){} updateVoiceHint(); if('speechSynthesis'in window){ speechSynthesis.cancel(); try{ speechSynthesis.speak(mkUtter('Así sonará la narración de la lección.')); }catch(e){} } }
 if('speechSynthesis'in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
