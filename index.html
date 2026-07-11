@@ -1971,30 +1971,39 @@ function exitClass(){                                 // el usuario cierra: NO a
   portalPlayerTo('playerHost');
 }
 function classFlowNext(){ classToInteractive(flowN); }
-const CINE={1:'pilot2/'};                             // "versión cine" disponible (por ahora EP1)
-function classProfundizar(){                          // abre panel IN-APP; ya no expulsa directo a YouTube
+function classProfundizar(){                          // abre panel IN-APP; no expulsa a YouTube
   const n=flowN||1;
+  pauseClassPlayback();                               // pausa lo que se esté reproduciendo, para dar lugar a lo nuevo
   const dt=document.getElementById('deepTitle'); if(dt)dt.textContent='Profundizar · EP'+pad2(n);
   const id=(typeof YTMAP!=='undefined')?YTMAP[n]:null;
   let html='';
-  if(CINE[n]){
-    html+='<button class="rescard film" onclick="openCine('+n+')"><span class="ri">🎬</span><span class="rt"><b>La versión cine</b><span>El gancho narrado, con música · voz en español de México</span></span><span class="rd">FILM ▸</span></button>';
-  }
+  html+='<button class="rescard film" onclick="openCine('+n+')"><span class="ri">🎬</span><span class="rt"><b>La versión cine</b><span>El episodio contado como una historia, con voz y música</span></span><span class="rd">FILM ▸</span></button>';
   if(id){
-    html+='<div class="deep-vid"><iframe src="https://www.youtube-nocookie.com/embed/'+id+'?rel=0" title="Video de apoyo (externo)" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>';
-    html+='<p class="deep-cap">▶ Si quieres más información externa por YouTube. Es contenido de terceros y se reproduce aquí mismo. <a href="https://youtu.be/'+id+'" target="_blank" rel="noopener" style="color:var(--muted)">Abrir en YouTube ↗</a></p>';
+    html+='<button class="rescard yt" id="deepYtCard" onclick="toggleDeepYt(\''+id+'\')"><span class="ri">▶</span><span class="rt"><b>Ver contenido de YT</b><span>Video de apoyo · externo (YouTube), se abre aquí</span></span><span class="rd">VIDEO</span></button>';
+    html+='<div class="deep-vid" id="deepVid" style="display:none"></div>';
   }
-  if(!html) html='<p class="deep-cap">Aún no hay material adicional para este episodio.</p>';
   const db=document.getElementById('deepBody'); if(db)db.innerHTML=html;
   document.getElementById('deepPanel').classList.add('on');
+}
+function pauseClassPlayback(){                          // pausa lección embebida y narración IA (no reinicia)
+  try{ stopOwnLesson(); }catch(e){}
+  try{ if(typeof vp!=='undefined' && vp.playing && typeof vpToggle==='function') vpToggle(); }catch(e){}
+}
+function toggleDeepYt(id){                              // el video de YT NO aparece solo: se muestra al pedirlo, contenido (no pantalla completa)
+  const box=document.getElementById('deepVid'), card=document.getElementById('deepYtCard'); if(!box)return;
+  if(box.style.display==='none'){
+    box.innerHTML='<iframe src="https://www.youtube-nocookie.com/embed/'+id+'?rel=0&autoplay=1" title="Video de apoyo (externo)" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>';
+    box.style.display=''; if(card)card.classList.add('open');
+  } else {
+    box.innerHTML=''; box.style.display='none'; if(card)card.classList.remove('open');   // toggle off detiene el video
+  }
 }
 function closeDeepPanel(){
   const p=document.getElementById('deepPanel'); if(p)p.classList.remove('on');
   const b=document.getElementById('deepBody'); if(b)b.innerHTML='';   // vaciar detiene el video embebido
 }
 function openCine(n){
-  const src=CINE[n]||CINE[1]; if(!src)return;
-  document.getElementById('cineFrame').src=src;
+  document.getElementById('cineFrame').src='pilot2/?ep='+n;   // todos los episodios tienen versión cine
   document.getElementById('cineOv').classList.add('on');
 }
 function closeCine(){

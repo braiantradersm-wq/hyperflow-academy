@@ -199,14 +199,10 @@
   <!-- DECISIÓN -->
   <div id="decision">
     <div>
-      <div class="dk">Tu decisión · piensa como consultor</div>
-      <h2>¿Cuál automatizas primero?</h2>
-      <div class="dsub">Tres procesos llegan a tu mesa. Solo uno se paga solo en semanas.</div>
-      <div class="dcards">
-        <div class="dc" onclick="decide(this,false)"><div class="di">Proceso A</div><b>El informe anual del director: complejo y muy visible</b></div>
-        <div class="dc" onclick="decide(this,true)"><div class="di">Proceso B</div><b>Cargar 400 facturas al día: repetitivo, por reglas, alto volumen</b></div>
-        <div class="dc" onclick="decide(this,false)"><div class="di">Proceso C</div><b>Un caso raro que ocurre una vez al mes, siempre distinto</b></div>
-      </div>
+      <div class="dk" id="decK">Tu decisión</div>
+      <h2 id="decH"></h2>
+      <div class="dsub" id="decSub"></div>
+      <div class="dcards" id="decCards"></div>
       <div class="dfb" id="dfb"></div>
     </div>
   </div>
@@ -214,32 +210,36 @@
   <!-- POSTER -->
   <div id="poster">
     <div>
-      <div class="pk">Temporada 1 · Episodio 01 · El Despertar</div>
-      <h1>Hoy empieza <span class="g">tu historia</span></h1>
-      <div class="psub">“El Origen” — no vas a ver una clase. Vas a vivir el día en que dejaste de ser quien hace el trabajo repetitivo.</div>
+      <div class="pk" id="pk"></div>
+      <h1 id="ph"></h1>
+      <div class="psub" id="psub"></div>
       <button class="bigplay" onclick="startFilm()" aria-label="Reproducir"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
-      <div class="pmeta">▶ 8 escenas · voz + música · ~2 min · con tu decisión · 🔊 sube el volumen</div>
+      <div class="pmeta" id="pmeta">▶ voz + música · con tu decisión · 🔊 sube el volumen</div>
     </div>
   </div>
 
   <!-- OUTRO -->
   <div id="outro">
     <div>
-      <div class="ok">✓ Fin del episodio 01</div>
-      <h2>Bienvenido a tu nueva versión</h2>
-      <div class="osub">Ya entendiste el arma. En “La Mente” aprendes a empuñarla. Cuando quieras, supera el reto y sigue tu historia.</div>
+      <div class="ok" id="ok"></div>
+      <h2 id="oh"></h2>
+      <div class="osub" id="osub"></div>
       <div class="btnrow">
         <button class="btn btn-ghost" onclick="restart()">↺ Ver de nuevo</button>
-        <a class="btn btn-amber" href="../?alumno=1">Continuar en el campus →</a>
+        <a class="btn btn-amber" href="../?enrolled=1">Continuar en el campus →</a>
       </div>
-      <div class="explore">¿Quieres explorar más a fondo? <a href="https://www.youtube.com/watch?v=UjBJJuxo5C4" target="_blank" style="color:#FF6B7A;text-decoration:underline">Si quieres más información externa por YT ↗</a></div>
+      <div class="explore" id="oexplore">¿Quieres explorar más a fondo? <a id="oyt" href="#" target="_blank" style="color:#FF6B7A;text-decoration:underline">Si quieres más información externa por YT ↗</a></div>
     </div>
   </div>
 </div>
 
+<script src="cine-data.js"></script>
 <script>
-/* ===================== DATOS ===================== */
-const AB='../audio/ep1_v2/';
+/* ===================== DATOS (por episodio, desde cine-data.js) ===================== */
+const QS=new URLSearchParams(location.search);
+const EP=Math.max(1,Math.min(22,parseInt(QS.get('ep')||'1',10)));
+const D=(window.CINE&&(window.CINE[EP]||window.CINE[1]))||{scenes:[],poster:{},outro:{},decision:null};
+const AB='../audio/'+(D.audio||('ep'+EP+'_cine'))+'/';
 const ACC={indigo:'var(--indigo)',amber:'var(--amber)',green:'var(--green)',red:'var(--red)'};
 const AUR={
   indigo:'radial-gradient(50% 60% at 30% 30%,rgba(102,116,255,.5),transparent),radial-gradient(50% 60% at 75% 70%,rgba(139,123,255,.4),transparent)',
@@ -250,35 +250,10 @@ const AUR={
 // chords (Hz) por mood
 const CH={
   amin:[110.00,130.81,164.81], c:[130.81,164.81,196.00], f:[116.54,174.61,220.00],
-  dmin:[146.83,174.61,220.00], g:[146.83,196.00,246.94]
+  dmin:[146.83,174.61,220.00], g:[146.83,196.00,246.94], emin:[164.81,196.00,246.94]
 };
-const SCENES=[
- {clip:'0.mp3',acc:'red',chord:'amin',kind:'cold',kicker:'Cold open',
-  titleHTML:'Son las seis. Y tú <span class="g">sigues ahí</span>',
-  lead:'¿Y si ese trabajo pudiera hacerse solo… mientras duermes?',
-  say:"Son las seis de la tarde. La oficina ya está vacía. Y tú sigues ahí, copiando datos de una casilla a otra. Otra vez. ¿Y si te dijera que todo ese trabajo podría hacerse solo, mientras tú duermes? No es ciencia ficción. Se llama hiperautomatización. Y hoy empieza tu historia."},
- {clip:'1.mp3',acc:'indigo',chord:'c',kind:'split',
-  titleHTML:'El trabajo se parte <span class="g">en dos</span>',
-  say:"El trabajo se está partiendo en dos. Los que ejecutan tareas, y los que las diseñan. Los primeros compiten contra las máquinas. Los segundos las comandan. En las próximas seis temporadas vas a cruzar de un lado al otro. Al final, no serás quien hace el trabajo repetitivo. Serás quien construye a quien lo hace."},
- {clip:'2.mp3',acc:'amber',chord:'amin',kind:'char',kicker:'Un caso real',
-  titleHTML:'Ella es <span class="g">Marta</span>. ¿Te suena?',
-  say:"Déjame presentarte a Marta. Trabaja en facturación. Cada día procesa cuatrocientas facturas a mano. Abre el correo, copia el número, lo pega en el sistema, revisa, y vuelve a empezar. Ocho horas, cinco días a la semana. Marta es muy buena en lo suyo. Pero su talento se está gastando en algo que una máquina haría mejor. ¿Te suena?"},
- {clip:'3.mp3',acc:'indigo',chord:'f',kind:'define',
-  titleHTML:'No un robot. <span class="g">Un equipo que nunca duerme</span>',
-  say:"Aquí entra la gran idea. Automatizar una tarea es enseñarle a una máquina a dar un paso. Hiperautomatizar es mucho más ambicioso. Es orquestar muchas tecnologías, inteligencia artificial, robots y reglas de negocio, para que trabajen juntas y resuelvan el proceso completo. Piénsalo así. No es contratar un robot. Es tener un equipo entero que nunca duerme."},
- {clip:'4.mp3',acc:'green',chord:'c',kind:'diagram',
-  titleHTML:'De un robot a un <span class="g">empleado que piensa</span>',
-  say:"El robot clásico solo imita clics. Es rápido, pero torpe. Si algo cambia, se rompe. Pero cuando le sumas inteligencia artificial, ocurre algo casi mágico. Empieza a leer documentos. A entender lo que dicen. A decidir. Ya no tienes un robot que obedece. Tienes un empleado digital que piensa. ¿Y Marta? Sus ocho horas, ahora son cuatro minutos."},
- {clip:'5.mp3',acc:'indigo',chord:'dmin',kind:'prompt',interactive:true,
-  titleHTML:'Ahora decides <span class="g">tú</span>',
-  say:"Ahora te toca a ti. Llega un proceso nuevo a tu mesa, y tienes que elegir cuál automatizar primero. Piensa como un consultor, no como un empleado. ¿Cuál eliges?"},
- {clip:'6.mp3',acc:'green',chord:'g',kind:'affirm',kicker:'Pensaste como consultor',
-  titleHTML:'Ese es el que <span class="g">se paga solo</span>',
-  say:"Exacto. No el más vistoso. No el más nuevo. El de alto volumen, repetitivo y con reglas claras. Ese es el que se paga solo en semanas. Acabas de pensar como alguien que cobra miles por esto."},
- {clip:'7.mp3',acc:'indigo',chord:'c',kind:'recap',
-  titleHTML:'Tres ideas para <span class="g">no olvidar</span>',
-  say:"Llévate tres ideas para siempre. Una: hiperautomatizar es orquestar. Dos: la inteligencia artificial es lo que multiplica el valor. Tres: el retorno manda. Hoy entendiste el arma. En el próximo episodio, La Mente, aprendes a empuñarla. Supera el reto, y nos vemos ahí. Bienvenido a tu nueva versión."}
-];
+const SCENES=(D.scenes||[]).map((s,i)=>({clip:i+'.mp3',...s}));   // clip = índice de escena
+const DEC_IDX=SCENES.findIndex(s=>s.interactive);
 
 /* ===================== AUDIO NARRACIÓN ===================== */
 const audio=new Audio(); audio.preload='auto';
@@ -340,41 +315,38 @@ const Sound={
 
 /* ===================== RENDER DE ESCENA ===================== */
 function stageHTML(s){
-  let x='';
+  let x=''; const v=s.viz||{};
   if(s.kind==='split'){
+    const a=v.a||{},b=v.b||{};
     x=`<div class="split">
-      <div class="path a" id="pa"><div class="pl">Camino A</div><b>Ejecutas tareas</b><span>Compites contra la máquina. Reemplazable.</span></div>
-      <div class="path b" id="pb"><div class="pl">Camino B · el tuyo</div><b>Diseñas sistemas</b><span>Comandas a las máquinas. Imprescindible.</span></div>
+      <div class="path a" id="pa"><div class="pl">${a.pl||'Camino A'}</div><b>${a.b||''}</b><span>${a.s||''}</span></div>
+      <div class="path b" id="pb"><div class="pl">${b.pl||'Camino B'}</div><b>${b.b||''}</b><span>${b.s||''}</span></div>
     </div>`;
-  }else if(s.kind==='char'){
+  }else if(s.kind==='stat'){
+    const st=v.stats||[];
     x=`<div class="char">
-      <div class="avatar" id="av"><svg viewBox="0 0 24 24" fill="none" stroke="#8B7BFF" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+      <div class="avatar" id="av"><span style="font-size:54px;line-height:1">${v.ic||'👤'}</span></div>
       <div class="cstats">
-        <div class="cstat" id="cs0"><b>400</b><span>facturas al día · a mano</span></div>
-        <div class="cstat" id="cs1"><b>8 h</b><span>de talento, gastadas en copiar y pegar</span></div>
-        <div class="cstat" id="cs2"><b>5×</b><span>por semana… ¿y si fueras tú?</span></div>
+        ${st.map((c,i)=>`<div class="cstat" id="cs${i}"><b>${c.b}</b><span>${c.s}</span></div>`).join('')}
       </div></div>`;
-  }else if(s.kind==='diagram'){
-    x=`<div class="diagram">
-      <div class="node" id="nd0"><div class="nt">Hoy</div><div class="nv">Robot (RPA)</div></div>
-      <div class="plus" id="pl0">+</div>
-      <div class="node" id="nd1"><div class="nt">Le sumas</div><div class="nv">IA</div></div>
-      <div class="arrow" id="ar0">→</div>
-      <div class="node out" id="nd2"><div class="nt">Obtienes</div><div class="nv">Empleado que piensa</div></div>
-    </div>
-    <div class="beforeafter" id="ba">Marta: <s>8 horas</s> &nbsp;→&nbsp; <b>4 minutos</b></div>`;
+  }else if(s.kind==='pipeline'){
+    const nd=v.nodes||[]; let inner='';
+    nd.forEach((n,i)=>{
+      if(i>0) inner+= n.plus?`<div class="plus" id="pl${i}">+</div>`:`<div class="arrow" id="ar${i}">→</div>`;
+      inner+=`<div class="node${n.out?' out':''}" id="nd${i}"><div class="nt">${n.t||''}</div><div class="nv">${n.v||''}</div></div>`;
+    });
+    x=`<div class="diagram">${inner}</div>${v.ba?`<div class="beforeafter" id="ba">${v.ba}</div>`:''}`;
   }else if(s.kind==='affirm'){
     x=`<div class="affirm" id="af"><div class="seal"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5"/></svg></div></div>`;
   }else if(s.kind==='recap'){
+    const rc=v.cards||[];
     x=`<div class="recap">
-      <div class="rc" id="rc0"><div class="n">01</div><p>Hiperautomatizar es <b>orquestar</b>.</p></div>
-      <div class="rc" id="rc1"><div class="n">02</div><p>La <b>IA</b> multiplica el valor.</p></div>
-      <div class="rc" id="rc2"><div class="n">03</div><p>El <b>retorno manda</b>.</p></div>
+      ${rc.map((c,i)=>`<div class="rc" id="rc${i}"><div class="n">${c.n||''}</div><p>${c.p||''}</p></div>`).join('')}
     </div>
-    <div class="cliff" id="cliff"><div class="cn">Próximo episodio</div><div class="cc">“La Mente” — dentro de la IA generativa</div></div>`;
+    ${v.cliff?`<div class="cliff" id="cliff"><div class="cn">${v.cliff.n||'Próximo episodio'}</div><div class="cc">${v.cliff.c||''}</div></div>`:''}`;
   }
   return `<div class="kicker" id="kk">${s.kicker||'Hyperflow Academy'}</div>
-    <div class="title" id="ttl">${s.titleHTML}</div>
+    <div class="title" id="ttl">${s.title||s.titleHTML||''}</div>
     ${s.lead?`<div class="lead" id="ld">${s.lead}</div>`:''}${x}`;
 }
 function wrapTitleWords(){
@@ -407,11 +379,12 @@ function enterScene(i){
 }
 function sceneAnim(s,base){
   const T=(id,d,ding)=>{const e=$('#'+id);if(e)setTimeout(()=>{e.classList.add('on');if(ding)Sound.ding(ding);},d);};
+  const v=s.viz||{};
   if(s.kind==='split'){T('pa',base+500);T('pb',base+1100,784);}
-  else if(s.kind==='char'){T('av',base+400);T('cs0',base+900,523);T('cs1',base+1500,523);T('cs2',base+2100,587);}
-  else if(s.kind==='diagram'){T('nd0',base+500);T('pl0',base+1000);T('nd1',base+1400,660);T('ar0',base+2100);T('nd2',base+2500,880);T('ba',base+3200,988);}
+  else if(s.kind==='stat'){T('av',base+400);(v.stats||[]).forEach((_,i)=>T('cs'+i,base+900+i*600,i<2?523:587));}
+  else if(s.kind==='pipeline'){const nd=v.nodes||[];let d=base+500;nd.forEach((n,i)=>{if(i>0){T((n.plus?'pl':'ar')+i,d);d+=450;}T('nd'+i,d,i===nd.length-1?880:660);d+=600;});if(v.ba)T('ba',d+300,988);}
   else if(s.kind==='affirm'){T('af',base+300,880);}
-  else if(s.kind==='recap'){T('rc0',base+400,523);T('rc1',base+900,587);T('rc2',base+1400,659);T('cliff',base+2100,784);}
+  else if(s.kind==='recap'){const rc=v.cards||[];rc.forEach((_,i)=>T('rc'+i,base+400+i*500,523+i*64));if(v.cliff)T('cliff',base+400+rc.length*500+200,784);}
 }
 /* Subtítulos: una frase a la vez (evita que el párrafo se encime en móvil) */
 let subSent=[], subCum=[], curSent=-1;
@@ -453,18 +426,34 @@ function loop(){updateSubs();requestAnimationFrame(loop);}
 
 function openDecision(){ awaitingDecision=true; Sound.duck(true); $('#decision').classList.add('show'); }
 function decide(el,ok){
-  const fb=$('#dfb');
+  const fb=$('#dfb'); const dd=D.decision||{};
   if(ok){
     document.querySelectorAll('.dc').forEach(c=>c.style.pointerEvents='none');
     el.classList.add('correct'); Sound.ding(988);
-    fb.innerHTML='<b>Correcto.</b> Alto volumen + reglas claras = ROI en semanas.';
+    fb.innerHTML=dd.ok||'<b>Correcto.</b>';
     setTimeout(()=>{ $('#decision').classList.remove('show'); awaitingDecision=false; Sound.duck(false);
-      stage.classList.add('out'); setTimeout(()=>enterScene(6),500); },1400);
+      stage.classList.add('out'); setTimeout(()=>enterScene(DEC_IDX+1),500); },1500);
   }else{
     el.classList.add('wrong'); Sound.ding(220); setTimeout(()=>el.classList.remove('wrong'),450);
-    fb.innerHTML='Casi. Eso impresiona, pero no da retorno rápido. Piensa en <b>volumen y reglas</b>.';
+    fb.innerHTML=dd.bad||'Casi. Prueba otra vez.';
   }
 }
+/* ---- poblar carátula/outro/decisión desde D ---- */
+function populateChrome(){
+  const p=D.poster||{}, o=D.outro||{};
+  const set=(id,html)=>{const e=$('#'+id);if(e)e.innerHTML=html||'';};
+  set('pk',p.k); set('ph',p.h); set('psub',p.sub); if(p.meta)set('pmeta',p.meta);
+  set('ok',o.k); set('oh',o.h); set('osub',o.sub);
+  const yt=$('#oyt'), ex=$('#oexplore');
+  if(o.yt){ yt.href='https://www.youtube.com/watch?v='+o.yt; } else if(ex){ ex.style.display='none'; }
+  const dd=D.decision;
+  if(dd){
+    set('decK',dd.k||'Tu decisión'); set('decH',dd.h); set('decSub',dd.sub);
+    const wrap=$('#decCards'); if(wrap) wrap.innerHTML=(dd.cards||[]).map((c,i)=>`<div class="dc" onclick="decide(this,${c.ok?'true':'false'})"><div class="di">${c.i||('Opción '+(i+1))}</div><b>${c.b||''}</b></div>`).join('');
+  }
+  document.title='EP'+String(EP).padStart(2,'0')+' · La versión cine — Hyperflow Academy';
+}
+populateChrome();
 /* ===================== CONTROLES ===================== */
 function startFilm(){ if(started)return; started=true;
   Sound.init();
