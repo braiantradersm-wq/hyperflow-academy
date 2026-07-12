@@ -642,6 +642,27 @@
   .class-deep{flex:none;padding:8px 14px;border-radius:9px;background:var(--ink-3);border:1px solid var(--line-2);color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
   .class-deep:hover{color:var(--text);border-color:var(--amber)}
   @media(max-width:640px){ .class-deep .cdtxt{display:none} }
+  /* Botón de menú persistente en las barras de clase y juego */
+  .bar-menu{flex:none;display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border-radius:9px;background:var(--ink-3);border:1px solid var(--line-2);color:var(--text);font-size:13.5px;font-weight:700;cursor:pointer;white-space:nowrap}
+  .bar-menu:hover{border-color:var(--indigo);color:#fff}
+  .bar-menu .bm-ico{font-size:15px;line-height:1}
+  @media(max-width:640px){ .bar-menu .bm-txt{display:none} .bar-menu{padding:8px 12px} }
+  /* Overlay de menú (por encima de clase 1290 y juego 1300) */
+  .nav-ov{position:fixed;inset:0;z-index:1500;display:none;align-items:flex-start;justify-content:center;padding:64px 16px 24px;background:rgba(4,5,12,.74);backdrop-filter:blur(5px);overflow:auto}
+  .nav-ov.on{display:flex;animation:gfade .22s}
+  .nav-card{width:100%;max-width:400px;background:var(--ink-3);border:1px solid var(--line-2);border-radius:18px;padding:10px;box-shadow:0 26px 60px rgba(0,0,0,.55);animation:navpop .24s cubic-bezier(.2,.8,.25,1)}
+  @keyframes navpop{from{opacity:0;transform:translateY(-14px) scale(.97)}to{opacity:1;transform:none}}
+  .nav-h{display:flex;align-items:center;justify-content:space-between;padding:8px 10px 10px}
+  .nav-h b{font-size:15px;color:var(--text)}
+  .nav-h .nav-x{width:34px;height:34px;border-radius:9px;background:var(--ink-4);border:1px solid var(--line-2);color:var(--muted);font-size:15px;cursor:pointer}
+  .nav-h .nav-x:hover{color:#fff;border-color:var(--indigo)}
+  .nav-item{width:100%;display:flex;align-items:center;gap:13px;padding:14px 13px;border-radius:12px;background:transparent;border:none;color:var(--text);font-size:14.5px;font-weight:600;text-align:left;cursor:pointer;transition:.13s}
+  .nav-item:hover{background:var(--ink-4)}
+  .nav-item .ni{font-size:18px;width:24px;text-align:center;flex:none}
+  .nav-item.primary{background:linear-gradient(135deg,var(--indigo),var(--indigo-2));color:#fff;margin-bottom:4px}
+  .nav-item.primary:hover{filter:brightness(1.08)}
+  .nav-item.danger{color:var(--red)}
+  .nav-sep{height:1px;background:var(--line-2);margin:6px 8px}
   /* ---- Panel Profundizar (in-app, no expulsa a YouTube) ---- */
   .deep-ov{position:fixed;inset:0;z-index:1300;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(4,5,12,.72);backdrop-filter:blur(4px)}
   .deep-ov.on{display:flex;animation:gfade .25s}
@@ -692,12 +713,13 @@
 <div class="cine" id="cine"><div class="cbar" id="cineBar"></div><div class="cscene" id="cineBody"></div><button class="skip" onclick="skipCine()">saltar intro ⏭</button></div>
 
 <div class="game-ov" id="gameOverlay">
-  <div class="game-bar"><button class="game-back" onclick="closeGame()">← Volver al curso</button><span class="game-title" id="gameTitle"></span><span class="game-hint">Cuando termine, vuelva para superar el reto</span></div>
+  <div class="game-bar"><button class="bar-menu" onclick="openNavMenu()" aria-label="Menú principal"><span class="bm-ico">☰</span><span class="bm-txt">Menú</span></button><button class="game-back" onclick="closeGame()">← Volver al curso</button><span class="game-title" id="gameTitle"></span><span class="game-hint">Cuando termines, vuelve para superar el reto</span></div>
   <iframe id="gameFrame" title="Experiencia interactiva" allow="autoplay; fullscreen"></iframe>
 </div>
 
 <div class="class-ov" id="classOverlay">
   <div class="class-bar">
+    <button class="bar-menu" onclick="openNavMenu()" aria-label="Menú principal"><span class="bm-ico">☰</span><span class="bm-txt">Menú</span></button>
     <span class="class-step">▶ Clase</span>
     <span class="class-title" id="classTitle">La clase del episodio</span>
     <button class="class-deep" id="classDeep" onclick="classProfundizar()" title="Material opcional para ir más a fondo (se abre aquí mismo)">📚 <span class="cdtxt">Profundizar</span></button>
@@ -705,6 +727,22 @@
     <button class="class-x" onclick="exitClass()" aria-label="Salir de la clase">Salir ✕</button>
   </div>
   <div class="class-stage" id="classStage"></div>
+</div>
+
+<!-- Menú principal accesible desde CUALQUIER pantalla (clase/juego/campus) -->
+<div class="nav-ov" id="navMenu" onclick="if(event.target===this)closeNavMenu()">
+  <div class="nav-card" role="dialog" aria-label="Menú principal">
+    <div class="nav-h"><b>Menú principal</b><button class="nav-x" onclick="closeNavMenu()" aria-label="Cerrar">✕</button></div>
+    <button class="nav-item primary" onclick="navExitToCourse()"><span class="ni">✕</span> Salir de esta pantalla</button>
+    <button class="nav-item" onclick="navGo(()=>epGo(frontierEp()))"><span class="ni">▶</span> Continuar donde iba</button>
+    <button class="nav-item" onclick="navGo(()=>openEpDrawer())"><span class="ni">📺</span> Elegir clase / episodio</button>
+    <div class="nav-sep"></div>
+    <button class="nav-item" onclick="navGo(()=>openVault())"><span class="ni">🗃️</span> Bóveda del Acelerador</button>
+    <button class="nav-item" onclick="navGo(()=>showCertificate())"><span class="ni">🎓</span> Mi certificado</button>
+    <button class="nav-item" onclick="navGo(()=>showLanding())"><span class="ni">🏠</span> Página de inicio</button>
+    <div class="nav-sep"></div>
+    <button class="nav-item danger" onclick="navGo(()=>{if(confirm('¿Reiniciar tu progreso y volver al Episodio 1?'))resetProgress();})"><span class="ni">↻</span> Reiniciar progreso</button>
+  </div>
 </div>
 
 <!-- Panel Profundizar (in-app): NO expulsa a YouTube; ofrece el material en contexto -->
@@ -2250,6 +2288,21 @@ function toggleMainMenu(){ const m=document.getElementById('fabMenu'); if(!m)ret
 function openMainMenu(){ document.getElementById('fabMenu')?.classList.add('open'); document.getElementById('fabBtn')?.classList.add('open'); document.getElementById('fabBack')?.classList.add('open'); }
 function closeMainMenu(){ document.getElementById('fabMenu')?.classList.remove('open'); document.getElementById('fabBtn')?.classList.remove('open'); document.getElementById('fabBack')?.classList.remove('open'); }
 function mm(fn){ closeMainMenu(); try{fn();}catch(e){} }
+/* ===== Menú accesible desde cualquier pantalla (clase audiovisual / juego / campus) ===== */
+function navCurScreen(){
+  if(document.getElementById('classOverlay')?.classList.contains('on')) return 'class';
+  if(document.getElementById('gameOverlay')?.classList.contains('on')) return 'game';
+  return null;
+}
+function navExitScreen(){                     // cierra la pantalla actual (para el audio) y vuelve al campus
+  const s=navCurScreen();
+  if(s==='class'){ try{exitClass();}catch(e){} }
+  else if(s==='game'){ try{closeGame();}catch(e){} }
+}
+function openNavMenu(){ const o=document.getElementById('navMenu'); if(o)o.classList.add('on'); }
+function closeNavMenu(){ const o=document.getElementById('navMenu'); if(o)o.classList.remove('on'); }
+function navExitToCourse(){ closeNavMenu(); navExitScreen(); }   // "Salir de esta pantalla"
+function navGo(fn){ closeNavMenu(); navExitScreen(); setTimeout(()=>{ try{ fn&&fn(); }catch(e){} }, 80); }
 function renderSide(){
   const el=document.getElementById('sideList');
   el.innerHTML=SEASONS.map(s=>{
