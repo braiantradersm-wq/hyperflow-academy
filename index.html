@@ -723,7 +723,7 @@
     <span class="class-step">▶ Clase</span>
     <span class="class-title" id="classTitle">La clase del episodio</span>
     <button class="class-deep" id="classDeep" onclick="classProfundizar()" title="Material opcional para ir más a fondo (se abre aquí mismo)">📚 <span class="cdtxt">Profundizar</span></button>
-    <button class="class-next" id="classNext" style="display:none" onclick="classFlowNext()">Continuar<span class="cnfull"> al episodio</span> →</button>
+    <button class="class-next" id="classNext" style="display:none" onclick="classFlowNext()">Continuar<span class="cnfull"> al modo cine</span> →</button>
     <button class="class-x" onclick="exitClass()" aria-label="Salir de la clase">Salir ✕</button>
   </div>
   <div class="class-stage" id="classStage"></div>
@@ -755,7 +755,7 @@
 </div>
 <!-- Versión cine a pantalla completa (in-app) -->
 <div class="cine-ov" id="cineOv">
-  <div class="cine-top"><span style="font-size:16px">🎬</span><b>La versión cine · voz en español de México</b><button class="cine-back" onclick="closeCine()">← Volver</button></div>
+  <div class="cine-top"><button class="bar-menu" onclick="openNavMenu()" aria-label="Menú principal"><span class="bm-ico">☰</span><span class="bm-txt">Menú</span></button><span style="font-size:16px">🎬</span><b>Modo cine · el episodio como historia</b><button class="class-next" id="cineNext" style="display:none;margin-left:auto" onclick="cineFlowNext()">Continuar<span class="cnfull"> al episodio</span> →</button><button class="cine-back" id="cineBack" onclick="closeCine()">← Volver</button></div>
   <iframe id="cineFrame" title="La versión cine" allow="autoplay; fullscreen"></iframe>
 </div>
 
@@ -2008,14 +2008,14 @@ function exitClass(){                                 // el usuario cierra: NO a
   document.getElementById('classOverlay').classList.remove('on'); document.body.style.overflow='';
   portalPlayerTo('playerHost');
 }
-function classFlowNext(){ classToInteractive(flowN); }
+function classFlowNext(){ classToCine(flowN); }       // clase → modo cine (nuevo orden)
 function classProfundizar(){                          // abre panel IN-APP; no expulsa a YouTube
   const n=flowN||1;
   pauseClassPlayback();                               // pausa lo que se esté reproduciendo, para dar lugar a lo nuevo
   const dt=document.getElementById('deepTitle'); if(dt)dt.textContent='Profundizar · EP'+pad2(n);
   const id=(typeof YTMAP!=='undefined')?YTMAP[n]:null;
   let html='';
-  html+='<button class="rescard film" onclick="openCine('+n+')"><span class="ri">🎬</span><span class="rt"><b>La versión cine</b><span>El episodio contado como una historia, con voz y música</span></span><span class="rd">FILM ▸</span></button>';
+  html+='<p class="deep-note" style="margin:0 0 10px;color:var(--muted);font-size:13px">El <b>modo cine</b> ahora es un paso del episodio (va justo después de la clase). Aquí queda solo el material externo de apoyo.</p>';
   if(id){
     html+='<button class="rescard yt" id="deepYtCard" onclick="toggleDeepYt(\''+id+'\')"><span class="ri">▶</span><span class="rt"><b>Ver contenido de YT</b><span>Video de apoyo · externo (YouTube), se abre aquí</span></span><span class="rd">VIDEO</span></button>';
     html+='<div class="deep-vid" id="deepVid" style="display:none"></div>';
@@ -2040,14 +2040,25 @@ function closeDeepPanel(){
   const p=document.getElementById('deepPanel'); if(p)p.classList.remove('on');
   const b=document.getElementById('deepBody'); if(b)b.innerHTML='';   // vaciar detiene el video embebido
 }
-function openCine(n){
+let cineFlowN=0;
+function openCine(n,flow){
   document.getElementById('cineFrame').src='pilot2/?ep='+n;   // todos los episodios tienen versión cine
-  document.getElementById('cineOv').classList.add('on');
+  document.getElementById('cineOv').classList.add('on'); document.body.style.overflow='hidden';
+  const nx=document.getElementById('cineNext'); if(nx)nx.style.display=flow?'':'none';   // en el flujo: botón para avanzar al interactivo
+  cineFlowN=flow?n:0;
 }
 function closeCine(){
   const ov=document.getElementById('cineOv'); if(ov)ov.classList.remove('on');
   const f=document.getElementById('cineFrame'); if(f)f.src='about:blank';
+  document.body.style.overflow=''; cineFlowN=0;
 }
+function classToCine(n){                               // fin de la clase → MODO CINE (paso del flujo, seguido de la clase)
+  vpStop(); stopOwnLesson();
+  document.getElementById('classOverlay').classList.remove('on');
+  portalPlayerTo('playerHost');
+  openCine(n,true);
+}
+function cineFlowNext(){ const n=cineFlowN||flowN; closeCine(); setTimeout(()=>classToInteractive(n),60); }  // cine → interactivo
 function classToInteractive(n){                       // fin de clase → método interactivo (encadena)
   vpStop(); stopOwnLesson();
   document.getElementById('classOverlay').classList.remove('on'); document.body.style.overflow='';
@@ -2066,23 +2077,25 @@ window.addEventListener('message',function(e){
   if(e.data.type==='hf-next'){ closeGame(); setTimeout(goQuiz,380); }      // terminó el juego → al reto para desbloquear
   else if(e.data.type==='hf-close'){ closeGame(); }                        // solo volver al curso
   else if(e.data.type==='hf-lesson-ended'){ classDone(); }                 // terminó la lección audiovisual → resalta "Continuar"
-  else if(e.data.type==='hf-lesson-next'){ classToInteractive(flowN); }     // botón "Siguiente" del end card → modo interactivo
+  else if(e.data.type==='hf-lesson-next'){ classToCine(flowN); }     // botón "Siguiente" del end card → modo cine (nuevo orden)
 });
 function goQuiz(){ switchTab('quiz'); const q=document.getElementById('panel-quiz'); if(q)q.scrollIntoView({behavior:'smooth',block:'start'}); }
 function goReto(){ switchTab('reto'); const p=document.getElementById('panel-reto'); if(p)p.scrollIntoView({behavior:'smooth',block:'start'}); }
 function renderGuide(n){
   const game=GAME[n];
+  const claseStep = {ic:'▶',k:'Paso 1 · empieza aquí',t:'Clase',d:'La lección audiovisual del episodio: aquí se explica el tema. Primero se ve y se aprende.',btn:'▶ Ver la clase ↓',act:'openClass('+n+')',big:true};
+  const cineStep  = {ic:'🎬',k:'Paso 2',t:'Modo cine',d:'El episodio contado como una historia, con voz y música. Va seguido de la clase para meterte en situación.',btn:'🎬 Ver el modo cine',act:'openCine('+n+',true)'};
   const steps = game ? [
-    {ic:'🎬',k:'Paso 1 · empieza aquí',t:'Clase',d:'La lección audiovisual del episodio: aquí se explica el tema. Primero se ve y se aprende.',btn:'▶ Ver la clase ↓',act:'openClass('+n+')',big:true},
-    {ic:'',k:'Paso 2',t:`Episodio ${n}`,d:(n===1?'Entra a la historia y tú tomas las decisiones. Ahora aplicas lo aprendido.':'Construye tu primer bot arrastrando y conectando piezas. Aplicas lo que viste en la clase.'),btn:`▶ Empezar el episodio ${n}`,act:`openGame(${n})`},
-    {ic:'🏆',k:'Paso 3',t:'Supera el reto',d:'Responde el cuestionario para desbloquear el siguiente episodio.',btn:'Ir al cuestionario →',act:'goQuiz()'}
+    claseStep, cineStep,
+    {ic:'🕹️',k:'Paso 3',t:`Episodio ${n}`,d:(n===1?'Entra a la historia y tú tomas las decisiones. Ahora aplicas lo aprendido.':'Construye tu primer bot arrastrando y conectando piezas. Aplicas lo que viste en la clase.'),btn:`▶ Empezar el episodio ${n}`,act:`openGame(${n})`},
+    {ic:'🏆',k:'Paso 4',t:'Supera el reto',d:'Responde el cuestionario para desbloquear el siguiente episodio.',btn:'Ir al cuestionario →',act:'goQuiz()'}
   ] : (hasReto(n) ? [
-    {ic:'🎬',k:'Paso 1 · empieza aquí',t:'Clase',d:'La lección del episodio: aquí se explica el tema. Primero se ve y se aprende.',btn:'▶ Ver la clase ↓',act:'openClass('+n+')',big:true},
-    {ic:'',k:'Paso 2',t:`Episodio ${n}`,d:'Aplicas lo aprendido: armas o clasificas con tus manos y lo compruebas. Aquí se afianza de verdad.',btn:`▶ Empezar el episodio ${n}`,act:'goReto()'},
-    {ic:'🏆',k:'Paso 3',t:'Supera el reto',d:'Responde el cuestionario para desbloquear el siguiente episodio.',btn:'Ir al cuestionario →',act:'goQuiz()'}
+    claseStep, cineStep,
+    {ic:'🧩',k:'Paso 3',t:`Episodio ${n}`,d:'Aplicas lo aprendido: armas o clasificas con tus manos y lo compruebas. Aquí se afianza de verdad.',btn:`▶ Empezar el episodio ${n}`,act:'goReto()'},
+    {ic:'🏆',k:'Paso 4',t:'Supera el reto',d:'Responde el cuestionario para desbloquear el siguiente episodio.',btn:'Ir al cuestionario →',act:'goQuiz()'}
   ] : [
-    {ic:'🎬',k:'Paso 1 · empieza aquí',t:'Clase',d:'La lección del episodio: aquí se explica el tema. Primero se ve y se aprende.',btn:'▶ Ver la clase ↓',act:'openClass('+n+')',big:true},
-    {ic:'🏆',k:'Paso 2',t:'Supera el reto',d:'Responde el cuestionario para desbloquear el siguiente episodio.',btn:'Ir al cuestionario →',act:'goQuiz()'}
+    claseStep, cineStep,
+    {ic:'🏆',k:'Paso 3',t:'Supera el reto',d:'Responde el cuestionario para desbloquear el siguiente episodio.',btn:'Ir al cuestionario →',act:'goQuiz()'}
   ]);
   return `<div class="guide">
     <div class="guide-h">🧭 Cómo estudiar este episodio — sigue los pasos en orden</div>
@@ -2290,13 +2303,15 @@ function closeMainMenu(){ document.getElementById('fabMenu')?.classList.remove('
 function mm(fn){ closeMainMenu(); try{fn();}catch(e){} }
 /* ===== Menú accesible desde cualquier pantalla (clase audiovisual / juego / campus) ===== */
 function navCurScreen(){
+  if(document.getElementById('cineOv')?.classList.contains('on')) return 'cine';
   if(document.getElementById('classOverlay')?.classList.contains('on')) return 'class';
   if(document.getElementById('gameOverlay')?.classList.contains('on')) return 'game';
   return null;
 }
 function navExitScreen(){                     // cierra la pantalla actual (para el audio) y vuelve al campus
   const s=navCurScreen();
-  if(s==='class'){ try{exitClass();}catch(e){} }
+  if(s==='cine'){ try{closeCine();}catch(e){} }
+  else if(s==='class'){ try{exitClass();}catch(e){} }
   else if(s==='game'){ try{closeGame();}catch(e){} }
 }
 function openNavMenu(){ const o=document.getElementById('navMenu'); if(o)o.classList.add('on'); }
