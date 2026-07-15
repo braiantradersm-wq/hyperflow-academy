@@ -508,6 +508,8 @@
   #vmOwn{margin:0}
   .ownframe{display:block;width:100%;height:676px;border:0;background:#070914;border-radius:14px}
   @media(max-width:960px){.ownframe{height:760px}}
+  .ownframe.frame-fs{position:fixed;inset:0;z-index:100000;width:100vw;height:100vh;border-radius:0}  /* respaldo iPhone: la lección ocupa toda la pantalla */
+  html.lesson-fs,html.lesson-fs body{overflow:hidden}
   .vstage{aspect-ratio:16/9;position:relative;display:grid;place-items:center;padding:38px;text-align:center;overflow:hidden;
     background:radial-gradient(circle at 50% 30%,rgba(102,116,255,.16),transparent 60%),linear-gradient(160deg,#0B0D1C,#070810)}
   .vstage .vslide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;padding:8% 9%;opacity:0;transform:translateY(14px) scale(.99);transition:opacity .5s,transform .5s}
@@ -2078,6 +2080,7 @@ window.addEventListener('message',function(e){
   else if(e.data.type==='hf-close'){ closeGame(); }                        // solo volver al curso
   else if(e.data.type==='hf-lesson-ended'){ classDone(); }                 // terminó la lección audiovisual → resalta "Continuar"
   else if(e.data.type==='hf-lesson-next'){ classToCine(flowN); }     // botón "Siguiente" del end card → modo cine (nuevo orden)
+  else if(e.data.type==='hf-lesson-fs'){ const f=document.querySelector('.ownframe'); if(f){ f.classList.toggle('frame-fs',!!e.data.on); document.documentElement.classList.toggle('lesson-fs',!!e.data.on); } }  // respaldo iPhone: expandir el iframe de la lección a toda la pantalla
 });
 function goQuiz(){ switchTab('quiz'); const q=document.getElementById('panel-quiz'); if(q)q.scrollIntoView({behavior:'smooth',block:'start'}); }
 function goReto(){ switchTab('reto'); const p=document.getElementById('panel-reto'); if(p)p.scrollIntoView({behavior:'smooth',block:'start'}); }
@@ -3212,7 +3215,7 @@ function renderPlayer(m){
     : `<button class="vtab active" data-vm="yt" onclick="vpMode(${m.n},'yt')">🎬 Video</button>`;
   const ytLink = own ? '' : `<a class="vtab vlink" href="https://youtu.be/${yt}" target="_blank" rel="noopener">Abrir en YouTube ↗</a>`;
   const firstPanel = own
-    ? `<div id="vmOwn"><iframe class="ownframe" src="${own}${own.includes('?')?'&':'?'}embed=1" title="Lección audiovisual del episodio" allow="autoplay; fullscreen" loading="lazy"></iframe></div>`
+    ? `<div id="vmOwn"><iframe class="ownframe" src="${own}${own.includes('?')?'&':'?'}embed=1" title="Lección audiovisual del episodio" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe></div>`
     : `<div id="vmYt">
       <div class="ytfacade" id="ytFacade" onclick="loadYt('${yt}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter')loadYt('${yt}')">
         <div class="vwm">Video de la clase</div>

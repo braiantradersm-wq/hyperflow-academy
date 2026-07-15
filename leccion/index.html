@@ -125,6 +125,11 @@
   .bar:hover .btrack{height:8px;transition:height .1s}
   .time{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap;min-width:76px;text-align:right}
   .cbtn.off{opacity:.42}
+  /* PANTALLA COMPLETA — el reproductor llena la pantalla (nativo en escritorio/Android; respaldo CSS en iPhone) */
+  .player:fullscreen,.player:-webkit-full-screen,.player.pfs{position:fixed;inset:0;z-index:99998;width:100vw;height:100vh;border:0;border-radius:0;box-shadow:none;background:#070914;display:flex;flex-direction:column}
+  .player:fullscreen .stage,.player:-webkit-full-screen .stage,.player.pfs .stage{flex:1;aspect-ratio:auto;height:auto;min-height:0}
+  .player:fullscreen .controls,.player:-webkit-full-screen .controls,.player.pfs .controls{padding-bottom:calc(12px + env(safe-area-inset-bottom))}
+  #fsBtn svg{width:17px;height:17px}
 
   .note{margin-top:14px;border:1px solid var(--line);border-radius:12px;background:rgba(9,11,22,.5);padding:13px 16px;font-size:12.5px;color:var(--muted-2);text-align:center}
   .note b{color:var(--muted)}
@@ -174,6 +179,7 @@
       <div class="time"><span id="tCur">0:00</span> / <span id="tTot">0:00</span></div>
       <button class="cbtn" id="mBtn" onclick="toggleMusic()" aria-label="Música de estudio" title="Música de estudio: activa">🎵</button>
       <button class="cbtn" id="vBtn" onclick="toggleVoice()" aria-label="Narración por voz" title="Narración">🗣️</button>
+      <button class="cbtn" id="fsBtn" onclick="toggleFull()" aria-label="Pantalla completa" title="Pantalla completa"><svg id="fsi" viewBox="0 0 24 24"><path d="M4 9V4h5v2H6v3H4zm0 6h2v3h3v2H4v-5zm16 0v5h-5v-2h3v-3h2zM15 6V4h5v5h-2V6h-3z"/></svg></button>
     </div>
   </div>
 
@@ -190,6 +196,29 @@
 <script>
 /* modo embebido: cuando la lección se carga dentro del curso con ?embed */
 if(/[?&]embed/.test(location.search)){document.body.classList.add('embed');}
+const EMBED = (function(){ try{ return window.self!==window.top; }catch(_){ return true; } })();
+
+/* =================== PANTALLA COMPLETA =================== */
+/* Nativo (escritorio + Android): el elemento .player escapa del iframe y llena la pantalla real.
+   iPhone/Safari no permite fullscreen en un <div> → respaldo: se expande vía CSS (y si está
+   embebido, se avisa al curso para que agrande el iframe a toda la pantalla del dispositivo). */
+let pseudoFS=false;
+function _playerEl(){ return document.querySelector('.player'); }
+function fsSupported(){ const d=document.createElement('div'); return !!(d.requestFullscreen||d.webkitRequestFullscreen); }
+function fsActive(){ return !!(document.fullscreenElement||document.webkitFullscreenElement); }
+function applyPseudo(on){ pseudoFS=on; const p=_playerEl(); if(p)p.classList.toggle('pfs',on); if(EMBED){ try{ window.parent.postMessage({type:'hf-lesson-fs',on:on},'*'); }catch(_){} } syncFsIcon(); }
+function toggleFull(){
+  const p=_playerEl(); if(!p)return;
+  if(fsSupported()){
+    if(fsActive()){ (document.exitFullscreen||document.webkitExitFullscreen).call(document); }
+    else { const rq=p.requestFullscreen||p.webkitRequestFullscreen; try{ const r=rq.call(p); if(r&&r.catch)r.catch(()=>applyPseudo(!pseudoFS)); }catch(_){ applyPseudo(!pseudoFS); } }
+  } else { applyPseudo(!pseudoFS); }   // iPhone: respaldo CSS
+}
+function syncFsIcon(){ const full=fsActive()||pseudoFS; const path=document.querySelector('#fsi path'); if(path)path.setAttribute('d', full
+  ? 'M9 4v2H6v3H4V4h5zm11 0v5h-2V6h-3V4h5zM4 15h2v3h3v2H4v-5zm16 0v5h-5v-2h3v-3h2z'   // salir de pantalla completa
+  : 'M4 9V4h5v2H6v3H4zm0 6h2v3h3v2H4v-5zm16 0v5h-5v-2h3v-3h2zM15 6V4h5v5h-2V6h-3z'); const b=document.getElementById('fsBtn'); if(b)b.classList.toggle('off',full); }
+document.addEventListener('fullscreenchange',()=>{ if(!fsActive()&&pseudoFS){pseudoFS=false;const p=_playerEl();if(p)p.classList.remove('pfs');} syncFsIcon(); });
+document.addEventListener('webkitfullscreenchange',()=>{ syncFsIcon(); });
 /* el curso (contenedor) puede pedir que la lección se detenga al cambiar de pestaña */
 window.addEventListener('message',function(e){ var d=e&&e.data; if(!d)return; if(d.type==='hf-lesson-stop'){ try{ pause(); }catch(_){} } else if(d.type==='hf-lesson-play'){ try{ if(!playing)play(); }catch(_){} } });
 /* =================== GUION DE LA LECCIÓN (data-driven) =================== */
