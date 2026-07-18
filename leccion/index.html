@@ -414,7 +414,7 @@ function pause(){ playing=false; setPP(); clearTimers(); stopSpeak(); stopBed();
 function toggle(){ playing?pause():play(); }
 let seekAt=0;   // segundos dentro de la escena a la que se salta (seek fino)
 function seekFrac(frac){ let target=frac*SUMDUR,acc=0,i=0; for(;i<SCENES.length;i++){ if(target<acc+SCENES[i].dur)break; acc+=SCENES[i].dur; } if(i>=SCENES.length)i=SCENES.length-1; seekAt=Math.max(0,target-acc); document.getElementById('ov').classList.add('hide'); document.getElementById('end').classList.remove('show'); if(!playing){ playing=true; setPP(); startBed(); } goScene(i); }
-function setPP(){ document.getElementById('ppi').setAttribute('d', playing?'M6 5h4v14H6zM14 5h4v14h-4z':'M8 5v14l11-7z'); }
+function setPP(){ const p=document.querySelector('#ppi path'); if(p)p.setAttribute('d', playing?'M6 5h4v14H6zM14 5h4v14h-4z':'M8 5v14l11-7z'); }  // el id va en el <svg>: hay que tocar el <path> interno
 function showEnd(){ document.getElementById('end').classList.add('show'); clearTimers(); stopSpeak(); stopBed(); try{ if(window.parent!==window)window.parent.postMessage({type:'hf-lesson-ended'},'*'); }catch(_){} }
 function replay(){ idx=-1; document.getElementById('end').classList.remove('show'); play(); }
 function lessonNext(){ if(window.parent!==window){ try{ window.parent.postMessage({type:'hf-lesson-next'},'*'); }catch(_){} } }  // continuar al modo interactivo
