@@ -33,7 +33,7 @@
   body.embed .player{border-radius:14px;box-shadow:none}
   body.embed .note{margin-top:12px}
 
-  .player{border:1px solid var(--line-2);border-radius:20px;overflow:hidden;background:#070914;box-shadow:0 40px 90px -50px rgba(108,123,255,.7)}
+  .player{position:relative;border:1px solid var(--line-2);border-radius:20px;overflow:hidden;background:#070914;box-shadow:0 40px 90px -50px rgba(108,123,255,.7)}
   .stage{position:relative;width:100%;aspect-ratio:16/10;min-height:380px;overflow:hidden;background:radial-gradient(700px 400px at 50% 18%,rgba(108,123,255,.13),transparent 60%),#070914}
   #bg{position:absolute;inset:0;z-index:0}
   .scene{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px 28px 82px;opacity:0;visibility:hidden;transition:opacity .5s ease}
@@ -95,7 +95,8 @@
   .myth .mx{flex:none;width:24px;height:24px;border-radius:7px;display:grid;place-items:center;background:rgba(255,122,147,.14);color:var(--rose);font-size:13px}
   .myth s{color:var(--muted-2)}.myth b{color:var(--text)}
 
-  .captions{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:14px 22px 15px;background:linear-gradient(transparent,rgba(5,6,15,.88)34%);text-align:center;pointer-events:none}
+  .captions{position:absolute;left:0;right:0;bottom:52px;z-index:3;padding:14px 22px 15px;background:linear-gradient(transparent,rgba(5,6,15,.88)34%);text-align:center;pointer-events:none;transition:bottom .28s ease}
+  .player.hidebars .captions{bottom:0}   /* barra oculta → subtítulos usan todo el espacio */
   .captions p{margin:0 auto;max-width:54ch;font-size:14.5px;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.75);min-height:20px}
 
   .overlay{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:rgba(5,6,15,.55);backdrop-filter:blur(3px);cursor:pointer;transition:opacity .4s}
@@ -115,7 +116,10 @@
   .endreplay:hover{color:var(--text);border-color:var(--indigo)}
   body:not(.embed) #lessonNextBtn{display:none}   /* "Siguiente" solo tiene sentido dentro del curso */
 
-  .controls{display:flex;align-items:center;gap:10px;padding:12px 14px;background:#0a0c1a;border-top:1px solid var(--line)}
+  /* barra flotante estilo YouTube: sobre el video, se auto-oculta al reproducir */
+  .controls{position:absolute;left:0;right:0;bottom:0;z-index:5;display:flex;align-items:center;gap:10px;padding:10px 14px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(6,8,20,.5) 24%,rgba(6,8,20,.92));border-top:0;transition:opacity .28s ease,transform .28s ease}
+  .player.hidebars .controls{opacity:0;transform:translateY(10px);pointer-events:none}
+  .player.hidebars{cursor:none}
   .cbtn{width:38px;height:38px;flex:none;border-radius:10px;border:1px solid var(--line-2);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;display:grid;place-items:center;transition:.2s}
   .cbtn:hover{border-color:var(--indigo);background:rgba(108,123,255,.12)}
   .cbtn svg{width:16px;height:16px;fill:currentColor}
@@ -409,13 +413,25 @@ function tick(){ if(playing&&idx>=0&&idx<SCENES.length){
     paintBars(idx,frac);
   } requestAnimationFrame(tick); }
 requestAnimationFrame(tick);
-function play(){ document.getElementById('end').classList.remove('show'); document.getElementById('ov').classList.add('hide'); playing=true; setPP(); startBed(); goScene((idx<0||idx>=SCENES.length)?0:idx); }
-function pause(){ playing=false; setPP(); clearTimers(); stopSpeak(); stopBed(); }
+function play(){ document.getElementById('end').classList.remove('show'); document.getElementById('ov').classList.add('hide'); playing=true; setPP(); startBed(); goScene((idx<0||idx>=SCENES.length)?0:idx); showBars(false); }
+function pause(){ playing=false; setPP(); clearTimers(); stopSpeak(); stopBed(); showBars(true); }
+
+/* AUTO-OCULTAR LA BARRA (estilo YouTube): al reproducir se esconde tras ~2.6s de
+   inactividad; reaparece al mover el mouse (PC) o tocar la pantalla (móvil). Mientras
+   está pausado/terminado, siempre visible. */
+let barTimer=null;
+function _plEl(){ return document.querySelector('.player'); }
+function showBars(persist){ const p=_plEl(); if(!p)return; p.classList.remove('hidebars'); clearTimeout(barTimer); if(!persist && playing){ barTimer=setTimeout(()=>{ if(playing)_plEl().classList.add('hidebars'); }, 2600); } }
+(function(){ const p=document.querySelector('.player'); if(!p)return;
+  ['mousemove','pointerdown','touchstart'].forEach(ev=>p.addEventListener(ev,()=>showBars(false),{passive:true}));
+  const ctr=document.querySelector('.controls');
+  if(ctr){ ctr.addEventListener('mouseenter',()=>showBars(true)); ctr.addEventListener('mouseleave',()=>showBars(false)); }
+})();
 function toggle(){ playing?pause():play(); }
 let seekAt=0;   // segundos dentro de la escena a la que se salta (seek fino)
 function seekFrac(frac){ let target=frac*SUMDUR,acc=0,i=0; for(;i<SCENES.length;i++){ if(target<acc+SCENES[i].dur)break; acc+=SCENES[i].dur; } if(i>=SCENES.length)i=SCENES.length-1; seekAt=Math.max(0,target-acc); document.getElementById('ov').classList.add('hide'); document.getElementById('end').classList.remove('show'); if(!playing){ playing=true; setPP(); startBed(); } goScene(i); }
 function setPP(){ const p=document.querySelector('#ppi path'); if(p)p.setAttribute('d', playing?'M6 5h4v14H6zM14 5h4v14h-4z':'M8 5v14l11-7z'); }  // el id va en el <svg>: hay que tocar el <path> interno
-function showEnd(){ document.getElementById('end').classList.add('show'); clearTimers(); stopSpeak(); stopBed(); try{ if(window.parent!==window)window.parent.postMessage({type:'hf-lesson-ended'},'*'); }catch(_){} }
+function showEnd(){ document.getElementById('end').classList.add('show'); clearTimers(); stopSpeak(); stopBed(); showBars(true); try{ if(window.parent!==window)window.parent.postMessage({type:'hf-lesson-ended'},'*'); }catch(_){} }
 function replay(){ idx=-1; document.getElementById('end').classList.remove('show'); play(); }
 function lessonNext(){ if(window.parent!==window){ try{ window.parent.postMessage({type:'hf-lesson-next'},'*'); }catch(_){} } }  // continuar al modo interactivo
 
