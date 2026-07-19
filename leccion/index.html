@@ -120,6 +120,12 @@
   .controls{position:absolute;left:0;right:0;bottom:0;z-index:5;display:flex;align-items:center;gap:10px;padding:10px 14px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(6,8,20,.5) 24%,rgba(6,8,20,.92));border-top:0;transition:opacity .28s ease,transform .28s ease}
   .player.hidebars .controls{opacity:0;transform:translateY(10px);pointer-events:none}
   .player.hidebars{cursor:none}
+  .stage{cursor:pointer}   /* el área de video es clickable (play/pausa), como YouTube */
+  /* flash central del icono al pausar/reanudar (feedback estilo YT) */
+  .tapflash{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(.7);z-index:4;width:74px;height:74px;border-radius:50%;background:rgba(6,8,20,.62);display:grid;place-items:center;opacity:0;pointer-events:none}
+  .tapflash svg{width:34px;height:34px;fill:#fff}
+  .tapflash.show{animation:tapf .5s ease-out}
+  @keyframes tapf{0%{opacity:.95;transform:translate(-50%,-50%) scale(.7)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.25)}}
   .cbtn{width:38px;height:38px;flex:none;border-radius:10px;border:1px solid var(--line-2);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;display:grid;place-items:center;transition:.2s}
   .cbtn:hover{border-color:var(--indigo);background:rgba(108,123,255,.12)}
   .cbtn svg{width:16px;height:16px;fill:currentColor}
@@ -162,6 +168,7 @@
       <canvas id="bg"></canvas>
       <div id="scenes"></div>
       <div class="captions"><p id="cap"></p></div>
+      <div class="tapflash" id="tapFlash"><svg viewBox="0 0 24 24"><path d=""/></svg></div>
       <div class="overlay" id="ov" onclick="play()">
         <div class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         <div class="ov-t" id="ovT">Lección</div>
@@ -427,6 +434,32 @@ function showBars(persist){ const p=_plEl(); if(!p)return; p.classList.remove('h
   const ctr=document.querySelector('.controls');
   if(ctr){ ctr.addEventListener('mouseenter',()=>showBars(true)); ctr.addEventListener('mouseleave',()=>showBars(false)); }
 })();
+
+/* =========== INTERACCIÓN ESTILO YOUTUBE sobre el video =========== */
+const IC_PLAY='M8 5v14l11-7z', IC_PAUSE='M6 5h4v14H6zM14 5h4v14h-4z';
+function flashCenter(){ const f=document.getElementById('tapFlash'); if(!f)return;
+  f.querySelector('path').setAttribute('d', playing?IC_PLAY:IC_PAUSE);   // muestra el estado NUEVO (▶ si reanudó, ⏸ si pausó)
+  f.classList.remove('show'); void f.offsetWidth; f.classList.add('show'); }
+(function(){
+  const stage=document.getElementById('stage'); if(!stage)return;
+  let clickT=null;
+  stage.addEventListener('click', e=>{
+    // no interferir con la barra, el end-card, el botón grande inicial ni ningún control
+    if(e.target.closest('.controls,.endcard,#ov,button,a,select,input')) return;
+    if(clickT){ clearTimeout(clickT); clickT=null; toggleFull(); return; }   // doble tap/click → pantalla completa
+    clickT=setTimeout(()=>{ clickT=null; toggle(); flashCenter(); }, 220);   // tap/click simple → play/pausa
+  });
+})();
+/* teclado (PC), como YouTube: espacio/K play·pausa · F pantalla completa · M silenciar voz · ←/→ escena */
+document.addEventListener('keydown', e=>{
+  if(e.target&&e.target.matches&&e.target.matches('input,select,textarea')) return;
+  const k=e.key;
+  if(k===' '||k==='k'||k==='K'){ e.preventDefault(); toggle(); flashCenter(); }
+  else if(k==='f'||k==='F'){ e.preventDefault(); toggleFull(); }
+  else if(k==='m'||k==='M'){ toggleVoice(); }
+  else if(k==='ArrowRight'){ e.preventDefault(); if(idx<SCENES.length-1)goScene(idx+1); showBars(false); }
+  else if(k==='ArrowLeft'){ e.preventDefault(); goScene(Math.max(0,idx-1)); showBars(false); }
+});
 function toggle(){ playing?pause():play(); }
 let seekAt=0;   // segundos dentro de la escena a la que se salta (seek fino)
 function seekFrac(frac){ let target=frac*SUMDUR,acc=0,i=0; for(;i<SCENES.length;i++){ if(target<acc+SCENES[i].dur)break; acc+=SCENES[i].dur; } if(i>=SCENES.length)i=SCENES.length-1; seekAt=Math.max(0,target-acc); document.getElementById('ov').classList.add('hide'); document.getElementById('end').classList.remove('show'); if(!playing){ playing=true; setPP(); startBed(); } goScene(i); }
