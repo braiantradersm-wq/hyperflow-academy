@@ -420,7 +420,12 @@ function tick(){ if(playing&&idx>=0&&idx<SCENES.length){
     paintBars(idx,frac);
   } requestAnimationFrame(tick); }
 requestAnimationFrame(tick);
-function play(){ document.getElementById('end').classList.remove('show'); document.getElementById('ov').classList.add('hide'); playing=true; setPP(); startBed(); goScene((idx<0||idx>=SCENES.length)?0:idx); showBars(false); }
+/* ¿el audio de la escena actual quedó pausado a mitad? → reanudar ahí, no reiniciar */
+function canResume(){ return voiceOn && hasLoc() && lecA && !lecA.ended && lecA.currentTime>0
+  && idx>=0 && idx<SCENES.length && lecA.src && lecA.src.indexOf(locSrc(idx))!==-1; }
+function play(){ document.getElementById('end').classList.remove('show'); document.getElementById('ov').classList.add('hide'); playing=true; setPP(); startBed(); showBars(false);
+  if(canResume()){ const p=lecA.play(); if(p&&p.catch)p.catch(()=>goScene(idx)); }   // continúa donde se pausó
+  else goScene((idx<0||idx>=SCENES.length)?0:idx); }
 function pause(){ playing=false; setPP(); clearTimers(); stopSpeak(); stopBed(); showBars(true); }
 
 /* AUTO-OCULTAR LA BARRA (estilo YouTube): al reproducir se esconde tras ~2.6s de
