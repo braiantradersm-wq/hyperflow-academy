@@ -2081,6 +2081,7 @@ window.addEventListener('message',function(e){
   else if(e.data.type==='hf-lesson-ended'){ classDone(); }                 // terminó la lección audiovisual → resalta "Continuar"
   else if(e.data.type==='hf-lesson-next'){ classToCine(flowN); }     // botón "Siguiente" del end card → modo cine (nuevo orden)
   else if(e.data.type==='hf-lesson-fs'){ const f=document.querySelector('.ownframe'); if(f){ f.classList.toggle('frame-fs',!!e.data.on); document.documentElement.classList.toggle('lesson-fs',!!e.data.on); } }  // respaldo iPhone: expandir el iframe de la lección a toda la pantalla
+  else if(e.data.type==='hf-lesson-menu'){ const f=document.querySelector('.ownframe'); if(f)f.classList.remove('frame-fs'); document.documentElement.classList.remove('lesson-fs'); openNavMenu(); }  // menú desde dentro de la lección (también en pantalla completa)
 });
 function goQuiz(){ switchTab('quiz'); const q=document.getElementById('panel-quiz'); if(q)q.scrollIntoView({behavior:'smooth',block:'start'}); }
 function goReto(){ switchTab('reto'); const p=document.getElementById('panel-reto'); if(p)p.scrollIntoView({behavior:'smooth',block:'start'}); }

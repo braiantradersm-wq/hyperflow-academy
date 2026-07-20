@@ -140,6 +140,7 @@
   .player:fullscreen .stage,.player:-webkit-full-screen .stage,.player.pfs .stage{flex:1;aspect-ratio:auto;height:auto;min-height:0}
   .player:fullscreen .controls,.player:-webkit-full-screen .controls,.player.pfs .controls{padding-bottom:calc(12px + env(safe-area-inset-bottom))}
   #fsBtn svg{width:17px;height:17px}
+  #menuBtn{font-size:18px;font-weight:700}
 
   .note{margin-top:14px;border:1px solid var(--line);border-radius:12px;background:rgba(9,11,22,.5);padding:13px 16px;font-size:12.5px;color:var(--muted-2);text-align:center}
   .note b{color:var(--muted)}
@@ -185,6 +186,7 @@
       </div>
     </div>
     <div class="controls">
+      <button class="cbtn" id="menuBtn" onclick="lessonMenu()" aria-label="Menú" title="Menú / salir" style="display:none">☰</button>
       <button class="cbtn" id="pp" onclick="toggle()" aria-label="Reproducir o pausar"><svg id="ppi" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="bar" id="bar"></div>
       <div class="time"><span id="tCur">0:00</span> / <span id="tTot">0:00</span></div>
@@ -208,6 +210,17 @@
 /* modo embebido: cuando la lección se carga dentro del curso con ?embed */
 if(/[?&]embed/.test(location.search)){document.body.classList.add('embed');}
 const EMBED = (function(){ try{ return window.self!==window.top; }catch(_){ return true; } })();
+
+/* MENÚ / SALIR desde dentro de la lección (visible también en pantalla completa, donde la barra
+   de menú del curso queda tapada). Sale de fullscreen y pide al curso abrir el menú principal. */
+function lessonMenu(){
+  const wasFs = (typeof fsActive==='function'&&fsActive()) || (typeof pseudoFS!=='undefined'&&pseudoFS);
+  try{ if(typeof fsActive==='function'&&fsActive()) (document.exitFullscreen||document.webkitExitFullscreen).call(document); }catch(_){}
+  try{ if(typeof pseudoFS!=='undefined'&&pseudoFS) applyPseudo(false); }catch(_){}
+  const send=()=>{ if(EMBED){ try{ window.parent.postMessage({type:'hf-lesson-menu'},'*'); }catch(_){} } };
+  wasFs ? setTimeout(send,180) : send();   // esperar a que salga de fullscreen para que el menú sea visible
+}
+if(EMBED){ const _mb=document.getElementById('menuBtn'); if(_mb)_mb.style.display=''; }
 
 /* =================== PANTALLA COMPLETA =================== */
 /* Nativo (escritorio + Android): el elemento .player escapa del iframe y llena la pantalla real.
