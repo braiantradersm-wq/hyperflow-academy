@@ -833,7 +833,7 @@
         <div class="card">
           <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div>
           <h3>Evaluación y certificado</h3>
-          <p>Cuestionario autocorregido en cada módulo, seguimiento de progreso y certificado de finalización verificable al completar el programa.</p>
+          <p>Cuestionario autocorregido en cada módulo, seguimiento de progreso y certificado de finalización con código único al completar el programa.</p>
         </div>
       </div>
     </div>
@@ -3471,7 +3471,7 @@ function showCertificate(){
       <div class="sig">
         <div><b>Hyperflow Academy</b>Entidad formadora</div>
         <div><b>2026</b>Año de emisión</div>
-        <div><b id="certCode">${certCode(name)}</b>Código verificable</div>
+        <div><b id="certCode">${certCode(name)}</b>Código único</div>
       </div>
     </div>
     <div style="text-align:center;margin-top:24px">
@@ -3750,7 +3750,7 @@ function openLegal(k){
 function closeLegal(){document.getElementById('legalModal').classList.remove('show');}
 document.getElementById('legalModal').addEventListener('click',e=>{if(e.target.id==='legalModal')closeLegal();});
 /* ---- CERTIFICADO: imprimir/guardar PDF ---- */
-/* Código verificable determinista: mismo nombre → mismo código (checksum base36) */
+/* Código único determinista: mismo nombre → mismo código (checksum base36) */
 function certCode(name){
   const s=(name||'').trim().toLowerCase().replace(/\s+/g,' ');
   let h=2166136261>>>0;
@@ -3790,7 +3790,7 @@ function downloadCert(){
   const y1=800;
   x.fillText('Hyperflow Academy',cx-380,y1);x.fillText(fecha,cx,y1);x.fillText(code,cx+380,y1);
   x.fillStyle='#6E739A';x.font='400 15px Georgia, serif';
-  x.fillText('Entidad formadora',cx-380,y1+28);x.fillText('Fecha de emisión',cx,y1+28);x.fillText('Código verificable',cx+380,y1+28);
+  x.fillText('Entidad formadora',cx-380,y1+28);x.fillText('Fecha de emisión',cx,y1+28);x.fillText('Código único',cx+380,y1+28);
   x.fillStyle='#6E739A';x.font='400 13px Georgia, serif';
   x.fillText('Certificación de programa profesional · no constituye un título oficial universitario · verifica el código en hyperflow-academy',cx,H-58);
   // descargar
