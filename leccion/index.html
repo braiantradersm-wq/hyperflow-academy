@@ -141,6 +141,14 @@
   .player:fullscreen .controls,.player:-webkit-full-screen .controls,.player.pfs .controls{padding-bottom:calc(12px + env(safe-area-inset-bottom))}
   #fsBtn svg{width:17px;height:17px}
   #menuBtn{font-size:18px;font-weight:700}
+  /* control de volumen estilo YouTube: altavoz + slider emergente */
+  .volwrap{position:relative;display:flex;align-items:center;flex:none}
+  .volpop{position:absolute;bottom:46px;left:50%;transform:translateX(-50%);background:#0a0c1a;border:1px solid var(--line-2);border-radius:12px;padding:13px 12px;display:none;box-shadow:0 12px 30px rgba(0,0,0,.55);z-index:8}
+  .volpop::after{content:"";position:absolute;bottom:-6px;left:50%;transform:translateX(-50%) rotate(45deg);width:11px;height:11px;background:#0a0c1a;border-right:1px solid var(--line-2);border-bottom:1px solid var(--line-2)}
+  .volwrap:hover .volpop, .volwrap.open .volpop{display:block}
+  #volRange{width:118px;height:5px;-webkit-appearance:none;appearance:none;background:var(--ink-4);border-radius:99px;outline:none;cursor:pointer;display:block}
+  #volRange::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--indigo);cursor:pointer;box-shadow:0 0 0 4px rgba(108,123,255,.22)}
+  #volRange::-moz-range-thumb{width:16px;height:16px;border:0;border-radius:50%;background:var(--indigo);cursor:pointer}
 
   .note{margin-top:14px;border:1px solid var(--line);border-radius:12px;background:rgba(9,11,22,.5);padding:13px 16px;font-size:12.5px;color:var(--muted-2);text-align:center}
   .note b{color:var(--muted)}
@@ -152,8 +160,13 @@
     .pieces{gap:8px}.piece{min-width:108px;max-width:150px;padding:11px 8px}.piece .pic{width:38px;height:38px;font-size:19px}
     .flowline .fnode{min-width:104px}.farrow{transform:rotate(90deg)}
     .captions{padding:12px 15px}.captions p{font-size:13.5px}
-    .time{min-width:66px}
+    .time{min-width:auto;font-size:11px}
+    .controls{gap:5px;padding-left:10px;padding-right:10px}
+    .cbtn{width:34px;height:34px}
+    #volRange{width:104px}
   }
+  @media(max-width:380px){ .cbtn{width:31px;height:31px} .controls{gap:4px;padding-left:8px;padding-right:8px} .time{font-size:10.5px} }
+  @media(max-width:340px){ .time{display:none} }
   @media (prefers-reduced-motion: reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
 </style>
 
@@ -192,6 +205,10 @@
       <div class="time"><span id="tCur">0:00</span> / <span id="tTot">0:00</span></div>
       <button class="cbtn" id="mBtn" onclick="toggleMusic()" aria-label="Música de estudio" title="Música de estudio: activa">🎵</button>
       <button class="cbtn" id="vBtn" onclick="toggleVoice()" aria-label="Narración por voz" title="Narración">🗣️</button>
+      <div class="volwrap" id="volwrap">
+        <button class="cbtn" id="volBtn" onclick="volToggle()" aria-label="Volumen" title="Volumen">🔊</button>
+        <div class="volpop"><input type="range" id="volRange" min="0" max="100" value="100" oninput="setVol(this.value/100)" aria-label="Nivel de volumen"></div>
+      </div>
       <button class="cbtn" id="fsBtn" onclick="toggleFull()" aria-label="Pantalla completa" title="Pantalla completa"><svg id="fsi" viewBox="0 0 24 24"><path d="M4 9V4h5v2H6v3H4zm0 6h2v3h3v2H4v-5zm16 0v5h-5v-2h3v-3h2zM15 6V4h5v5h-2V6h-3z"/></svg></button>
     </div>
   </div>
@@ -210,6 +227,16 @@
 /* modo embebido: cuando la lección se carga dentro del curso con ?embed */
 if(/[?&]embed/.test(location.search)){document.body.classList.add('embed');}
 const EMBED = (function(){ try{ return window.self!==window.top; }catch(_){ return true; } })();
+
+/* ===== VOLUMEN (estilo YouTube): regula voz MP3 + música + TTS a la vez ===== */
+let vol=1; try{ const _v=localStorage.getItem('hf_vol'); if(_v!==null)vol=Math.max(0,Math.min(1,parseFloat(_v))); }catch(_){}
+function volIcon(){ const b=document.getElementById('volBtn'); if(!b)return; b.textContent = vol===0?'🔇':(vol<0.34?'🔈':(vol<0.67?'🔉':'🔊')); b.classList.toggle('off',vol===0); }
+function applyVolume(){ try{ if(lecA)lecA.volume=vol; }catch(_){} try{ if(master)master.gain.value=vol*0.4; }catch(_){} volIcon(); }
+function setVol(v){ vol=Math.max(0,Math.min(1,v)); try{ localStorage.setItem('hf_vol',vol); }catch(_){} applyVolume(); const r=document.getElementById('volRange'); if(r&&Math.abs(r.value/100-vol)>0.005)r.value=Math.round(vol*100); }
+function volToggle(){ const w=document.getElementById('volwrap'); if(w)w.classList.toggle('open'); }   // móvil: abre/cierra el slider (en PC aparece al pasar el mouse)
+(function(){ const r=document.getElementById('volRange'); if(r)r.value=Math.round(vol*100); volIcon(); })();
+/* cerrar el popup del volumen al tocar fuera (móvil) */
+document.addEventListener('pointerdown',e=>{ const w=document.getElementById('volwrap'); if(w&&w.classList.contains('open')&&!w.contains(e.target))w.classList.remove('open'); });
 
 /* MENÚ / SALIR desde dentro de la lección (visible también en pantalla completa, donde la barra
    de menú del curso queda tapada). Sale de fullscreen y pide al curso abrir el menú principal. */
@@ -290,7 +317,7 @@ document.getElementById('tTot').textContent='≈ '+fmt(SUMDUR);
 
 /* audio transición */
 let AC=null,master=null,verb=null,soundOn=true;
-function initAudio(){ if(AC)return; try{ AC=new(window.AudioContext||window.webkitAudioContext)(); master=AC.createGain(); master.gain.value=.4; master.connect(AC.destination);
+function initAudio(){ if(AC)return; try{ AC=new(window.AudioContext||window.webkitAudioContext)(); master=AC.createGain(); master.gain.value=vol*.4; master.connect(AC.destination);
   verb=AC.createConvolver(); const L=AC.sampleRate*1.2,b=AC.createBuffer(2,L,AC.sampleRate); for(let c=0;c<2;c++){const d=b.getChannelData(c);for(let k=0;k<L;k++)d[k]=(Math.random()*2-1)*Math.pow(1-k/L,2.8);} verb.buffer=b; const vg=AC.createGain(); vg.gain.value=.16; verb.connect(vg); vg.connect(master);
 }catch(e){AC=null;} }
 function chime(){ if(!AC||!soundOn)return; const tt=AC.currentTime; [659.25,987.77].forEach((f,i)=>{ const o=AC.createOscillator(),g=AC.createGain(); o.type='sine'; o.frequency.value=f; g.gain.setValueAtTime(0,tt+i*.05); g.gain.linearRampToValueAtTime(.075,tt+i*.05+.02); g.gain.exponentialRampToValueAtTime(.0006,tt+i*.05+.5); o.connect(g); g.connect(master); g.connect(verb); o.start(tt+i*.05); o.stop(tt+i*.05+.6); }); }
@@ -312,7 +339,7 @@ function toggleMusic(){ musicOn=!musicOn; const b=document.getElementById('mBtn'
 /* voz — LOCUTOR es-MX pre-generado (Jorge). TTS del navegador solo de respaldo. */
 let voiceOn=true, esVoice=null;
 let lecA=null, locOff=false;                          // locutor MP3 es-MX
-function lecAudioEl(){ if(!lecA){ lecA=new Audio(); lecA.preload='auto'; } return lecA; }
+function lecAudioEl(){ if(!lecA){ lecA=new Audio(); lecA.preload='auto'; lecA.volume=vol; } return lecA; }
 function locSrc(i){ return 'audio/ep'+EP+'/'+i+'.mp3'; }        // 16 clips es-MX-JorgeNeural
 function hasLoc(){ return !locOff; }                   // se apaga solo si un clip falla al cargar
 const MALE=/(jorge|diego|pablo|ra[uú]l|carlos|miguel|juan|jos[eé]|fernando|ricardo|enrique|gonzalo|andr[eé]s|crist[oó]bal|male|hombre|masculino)/i;
@@ -351,7 +378,7 @@ function updateVoiceHint(){ const h=document.getElementById('voiceHint'); if(!h)
 function setVoiceByIndex(ix){ if(!window.__esV)return; esVoice=window.__esV[+ix]||esVoice; try{ localStorage.setItem('hf_voice',esVoice.name); }catch(e){} updateVoiceHint(); if('speechSynthesis'in window){ speechSynthesis.cancel(); try{ speechSynthesis.speak(mkUtter('Así sonará la narración de la lección.')); }catch(e){} } }
 if('speechSynthesis'in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
 function showVoiceFallback(){ const n=document.getElementById('locNote'); if(n)n.innerHTML='🎙️ Narración con voz de IA en <b>español de México</b>.'; const fb=document.getElementById('voiceFallback'); if(fb)fb.style.display='inline-flex'; }
-function mkUtter(txt){ const u=new SpeechSynthesisUtterance(txt); if(esVoice)u.voice=esVoice; u.lang='es-MX'; u.rate=.96; u.pitch=1; return u; }  // respaldo: fuerza es-MX
+function mkUtter(txt){ const u=new SpeechSynthesisUtterance(txt); if(esVoice)u.voice=esVoice; u.lang='es-MX'; u.rate=.96; u.pitch=1; u.volume=vol; return u; }  // respaldo: fuerza es-MX
 function stopSpeak(){ if('speechSynthesis'in window)speechSynthesis.cancel(); if(lecA){try{lecA.pause();}catch(e){}} }
 function toggleVoice(){ voiceOn=!voiceOn; document.getElementById('vBtn').classList.toggle('off',!voiceOn); stopSpeak(); if(playing)goScene(idx); }
 
