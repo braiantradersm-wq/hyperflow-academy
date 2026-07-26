@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#090B16">
+</head>
+<body>
+<title>Episodio 1 · Su primer flujo — Hyperflow Academy</title>
+<style>
+  :root{
+    --ink:#090B16; --ink-2:#10132A; --ink-3:#181C3A; --ink-4:#232852;
+    --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.16);
+    --text:#EDEEF9; --muted:#A6ABD1; --muted-2:#6B7099;
+    --indigo:#6C7BFF; --indigo-soft:#8b97ff; --cyan:#54D3F5; --gold:#F5C451; --green:#3FDBA0; --rose:#FF7A93;
+    --serif:'Iowan Old Style','Palatino Linotype',Palatino,'Book Antiqua',Georgia,serif;
+    --sans:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,'SF Mono','Cascadia Code','Segoe UI Mono',Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--ink);color:var(--text);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  #bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+  .veil{position:fixed;inset:0;z-index:0;pointer-events:none;background:
+    radial-gradient(1100px 640px at 50% -8%, rgba(108,123,255,.20), transparent 60%),
+    radial-gradient(820px 480px at 92% 16%, rgba(84,211,245,.08), transparent 55%)}
+  .wrap{max-width:720px;margin:0 auto;padding:0 20px;position:relative;z-index:1}
+  .mono{font-family:var(--mono)}
+  ::selection{background:rgba(108,123,255,.35)}
+
+  /* ---------- INTRO ---------- */
+  #intro{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(900px 620px at 50% 42%, rgba(108,123,255,.24), transparent 60%), var(--ink);
+    transition:opacity 1s ease, visibility 1s}
+  #intro.gone{opacity:0;visibility:hidden;pointer-events:none}
+  .intro-in{text-align:center;padding:0 26px;max-width:580px}
+  .kicker{font-family:var(--mono);letter-spacing:.42em;text-transform:uppercase;font-size:11px;color:var(--cyan);opacity:0;animation:rise .9s .3s forwards}
+  .intro-title{font-family:var(--serif);font-weight:600;font-size:clamp(36px,9.5vw,64px);line-height:1.02;margin:20px 0 16px;text-wrap:balance;opacity:0;animation:rise 1.1s .6s forwards}
+  .intro-sub{color:var(--muted);font-size:15.5px;opacity:0;animation:rise 1.1s 1s forwards;max-width:44ch;margin:0 auto}
+  .intro-btn{margin-top:36px;opacity:0;animation:rise 1.1s 1.5s forwards}
+  .intro-hint{margin-top:16px;font-size:12px;color:var(--muted-2);opacity:0;animation:rise 1.1s 1.9s forwards}
+  @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+  /* ---------- TOPBAR + CHAPTERS ---------- */
+  .topbar{position:sticky;top:0;z-index:30;backdrop-filter:blur(16px);background:rgba(9,11,22,.74);border-bottom:1px solid var(--line)}
+  .topbar .wrap{display:flex;align-items:center;gap:12px;height:56px}
+  .brand{font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+  .brand b{color:var(--text);font-weight:600}
+  .tb-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+  .xp-pill{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:12px;color:var(--gold);border:1px solid rgba(245,196,81,.28);background:rgba(245,196,81,.06);padding:5px 11px;border-radius:999px}
+  .icbtn{width:34px;height:34px;border-radius:10px;border:1px solid var(--line-2);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;display:grid;place-items:center;font-size:15px;transition:background .2s,border-color .2s,transform .12s}
+  .icbtn:hover{border-color:var(--indigo);background:rgba(108,123,255,.12)}
+  .icbtn.off{opacity:.45}
+  .chapbar{position:sticky;top:56px;z-index:29;background:rgba(9,11,22,.6);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .chapbar .wrap{display:flex;gap:6px;height:44px;align-items:center;overflow-x:auto;scrollbar-width:none}
+  .chapbar .wrap::-webkit-scrollbar{display:none}
+  .chip-ch{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2);border:1px solid transparent;padding:5px 10px;border-radius:999px;white-space:nowrap;transition:.25s;text-decoration:none}
+  .chip-ch.on{color:var(--cyan);border-color:rgba(84,211,245,.3);background:rgba(84,211,245,.06)}
+
+  .hero{padding:52px 0 8px;scroll-margin-top:106px}
+  .eyebrow{font-family:var(--mono);letter-spacing:.32em;text-transform:uppercase;font-size:11px;color:var(--cyan)}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(31px,7vw,48px);line-height:1.06;margin:14px 0 12px;text-wrap:balance}
+  .lead{color:var(--muted);font-size:clamp(16px,2.4vw,18px);max-width:56ch}
+  .lead b{color:var(--text)}
+
+  .sec{padding:36px 0;scroll-margin-top:110px}
+  .sec-label{font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--muted-2);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+  .sec-label::after{content:"";flex:1;height:1px;background:var(--line)}
+  h2{font-family:var(--serif);font-weight:600;font-size:clamp(23px,4.5vw,31px);line-height:1.1;margin:0 0 10px;text-wrap:balance}
+
+  /* ---------- BUILDER ---------- */
+  .builder{border:1px solid var(--line-2);border-radius:22px;background:linear-gradient(180deg,rgba(24,28,58,.72),rgba(16,19,42,.72));padding:20px 16px 18px;position:relative;overflow:hidden}
+  .builder::before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);background-size:28px 28px;-webkit-mask:radial-gradient(440px 320px at 50% 26%,#000,transparent 78%);mask:radial-gradient(440px 320px at 50% 26%,#000,transparent 78%);pointer-events:none}
+  .builder-head{display:flex;align-items:center;gap:8px;position:relative}
+  .dot{width:11px;height:11px;border-radius:50%}
+  .dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g{background:#28c840}
+  .builder-name{margin-left:8px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .flow{position:relative;padding:16px 4px 2px;display:flex;flex-direction:column;gap:32px}
+  .node{position:relative;display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:16px;background:rgba(9,11,22,.6);padding:15px 16px;opacity:.34;filter:saturate(.4);transition:opacity .55s ease,filter .55s,border-color .55s,box-shadow .55s}
+  .node .ic{flex:none;width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:var(--ink-3);border:1px solid var(--line-2);transition:.5s}
+  .node .nt{font-weight:650;font-size:15.5px}
+  .node .ns{color:var(--muted);font-size:12.5px;margin-top:2px}
+  .node .tag{margin-left:auto;font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted-2);border:1px solid var(--line);border-radius:999px;padding:3px 8px;white-space:nowrap;transition:.5s}
+  .node.on{opacity:1;filter:none;border-color:rgba(108,123,255,.6);box-shadow:0 0 0 1px rgba(108,123,255,.35),0 16px 46px -20px rgba(108,123,255,.9)}
+  .node.on .ic{background:linear-gradient(160deg,rgba(108,123,255,.4),rgba(84,211,245,.2));border-color:rgba(108,123,255,.55);transform:scale(1.04)}
+  .node.done{opacity:1;filter:none;border-color:rgba(63,219,160,.28)}
+  .node.done .tag{color:var(--green);border-color:rgba(63,219,160,.32)}
+  .node.done .ic{background:rgba(63,219,160,.1);border-color:rgba(63,219,160,.3)}
+  .connectors{position:absolute;inset:0;pointer-events:none;z-index:0}
+  .flow{z-index:1}
+  .cpath{fill:none;stroke:var(--line-2);stroke-width:2.4}
+  .cpath.lit{stroke:url(#grad);stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:draw .5s ease forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  .comet{r:5;fill:var(--cyan);opacity:0;filter:drop-shadow(0 0 6px var(--cyan))}
+
+  .narr{margin-top:16px;border-top:1px solid var(--line);padding-top:15px;min-height:78px}
+  .narr .step-n{font-family:var(--mono);font-size:11px;color:var(--indigo-soft);letter-spacing:.15em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+  .spk{width:7px;height:7px;border-radius:50%;background:var(--muted-2)}
+  .spk.live{background:var(--cyan);animation:pulse 1s infinite}
+  @keyframes pulse{0%,100%{opacity:.4;transform:scale(.8)}50%{opacity:1;transform:scale(1.3)}}
+  .narr p{margin:7px 0 0;font-size:15.5px;color:var(--text)}
+  .narr.swap{animation:swap .5s ease}
+  @keyframes swap{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .ctrls{display:flex;align-items:center;gap:10px;margin-top:18px;flex-wrap:wrap}
+  .prog{flex:1;min-width:110px;height:5px;border-radius:99px;background:var(--ink-4);overflow:hidden}
+  .prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--indigo),var(--cyan));transition:width .5s ease}
+
+  /* ---------- BUTTONS ---------- */
+  .btn{font-family:var(--sans);font-weight:650;font-size:14.5px;border:0;border-radius:12px;padding:12px 20px;cursor:pointer;transition:transform .15s,box-shadow .25s,background .25s,filter .2s;color:#fff}
+  .btn:active{transform:translateY(1px) scale(.99)}
+  .btn-primary{background:linear-gradient(160deg,var(--indigo),#5563e6);box-shadow:0 12px 30px -12px rgba(108,123,255,.9)}
+  .btn-primary:hover{filter:brightness(1.08)}
+  .btn-icon{background:rgba(255,255,255,.05);color:var(--text);border:1px solid var(--line-2);padding:11px 15px}
+  .btn-icon:hover{border-color:var(--indigo)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+
+  /* ---------- CHALLENGE ---------- */
+  .chal{border:1px solid var(--line-2);border-radius:20px;background:rgba(16,19,42,.62);padding:22px 18px}
+  .slots{display:flex;flex-direction:column;gap:10px;margin:16px 0}
+  .slot{display:flex;align-items:center;gap:12px;border:1px dashed var(--line-2);border-radius:14px;padding:12px 14px;min-height:58px;color:var(--muted-2);font-family:var(--mono);font-size:12px;transition:.3s}
+  .slot .num{width:26px;height:26px;border-radius:50%;background:var(--ink-3);display:grid;place-items:center;color:var(--muted);font-size:12px;flex:none}
+  .slot.filled{border-style:solid;border-color:var(--line);color:var(--text);font-family:var(--sans);cursor:pointer}
+  .slot.ok{border-color:rgba(63,219,160,.5);background:rgba(63,219,160,.07)}
+  .slot.bad{border-color:rgba(255,122,147,.55);background:rgba(255,122,147,.08);animation:shake .4s}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .slot .mini{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--ink-3);border:1px solid var(--line);font-size:16px;flex:none}
+  .bank{display:flex;flex-wrap:wrap;gap:9px}
+  .cchip{display:flex;align-items:center;gap:9px;border:1px solid var(--line-2);background:var(--ink-3);border-radius:12px;padding:10px 13px;cursor:pointer;font-size:13.5px;font-weight:600;transition:transform .12s,border-color .2s,opacity .3s}
+  .cchip:hover{border-color:var(--indigo);transform:translateY(-2px)}
+  .cchip:active{transform:scale(.97)}
+  .cchip.used{opacity:.24;pointer-events:none}
+  .cchip .mini{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--ink-4);font-size:15px}
+  .feedback{margin-top:14px;font-size:14.5px;min-height:22px}
+  .feedback.win{color:var(--green)}.feedback.lose{color:var(--rose)}
+
+  /* ---------- SEAL ---------- */
+  .seal-card{border:1px solid rgba(245,196,81,.35);background:linear-gradient(160deg,rgba(245,196,81,.09),rgba(16,19,42,.65));border-radius:20px;padding:26px 22px;text-align:center;margin-top:18px;display:none}
+  .seal-card.show{display:block;animation:swap .6s}
+  .seal-medal{font-size:48px;filter:drop-shadow(0 6px 18px rgba(245,196,81,.5))}
+  .seal-card h3{font-family:var(--serif);font-size:23px;margin:8px 0 4px}
+  .seal-card p{color:var(--muted);font-size:14px;margin:0 auto 14px;max-width:46ch}
+  .seal-in{display:flex;gap:8px;max-width:340px;margin:0 auto 12px}
+  .seal-in input{flex:1;min-width:0;background:var(--ink-2);border:1px solid var(--line-2);border-radius:10px;padding:10px 13px;color:var(--text);font-size:14px;font-family:var(--sans)}
+  .seal-in input:focus{outline:none;border-color:var(--indigo)}
+
+  /* ---------- CLOSE ---------- */
+  .close-blk{border-top:1px solid var(--line);margin-top:8px;padding:32px 0 8px}
+  .takeaways{display:flex;flex-direction:column;gap:12px;margin:18px 0}
+  .take{display:flex;gap:13px;align-items:flex-start}
+  .take .k{flex:none;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--ink-3);border:1px solid var(--line-2);color:var(--cyan);font-family:var(--mono);font-size:13px}
+  .take b{font-weight:650}.take span{color:var(--muted);font-size:14.5px}
+  .honest{border:1px solid var(--line);border-radius:14px;background:rgba(9,11,22,.5);padding:16px 18px;font-size:13.5px;color:var(--muted);margin-top:10px}
+  .honest b{color:var(--text)}
+  footer{padding:32px 0 64px;color:var(--muted-2);font-size:12px;font-family:var(--mono);text-align:center;letter-spacing:.05em}
+  #confetti{position:fixed;inset:0;z-index:55;pointer-events:none;display:none}
+
+  @media (prefers-reduced-motion: reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+</style>
+
+<canvas id="bg"></canvas>
+<div class="veil"></div>
+<canvas id="confetti"></canvas>
+
+<!-- ===== INTRO ===== -->
+<div id="intro">
+  <div class="intro-in">
+    <div class="kicker">Temporada 1 · El Despertar</div>
+    <div class="intro-title">Episodio 1<br>Su primer flujo</div>
+    <div class="intro-sub">De un trabajo repetitivo a un sistema que lo hace solo. Sin humo: usted lo verá construirse, paso a paso.</div>
+    <div class="intro-btn"><button class="btn btn-primary" onclick="startEp()">▶ Comenzar el episodio</button></div>
+    <div class="intro-hint">Con sonido. Puede silenciarlo cuando quiera.</div>
+  </div>
+</div>
+
+<!-- ===== SHELL ===== -->
+<div class="topbar"><div class="wrap">
+  <span class="brand"><b>HYPERFLOW</b> · EP01</span>
+  <div class="tb-right">
+    <span class="xp-pill">✦ <span id="xp">0</span> XP</span>
+    <button class="icbtn" id="voiceBtn" onclick="toggleVoice()" title="Narración por voz" aria-label="Activar narración por voz">🗣️</button>
+    <button class="icbtn" id="soundBtn" onclick="toggleSound()" title="Sonido" aria-label="Silenciar o activar sonido">🔊</button>
+  </div>
+</div></div>
+<div class="chapbar"><div class="wrap" id="chapbar">
+  <a class="chip-ch on" href="#c-hero" data-t="hero">01 · Enganche</a>
+  <a class="chip-ch" href="#c-build" data-t="build">02 · Constructor</a>
+  <a class="chip-ch" href="#c-chal" data-t="chal">03 · Práctica</a>
+  <a class="chip-ch" href="#c-close" data-t="close">04 · Cierre</a>
+</div></div>
+
+<header class="hero" id="c-hero"><div class="wrap">
+  <div class="eyebrow">Aprender haciendo</div>
+  <h1>Todos los lunes, alguien pierde media hora en lo mismo.</h1>
+  <p class="lead">Abre la planilla, resume los números, escribe el correo, lo envía. Media hora, cada semana, para siempre. En este episodio va a ver cómo eso ocurre <b>solo</b> — y por qué no es magia, sino criterio bien conectado.</p>
+</div></header>
+
+<!-- ===== BUILDER ===== -->
+<section class="sec" id="c-build"><div class="wrap">
+  <div class="sec-label">El constructor en vivo</div>
+  <h2>Mire cómo se arma el flujo, paso a paso.</h2>
+  <p class="lead" style="margin-bottom:20px">Esto reemplaza al típico video: en vez de mirar a otra persona, el sistema se construye delante de usted. Avance a su ritmo.</p>
+
+  <div class="builder">
+    <div class="builder-head">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span class="builder-name">reporte-semanal.flow</span>
+    </div>
+    <div style="position:relative">
+      <svg class="connectors" id="conn" preserveAspectRatio="none">
+        <defs><linearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#6C7BFF"/><stop offset="1" stop-color="#54D3F5"/>
+        </linearGradient></defs>
+      </svg>
+      <div class="flow" id="flow"></div>
+    </div>
+
+    <div class="narr" id="narr">
+      <div class="step-n" id="stepN"><span class="spk" id="spk"></span><span id="stepLbl">Paso 0 · Listo para empezar</span></div>
+      <p id="narrText">Pulse “Construir” y observe. Cada paso se conecta con el anterior; al final, un dato recorre el flujo de punta a punta.</p>
+    </div>
+
+    <div class="ctrls">
+      <button class="btn btn-primary" id="nextBtn" onclick="stepFwd()">Construir ▸</button>
+      <button class="btn-icon btn" id="autoBtn" onclick="toggleAuto()">⏵ Auto</button>
+      <button class="btn-icon btn" onclick="resetFlow()" title="Reiniciar">↺</button>
+      <div class="prog"><i id="prog"></i></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ===== CHALLENGE ===== -->
+<section class="sec" id="c-chal"><div class="wrap">
+  <div class="sec-label">Ahora usted</div>
+  <h2>Ordene los cuatro pasos del flujo.</h2>
+  <p class="lead">Todo flujo sigue la misma lógica: un <b>detonante</b>, unos pasos en orden, un resultado. Reconstrúyalo tocando los pasos en el orden correcto.</p>
+
+  <div class="chal" style="margin-top:18px">
+    <div class="slots" id="slots"></div>
+    <div class="bank" id="bank"></div>
+    <div class="feedback" id="fb"></div>
+
+    <div class="seal-card" id="sealCard">
+      <div class="seal-medal">🏅</div>
+      <h3>Primer flujo, diseñado.</h3>
+      <p>Acaba de ordenar la lógica de una automatización real. Lleve su sello del Episodio 1.</p>
+      <div class="seal-in">
+        <input id="sealName" maxlength="34" placeholder="Su nombre (para el sello)" oninput="drawSeal()">
+        <button class="btn btn-primary" onclick="downloadSeal()">Descargar</button>
+      </div>
+      <canvas id="sealPrev" width="600" height="380" style="width:100%;max-width:360px;border-radius:12px;border:1px solid var(--line)"></canvas>
+    </div>
+  </div>
+</div></section>
+
+<!-- ===== CLOSE ===== -->
+<section class="sec" id="c-close"><div class="wrap close-blk">
+  <div class="sec-label">Lo que se lleva</div>
+  <h2>Ya sabe leer y diseñar un flujo.</h2>
+  <div class="takeaways">
+    <div class="take"><span class="k">1</span><span><b>Todo se dispara con un detonante.</b> Una hora, un correo que llega, un formulario enviado. Sin detonante no hay automatización.</span></div>
+    <div class="take"><span class="k">2</span><span><b>Los datos ya viven en algún lado.</b> No los cree de nuevo: el flujo va a buscarlos donde están.</span></div>
+    <div class="take"><span class="k">3</span><span><b>La IA aporta criterio, no relleno.</b> Resume, clasifica, redacta — sobre datos reales, no inventados.</span></div>
+    <div class="take"><span class="k">4</span><span><b>El resultado se entrega solo.</b> Un correo, un mensaje, una fila nueva. Usted no vuelve a tocarlo.</span></div>
+  </div>
+  <div class="honest"><b>Sin promesas mágicas.</b> Esto no lo vuelve experto en un día ni le garantiza resultados. Le da una forma de pensar y una competencia aplicable ya. Lo que haga con ella depende de usted. Lo único que le garantizamos es que hicimos el trabajo lo mejor posible.</div>
+</div></section>
+
+<footer>PILOTO DE FORMATO · HYPERFLOW ACADEMY · CONTENIDO 100% PROPIO — SIN VIDEOS DE TERCEROS</footer>
+
+<script>
+/* ================= DATOS ================= */
+const NODES = [
+  {ic:'⏰', nt:'Cada lunes, 9:00', ns:'El flujo despierta solo. Nadie aprieta nada.', tag:'Detonante', step:'Paso 1 · El detonante',
+   narr:'Primero, el disparador. No hace falta que nadie recuerde hacerlo: el flujo se activa solo, cada lunes a las 9 en punto.'},
+  {ic:'📊', nt:'Leer la planilla', ns:'Toma las ventas de la semana tal como están.', tag:'Datos', step:'Paso 2 · Los datos',
+   narr:'Segundo, va a buscar los datos donde ya viven, su planilla, y los lee tal cual. No hay que copiar ni pegar nada.'},
+  {ic:'🤖', nt:'IA: resumir en 3 líneas', ns:'Convierte los números en un resumen claro.', tag:'Criterio', step:'Paso 3 · La IA',
+   narr:'Tercero, entra la inteligencia artificial. No inventa: toma esos números y los resume en tres líneas claras, en el tono que usted defina.'},
+  {ic:'📧', nt:'Enviar el correo al equipo', ns:'Sale firmado y listo, sin intervención.', tag:'Resultado', step:'Paso 4 · El resultado',
+   narr:'Cuarto, lo entrega. El correo sale al equipo con el resumen dentro. Usted no tocó nada, y ya está hecho.'}
+];
+const CLOSE = {step:'Flujo completo', narr:'Eso es una automatización: un detonante, unos pasos en orden, un resultado. Lo que acaba de ver no es magia; es criterio bien conectado. Ahora hágalo usted.'};
+
+/* ================= AUDIO PREMIUM (WebAudio) ================= */
+let AC=null, master=null, verb=null, soundOn=true;
+function initAudio(){
+  if(AC) return;
+  try{
+    AC = new (window.AudioContext||window.webkitAudioContext)();
+    master = AC.createGain(); master.gain.value = .5; master.connect(AC.destination);
+    // reverb sutil (impulse sintético)
+    verb = AC.createConvolver();
+    const len = AC.sampleRate*1.4, buf = AC.createBuffer(2,len,AC.sampleRate);
+    for(let ch=0;ch<2;ch++){ const d=buf.getChannelData(ch); for(let i=0;i<len;i++){ d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.6);} }
+    verb.buffer = buf;
+    const vg = AC.createGain(); vg.gain.value=.22; verb.connect(vg); vg.connect(master);
+    verb._in = vg; // no usado; conectaremos voces a verb directamente
+  }catch(e){ AC=null; }
+}
+function tone(freq, t0, dur, type, peak){
+  const o=AC.createOscillator(), g=AC.createGain(), lp=AC.createBiquadFilter();
+  o.type=type||'sine'; o.frequency.value=freq; o.detune.value=(Math.random()*8-4);
+  lp.type='lowpass'; lp.frequency.value=2600;
+  g.gain.setValueAtTime(0,t0);
+  g.gain.linearRampToValueAtTime(peak||.16, t0+.012);
+  g.gain.exponentialRampToValueAtTime(.0007, t0+dur);
+  o.connect(lp); lp.connect(g); g.connect(master); g.connect(verb);
+  o.start(t0); o.stop(t0+dur+.05);
+}
+function sfx(name){
+  if(!AC||!soundOn) return;
+  const t=AC.currentTime;
+  if(name==='tick'){ tone(523.25,t,.14,'sine',.10); }
+  else if(name==='place'){ tone(587.33,t,.16,'triangle',.13); tone(880,t+.02,.14,'sine',.06); }
+  else if(name==='connect'){ tone(659.25,t,.22,'sine',.13); tone(987.77,t+.06,.26,'sine',.09); }
+  else if(name==='step'){ tone(440,t,.2,'sine',.12); tone(660,t+.04,.22,'sine',.07); }
+  else if(name==='error'){ tone(311.13,t,.22,'triangle',.12); tone(233.08,t+.08,.28,'sine',.09); }
+  else if(name==='win'){ [523.25,659.25,783.99,1046.5].forEach((f,i)=>tone(f,t+i*.11,.5,'sine',.15)); tone(1567.98,t+.44,.6,'sine',.08); }
+  else if(name==='enter'){ tone(392,t,.5,'sine',.10); tone(587.33,t+.08,.6,'sine',.08); tone(783.99,t+.16,.7,'sine',.06); }
+}
+function toggleSound(){ soundOn=!soundOn; document.getElementById('soundBtn').textContent=soundOn?'🔊':'🔇'; document.getElementById('soundBtn').classList.toggle('off',!soundOn); if(soundOn){initAudio(); if(AC&&AC.state==='suspended')AC.resume();} }
+
+/* ================= VOZ (opcional, demo) ================= */
+let voiceOn=false, esVoice=null;
+function pickVoice(){ const vs=speechSynthesis.getVoices(); const es=vs.filter(v=>/^es/i.test(v.lang));
+  const score=v=>{ let s=0; const id=(v.lang+' '+v.name).toLowerCase();
+    if(/es-mx|es-419|m[eé]xic/.test(id))s+=5000;          // PRIORIDAD: español de México
+    if(/es-es|spain|espa[nñ]a/.test(id))s-=3000;          // evitar España
+    if(/natural|neural|online|premium|enhanced/.test(id))s+=800;
+    if(/jorge|pablo|diego|carlos|juan|enrique|male|hombre/.test(id))s+=200; return s; };
+  esVoice = (es.length?es:vs).sort((a,b)=>score(b)-score(a))[0] || null; }
+if('speechSynthesis' in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
+function speak(txt){
+  if(!voiceOn || !('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(txt); if(esVoice)u.voice=esVoice; u.lang='es-MX'; u.rate=1; u.pitch=1;   // siempre es-MX
+  const spk=document.getElementById('spk'); spk.classList.add('live');
+  u.onend=()=>spk.classList.remove('live');
+  speechSynthesis.speak(u);
+}
+function toggleVoice(){ voiceOn=!voiceOn; const b=document.getElementById('voiceBtn'); b.classList.toggle('off',!voiceOn); if(!voiceOn&&'speechSynthesis'in window)speechSynthesis.cancel(); else speak('Narración activada. En el curso, esta voz es una locución profesional.'); }
+
+/* ================= CONSTRUCTOR ================= */
+let cur=0, auto=false, autoT=null, xp=0;
+const flow=document.getElementById('flow'), conn=document.getElementById('conn');
+const prog=document.getElementById('prog'), stepLbl=document.getElementById('stepLbl'), narrText=document.getElementById('narrText'), narrBox=document.getElementById('narr'), nextBtn=document.getElementById('nextBtn');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function buildDOM(){
+  flow.innerHTML='';
+  NODES.forEach((n,i)=>{
+    const d=document.createElement('div'); d.className='node'; d.id='node'+i;
+    d.innerHTML=`<div class="ic">${n.ic}</div><div class="tx"><div class="nt">${n.nt}</div><div class="ns">${n.ns}</div></div><span class="tag">${n.tag}</span>`;
+    flow.appendChild(d);
+  });
+  requestAnimationFrame(drawConnectors);
+}
+function drawConnectors(){
+  const box=flow.getBoundingClientRect();
+  conn.setAttribute('width',box.width); conn.setAttribute('height',box.height);
+  conn.style.width=box.width+'px'; conn.style.height=box.height+'px';
+  [...conn.querySelectorAll('path,circle')].forEach(e=>e.remove());
+  const ic0=document.querySelector('#node0 .ic').getBoundingClientRect();
+  const x=Math.round(ic0.left-box.left+ic0.width/2);
+  for(let i=0;i<NODES.length-1;i++){
+    const a=document.getElementById('node'+i).getBoundingClientRect();
+    const b=document.getElementById('node'+(i+1)).getBoundingClientRect();
+    const y1=a.bottom-box.top-1, y2=b.top-box.top+1;
+    const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d',`M ${x} ${y1} L ${x} ${y2}`);
+    p.setAttribute('class','cpath'); p.id='cpath'+i;
+    p.style.setProperty('--len', (y2-y1)+'px');
+    conn.appendChild(p);
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('class','comet'); c.setAttribute('cx',x); c.setAttribute('cy',y1); c.id='comet'+i;
+    conn.appendChild(c);
+  }
+}
+function litConnector(i){
+  const p=document.getElementById('cpath'+i); if(p)p.classList.add('lit');
+  if(reduce) return;
+  const c=document.getElementById('comet'+i); if(!c)return;
+  const y1=parseFloat(c.getAttribute('cy')), y2=y1+parseFloat(p.style.getPropertyValue('--len'));
+  let t0=null; c.style.opacity=1;
+  const dur=460;
+  function anim(ts){ if(!t0)t0=ts; const k=Math.min(1,(ts-t0)/dur); c.setAttribute('cy',y1+(y2-y1)*k); c.style.opacity=1-k*0.9; if(k<1)requestAnimationFrame(anim); else c.style.opacity=0; }
+  requestAnimationFrame(anim);
+}
+function stepFwd(){
+  if(cur>=NODES.length) return;
+  const i=cur; const node=document.getElementById('node'+i);
+  if(i>0){ const p=document.getElementById('node'+(i-1)); p.classList.remove('on'); p.classList.add('done'); }
+  node.classList.add('on');
+  const d=NODES[i];
+  narrBox.classList.remove('swap'); void narrBox.offsetWidth; narrBox.classList.add('swap');
+  stepLbl.textContent=d.step; narrText.textContent=d.narr; speak(d.narr);
+  if(i>0){ litConnector(i-1); sfx('connect'); } else { sfx('step'); }
+  cur++; setXP(xp+5);
+  prog.style.width=Math.min(100,(cur/NODES.length)*100)+'%';
+  if(cur>=NODES.length){
+    const last=document.getElementById('node'+(NODES.length-1));
+    setTimeout(()=>{ last.classList.remove('on'); last.classList.add('done'); },700);
+    setTimeout(()=>{
+      narrBox.classList.remove('swap'); void narrBox.offsetWidth; narrBox.classList.add('swap');
+      stepLbl.textContent=CLOSE.step; narrText.textContent=CLOSE.narr; speak(CLOSE.narr);
+      nextBtn.textContent='Flujo listo ✓'; nextBtn.disabled=true; stopAuto();
+      document.getElementById('c-chal').scrollIntoView({behavior:'smooth',block:'start'});
+    },950);
+  }
+}
+function setXP(v){ xp=v; document.getElementById('xp').textContent=xp; }
+function toggleAuto(){ auto?stopAuto():startAuto(); }
+function startAuto(){ if(cur>=NODES.length)return; auto=true; document.getElementById('autoBtn').textContent='⏸ Auto';
+  const tick=()=>{ if(!auto)return; stepFwd(); if(cur<NODES.length)autoT=setTimeout(tick,2800); else stopAuto(); }; autoT=setTimeout(tick,400); }
+function stopAuto(){ auto=false; clearTimeout(autoT); document.getElementById('autoBtn').textContent='⏵ Auto'; }
+function resetFlow(){ stopAuto(); cur=0; setXP(0); buildDOM(); buildChal(); prog.style.width='0%'; nextBtn.textContent='Construir ▸'; nextBtn.disabled=false; stepLbl.textContent='Paso 0 · Listo para empezar'; narrText.textContent='Pulse “Construir” y observe. Cada paso se conecta con el anterior; al final, un dato recorre el flujo de punta a punta.'; }
+
+/* ================= INTRO ================= */
+function startEp(){ initAudio(); if(AC&&AC.state==='suspended')AC.resume(); sfx('enter'); document.getElementById('intro').classList.add('gone'); setTimeout(()=>{document.body.style.overflow='auto';},600); setTimeout(drawConnectors,700); }
+
+/* ================= RETO ================= */
+const ORDER=NODES.map((n,i)=>({i,ic:n.ic,nt:n.nt}));
+let placed=[], solved=false;
+function shuffle(a){ const arr=a.slice(), seed=[2,0,3,1,3,0,2,1]; for(let k=0;k<arr.length;k++){const j=(k+seed[k%seed.length])%arr.length;const t=arr[k];arr[k]=arr[j];arr[j]=t;} return arr; }
+function buildChal(){
+  const slots=document.getElementById('slots'), bank=document.getElementById('bank');
+  slots.innerHTML=''; bank.innerHTML=''; placed=[]; solved=false;
+  const fb=document.getElementById('fb'); fb.textContent=''; fb.className='feedback';
+  document.getElementById('sealCard').classList.remove('show');
+  ORDER.forEach((_,i)=>{ const s=document.createElement('div'); s.className='slot'; s.id='slot'+i; s.innerHTML=`<span class="num">${i+1}</span><span>Toque el paso que va aquí…</span>`; s.onclick=()=>unplace(i); slots.appendChild(s); });
+  shuffle(ORDER).forEach(o=>{ const c=document.createElement('div'); c.className='cchip'; c.id='cchip'+o.i; c.innerHTML=`<span class="mini">${o.ic}</span>${o.nt}`; c.onclick=()=>place(o.i); bank.appendChild(c); });
+}
+function renderSlots(){
+  for(let i=0;i<ORDER.length;i++){ const slot=document.getElementById('slot'+i);
+    if(i<placed.length){ const o=ORDER[placed[i]]; slot.className='slot filled'; slot.innerHTML=`<span class="mini">${o.ic}</span><span>${o.nt}</span><span class="num" style="margin-left:auto">${i+1}</span>`; slot.onclick=(j=>()=>unplace(j))(i); }
+    else { slot.className='slot'; slot.innerHTML=`<span class="num">${i+1}</span><span>Toque el paso que va aquí…</span>`; slot.onclick=null; } }
+}
+function place(idx){ if(solved||placed.includes(idx)||placed.length>=ORDER.length)return; placed.push(idx); document.getElementById('cchip'+idx).classList.add('used'); sfx('place'); renderSlots(); if(placed.length===ORDER.length)check(); }
+function unplace(pos){ if(solved||pos>=placed.length)return; const rm=placed.splice(pos); rm.forEach(idx=>document.getElementById('cchip'+idx).classList.remove('used')); sfx('tick'); renderSlots(); const fb=document.getElementById('fb'); fb.textContent=''; fb.className='feedback'; }
+function check(){
+  const ok=placed.every((v,i)=>v===i), fb=document.getElementById('fb');
+  if(ok){ solved=true; setXP(xp+30); for(let i=0;i<ORDER.length;i++)document.getElementById('slot'+i).classList.add('ok');
+    fb.textContent='✓ Correcto. Ese es el orden de todo flujo: detonante → datos → criterio → resultado.'; fb.className='feedback win';
+    sfx('win'); celebrate(); document.getElementById('sealCard').classList.add('show'); drawSeal(); }
+  else { for(let i=0;i<ORDER.length;i++){const s=document.getElementById('slot'+i); if(placed[i]!==i)s.classList.add('bad');}
+    fb.textContent='Aún no. Pista: ¿qué tiene que pasar primero para que todo lo demás se active? Toque un paso para quitarlo y reintente.'; fb.className='feedback lose';
+    sfx('error'); setTimeout(()=>{for(let i=0;i<ORDER.length;i++)document.getElementById('slot'+i).classList.remove('bad');},800); }
+}
+
+/* ================= SELLO (canvas + descarga) ================= */
+function hashCode(s){ let h=2166136261; for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);} return (h>>>0).toString(36).toUpperCase().slice(0,5); }
+function drawSeal(){
+  const name=(document.getElementById('sealName').value||'').trim();
+  const cv=document.getElementById('sealPrev'); paintSeal(cv,name,600,380);
+}
+function paintSeal(cv,name,W,H){
+  const s=cv.width/600; const x=cv.getContext('2d');
+  x.fillStyle='#0B0D1A'; x.fillRect(0,0,cv.width,cv.height);
+  const g=x.createRadialGradient(cv.width/2,cv.height*0.3,10,cv.width/2,cv.height*0.3,cv.width*0.7);
+  g.addColorStop(0,'rgba(108,123,255,.18)'); g.addColorStop(1,'rgba(11,13,26,0)'); x.fillStyle=g; x.fillRect(0,0,cv.width,cv.height);
+  x.strokeStyle='rgba(245,196,81,.6)'; x.lineWidth=2*s; x.strokeRect(16*s,16*s,cv.width-32*s,cv.height-32*s);
+  x.textAlign='center';
+  x.fillStyle='#F5C451'; x.font=`${13*s}px ui-monospace,monospace`; x.fillText('HYPERFLOW ACADEMY', cv.width/2, 52*s);
+  x.fillStyle='#EDEEF9'; x.font=`600 ${34*s}px Georgia,serif`; x.fillText('Episodio 1 · Completado', cv.width/2, 118*s);
+  x.fillStyle='#A6ABD1'; x.font=`${15*s}px ui-monospace,monospace`; x.fillText('Temporada 1 · El Despertar', cv.width/2, 150*s);
+  x.fillStyle='#54D3F5'; x.font=`600 ${20*s}px Georgia,serif`;
+  x.fillText(name?name:'— Su primer flujo —', cv.width/2, 214*s);
+  const code='HF-EP01-'+hashCode('EP01'+(name||'anon'));
+  x.fillStyle='#EDEEF9'; x.font=`${16*s}px ui-monospace,monospace`; x.fillText(code, cv.width/2, 262*s);
+  const d=new Date(); const fecha=d.toLocaleDateString('es-ES',{day:'2-digit',month:'long',year:'numeric'});
+  x.fillStyle='#6B7099'; x.font=`${12*s}px ui-monospace,monospace`; x.fillText(fecha.toUpperCase(), cv.width/2, 320*s);
+  x.fillStyle='#3FDBA0'; x.font=`${34*s}px serif`; x.fillText('🏅', cv.width/2, 356*s);
+}
+function downloadSeal(){
+  const name=(document.getElementById('sealName').value||'').trim();
+  const cv=document.createElement('canvas'); cv.width=1200; cv.height=760; paintSeal(cv,name,1200,760);
+  const a=document.createElement('a'); a.download='sello-hyperflow-ep01.png'; a.href=cv.toDataURL('image/png'); a.click(); sfx('connect');
+}
+
+/* ================= CONFETTI ================= */
+function celebrate(){
+  if(reduce) return;
+  const cv=document.getElementById('confetti'); cv.style.display='block';
+  const x=cv.getContext('2d'); cv.width=innerWidth; cv.height=innerHeight;
+  const cols=['#6C7BFF','#54D3F5','#F5C451','#3FDBA0','#FF7A93'];
+  const P=[]; for(let i=0;i<120;i++)P.push({x:innerWidth/2+(Math.random()*200-100),y:innerHeight*0.4,vx:Math.random()*6-3,vy:Math.random()*-9-3,g:.22,s:Math.random()*7+4,c:cols[i%cols.length],a:1,rot:Math.random()*6,vr:Math.random()*.3-.15});
+  let f=0;
+  (function loop(){ x.clearRect(0,0,cv.width,cv.height); f++;
+    P.forEach(p=>{ p.vy+=p.g; p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr; p.a-=.006;
+      x.save(); x.globalAlpha=Math.max(0,p.a); x.translate(p.x,p.y); x.rotate(p.rot); x.fillStyle=p.c; x.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6); x.restore(); });
+    if(f<160)requestAnimationFrame(loop); else { cv.style.display='none'; x.clearRect(0,0,cv.width,cv.height); } })();
+}
+
+/* ================= FONDO CONSTELACIÓN ================= */
+(function(){
+  const cv=document.getElementById('bg'), x=cv.getContext('2d'); let W,H,pts;
+  function rs(){ W=cv.width=innerWidth; H=cv.height=innerHeight; const n=Math.min(64,Math.floor(W*H/26000)); pts=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.22,vy:(Math.random()-.5)*.22})); }
+  rs(); addEventListener('resize',()=>{rs(); if(typeof drawConnectors==='function')drawConnectors();});
+  function frame(){
+    x.clearRect(0,0,W,H);
+    for(let i=0;i<pts.length;i++){ const p=pts[i]; p.x+=p.vx; p.y+=p.vy; if(p.x<0||p.x>W)p.vx*=-1; if(p.y<0||p.y>H)p.vy*=-1;
+      for(let j=i+1;j<pts.length;j++){ const q=pts[j], dx=p.x-q.x, dy=p.y-q.y, d=dx*dx+dy*dy; if(d<15000){ x.strokeStyle='rgba(108,123,255,'+(0.12*(1-d/15000))+')'; x.lineWidth=1; x.beginPath(); x.moveTo(p.x,p.y); x.lineTo(q.x,q.y); x.stroke(); } }
+      x.fillStyle='rgba(140,151,255,.5)'; x.beginPath(); x.arc(p.x,p.y,1.2,0,7); x.fill(); }
+    if(!reduce)requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+/* ================= SCROLL-SPY ================= */
+(function(){
+  const ids=['c-hero','c-build','c-chal','c-close'];
+  const links={hero:document.querySelector('[data-t=hero]'),build:document.querySelector('[data-t=build]'),chal:document.querySelector('[data-t=chal]'),close:document.querySelector('[data-t=close]')};
+  const key={'c-hero':'hero','c-build':'build','c-chal':'chal','c-close':'close'};
+  const io=new IntersectionObserver(es=>{ es.forEach(e=>{ if(e.isIntersecting){ Object.values(links).forEach(l=>l&&l.classList.remove('on')); const l=links[key[e.target.id]]; if(l)l.classList.add('on'); } }); },{rootMargin:'-45% 0px -45% 0px'});
+  ids.forEach(id=>{ const el=document.getElementById(id); if(el)io.observe(el); });
+})();
+
+/* ================= INIT ================= */
+document.body.style.overflow='hidden';
+buildDOM(); buildChal();
+addEventListener('load',()=>setTimeout(drawConnectors,200));
+</script>
+</body></html>
