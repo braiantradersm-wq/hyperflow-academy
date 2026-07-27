@@ -2107,6 +2107,11 @@ window.addEventListener('message',function(e){
   else if(e.data.type==='hf-lesson-menu'){ const f=document.querySelector('.ownframe'); if(f)f.classList.remove('frame-fs'); document.documentElement.classList.remove('lesson-fs'); openNavMenu(); }  // menú desde dentro de la lección (también en pantalla completa)
 });
 function goQuiz(){ switchTab('quiz'); const q=document.getElementById('panel-quiz'); if(q)q.scrollIntoView({behavior:'smooth',block:'start'}); }
+function nextEpisode(n){                                  // para avanzar al siguiente hay que APROBAR el cuestionario
+  if((progress.done&&progress.done.includes(n)) || n>=22){ loadModule(Math.min(22,n+1)); return; }
+  showToast('📝','Primero el cuestionario','Superá el cuestionario de este episodio para avanzar al siguiente.');
+  goQuiz();
+}
 function goReto(){ switchTab('reto'); const p=document.getElementById('panel-reto'); if(p)p.scrollIntoView({behavior:'smooth',block:'start'}); }
 function renderGuide(n){
   const game=GAME[n];
@@ -2406,7 +2411,7 @@ function loadModule(n){
     ${renderComments(n)}
     <div class="lesson-nav">
       <button class="btn btn-ghost" onclick="loadModule(${Math.max(1,n-1)})" ${n===1?'style="visibility:hidden"':''}>← Episodio anterior</button>
-      <button class="btn btn-primary" onclick="loadModule(${Math.min(22,n+1)})" ${n===22?'style="visibility:hidden"':''}>Siguiente episodio →</button>
+      <button class="btn btn-primary" onclick="nextEpisode(${n})" ${n===22?'style="visibility:hidden"':''}>Siguiente episodio →</button>
     </div>`;
   vpInit(m); applyCourseVol();
   if(window.innerWidth<=960){const el=document.getElementById('lessonMain');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}
