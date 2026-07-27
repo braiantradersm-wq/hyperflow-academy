@@ -2081,7 +2081,8 @@ function classToCine(n){                               // fin de la clase → MO
   portalPlayerTo('playerHost');
   openCine(n,true);
 }
-function cineFlowNext(){ const n=cineFlowN||flowN; closeCine(); setTimeout(()=>classToInteractive(n),60); }  // cine → interactivo
+function cineFlowNext(){ const ov=document.getElementById('cineOv'); if(!ov||!ov.classList.contains('on'))return;  // evita doble avance (auto + botón)
+  const n=cineFlowN||flowN; closeCine(); setTimeout(()=>classToInteractive(n),60); }  // modo historia → interactivo
 function classToInteractive(n){                       // fin de clase → método interactivo (encadena)
   vpStop(); stopOwnLesson();
   document.getElementById('classOverlay').classList.remove('on'); document.body.style.overflow='';
@@ -2100,7 +2101,8 @@ window.addEventListener('message',function(e){
   if(e.data.type==='hf-next'){ closeGame(); setTimeout(goQuiz,380); }      // terminó el juego → al reto para desbloquear
   else if(e.data.type==='hf-close'){ closeGame(); }                        // solo volver al curso
   else if(e.data.type==='hf-lesson-ended'){ classDone(); }                 // terminó la lección audiovisual → resalta "Continuar"
-  else if(e.data.type==='hf-lesson-next'){ classToCine(flowN); }     // botón "Siguiente" del end card → modo cine (nuevo orden)
+  else if(e.data.type==='hf-lesson-next'){ classToCine(flowN); }     // botón "Siguiente" del end card → modo historia (nuevo orden)
+  else if(e.data.type==='hf-cine-ended'){ cineFlowNext(); }          // terminó el modo historia → avanzar al interactivo ("la historia es tuya")
   else if(e.data.type==='hf-lesson-fs'){ const f=document.querySelector('.ownframe'); if(f){ f.classList.toggle('frame-fs',!!e.data.on); document.documentElement.classList.toggle('lesson-fs',!!e.data.on); } }  // respaldo iPhone: expandir el iframe de la lección a toda la pantalla
   else if(e.data.type==='hf-lesson-menu'){ const f=document.querySelector('.ownframe'); if(f)f.classList.remove('frame-fs'); document.documentElement.classList.remove('lesson-fs'); openNavMenu(); }  // menú desde dentro de la lección (también en pantalla completa)
 });

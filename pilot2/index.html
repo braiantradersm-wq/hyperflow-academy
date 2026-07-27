@@ -226,7 +226,7 @@
       <div class="osub" id="osub"></div>
       <div class="btnrow">
         <button class="btn btn-ghost" onclick="restart()">↺ Ver de nuevo</button>
-        <a class="btn btn-amber" href="../?enrolled=1">Continuar en el campus →</a>
+        <a class="btn btn-amber" id="outroCont" href="../?enrolled=1">Continuar en el campus →</a>
       </div>
       <div class="explore" id="oexplore">¿Quieres explorar más a fondo? <a id="oyt" href="#" target="_blank" style="color:#FF6B7A;text-decoration:underline">Si quieres más información externa por YT ↗</a></div>
     </div>
@@ -258,6 +258,10 @@ const DEC_IDX=SCENES.findIndex(s=>s.interactive);
 /* ===================== AUDIO NARRACIÓN ===================== */
 const audio=new Audio(); audio.preload='auto';
 let idx=0, started=false, awaitingDecision=false, advanced=false;
+/* dentro del curso (embebido): al terminar la historia hay que AVANZAR al interactivo, no recargar el campus */
+const EMBED=(function(){try{return window.self!==window.top;}catch(_){return true;}})();
+let cineAdvanced=false, cineTimer=null;
+function cineAdvance(){ if(cineAdvanced)return; cineAdvanced=true; if(cineTimer){clearTimeout(cineTimer);cineTimer=null;} try{ window.parent.postMessage({type:'hf-cine-ended'},'*'); }catch(_){} }
 const $=s=>document.querySelector(s);
 const stage=$('#stage'), sline=$('#sline'), aurora=$('#aurora'), topfill=$('#topfill'), sceneLabel=$('#sceneLabel'), dotsEl=$('#dots');
 SCENES.forEach((_,i)=>{const d=document.createElement('div');d.className='dot';d.id='dot'+i;dotsEl.appendChild(d);});
@@ -466,8 +470,15 @@ function togglePlay(){ if(!started){startFilm();return;} if(awaitingDecision)ret
 function setPP(on){$('#ppIcon').innerHTML=on?'<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>':'<path d="M8 5v14l11-7z"/>';}
 function toggleMute(){const m=!audio.muted; audio.muted=m; Sound.setMuted(m); $('#btnMute').style.opacity=m?.5:1;}
 function restart(){ $('#outro').classList.remove('show'); $('#decision').classList.remove('show'); awaitingDecision=false;
+  cineAdvanced=false; if(cineTimer){clearTimeout(cineTimer);cineTimer=null;}
   $('#film').classList.add('show-hud'); started=true; setPP(true); Sound.duck(false); enterScene(0); }
-function endFilm(){ topfill.style.width='100%'; $('#film').classList.remove('show-hud'); $('#outro').classList.add('show'); Sound.chord(CH.c); }
+function endFilm(){ topfill.style.width='100%'; $('#film').classList.remove('show-hud'); $('#outro').classList.add('show'); Sound.chord(CH.c);
+  if(EMBED){                                                    // en el flujo del curso: avanzar al interactivo
+    const a=document.getElementById('outroCont');
+    if(a){ a.textContent='Continuar al episodio →'; a.removeAttribute('href'); a.style.cursor='pointer'; a.onclick=function(ev){ if(ev)ev.preventDefault(); cineAdvance(); }; }
+    cineTimer=setTimeout(cineAdvance, 3000);                    // auto-avanza tras un momento para leer el cierre
+  }
+}
 
 /* ===================== FONDO: PARTÍCULAS + GRANO ===================== */
 const bg=$('#bg'),bx=bg.getContext('2d'),grain=$('#grain'),gx=grain.getContext('2d');
