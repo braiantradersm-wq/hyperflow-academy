@@ -738,6 +738,7 @@
     <span class="class-step">▶ Clase</span>
     <span class="class-title" id="classTitle">La clase del episodio</span>
     <button class="class-deep" id="classDeep" onclick="classProfundizar()" title="Material opcional para ir más a fondo (se abre aquí mismo)">📚 <span class="cdtxt">Profundizar</span></button>
+    <button class="class-deep" id="classSkip" style="display:none" onclick="classSkip()" title="Saltar la clase e ir al modo historia">Saltar clase ⏭</button>
     <button class="class-next" id="classNext" style="display:none" onclick="classFlowNext()">Continuar<span class="cnfull"> al modo historia</span> →</button>
     <button class="class-x" onclick="exitClass()" aria-label="Salir de la clase">Salir ✕</button>
   </div>
@@ -2010,6 +2011,7 @@ function stopOwnLesson(){ const f=document.querySelector('.ownframe'); if(f&&f.c
 function openClass(n){
   flowN=n; classPhase=OWNLESSON[n]?'own':'ia'; const m=COURSE.find(x=>x.n===n)||{n:n,title:''};
   const nx=document.getElementById('classNext'); if(nx)nx.style.display='none';
+  const sk0=document.getElementById('classSkip'); if(sk0)sk0.style.display='none';
   document.getElementById('classTitle').textContent='Clase · '+(m.title||'');
   portalPlayerTo('classStage');
   document.getElementById('classOverlay').classList.add('on'); document.body.style.overflow='hidden';
@@ -2025,6 +2027,7 @@ function openClass(n){
 }
 function classDone(){                                 // fin de un paso de clase → "Continuar" con la etiqueta correcta
   const nx=document.getElementById('classNext'); if(!nx)return;
+  const sk=document.getElementById('classSkip'); if(sk)sk.style.display='none';   // ya terminó: ya no es "saltar"
   const cf=nx.querySelector('.cnfull'); if(cf)cf.textContent = (classPhase==='own') ? ' a la clase narrada' : ' al modo historia';
   nx.style.display='';
 }
@@ -2038,10 +2041,12 @@ function classAdvance(n){
   if(classPhase==='own' && OWNLESSON[n]){ classToNarrated(n); }   // lección audiovisual → CLASE NARRADA
   else { classToCine(n); }                                       // clase narrada → modo historia
 }
-function classToNarrated(n){                           // paso OBLIGATORIO: la clase narrada, tras la lección audiovisual (para que no se saltee)
+function classSkip(){ classToCine(flowN); }            // saltar la clase narrada → modo historia (opcional, decisión del usuario)
+function classToNarrated(n){                           // tras la lección audiovisual: se MUESTRA la clase narrada (con opción de saltarla)
   if(classPhase!=='own')return; classPhase='ia';
   stopOwnLesson();
   const nx=document.getElementById('classNext'); if(nx)nx.style.display='none';
+  const sk=document.getElementById('classSkip'); if(sk)sk.style.display='';   // botón para saltarla si el usuario quiere
   const m=COURSE.find(x=>x.n===n)||{n:n,title:''};
   vpMode(n,'ia');
   if(!vp.slides||!vp.slides.length)vpInit(m);
