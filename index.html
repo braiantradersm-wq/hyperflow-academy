@@ -2001,14 +2001,14 @@ function closeGame(){
 }
 function scrollToPlayer(){ const p=document.querySelector('.vplayer'); if(p)p.scrollIntoView({behavior:'smooth',block:'center'}); }
 /* ===== FLUJO GUIADO: cinemática → CLASE → interactivo → cuestionario ===== */
-let flowN=0;
+let flowN=0, classPhase='own';   // classPhase: 'own'=lección audiovisual, 'ia'=clase narrada
 function portalPlayerTo(hostId){
   const pl=document.querySelector('.vplayer'), host=document.getElementById(hostId);
   if(pl&&host&&pl.parentElement!==host)host.appendChild(pl);
 }
 function stopOwnLesson(){ const f=document.querySelector('.ownframe'); if(f&&f.contentWindow){try{f.contentWindow.postMessage({type:'hf-lesson-stop'},'*');}catch(e){}} }
 function openClass(n){
-  flowN=n; const m=COURSE.find(x=>x.n===n)||{n:n,title:''};
+  flowN=n; classPhase=OWNLESSON[n]?'own':'ia'; const m=COURSE.find(x=>x.n===n)||{n:n,title:''};
   const nx=document.getElementById('classNext'); if(nx)nx.style.display='none';
   document.getElementById('classTitle').textContent='Clase · '+(m.title||'');
   portalPlayerTo('classStage');
@@ -2023,15 +2023,31 @@ function openClass(n){
     if(!vp.playing)vpToggle();                        // arranca dentro del gesto del tap final de la cinemática
   }
 }
-function classDone(){                                 // fin de la clase → resalta "Continuar"
-  const nx=document.getElementById('classNext'); if(nx)nx.style.display='';
+function classDone(){                                 // fin de un paso de clase → "Continuar" con la etiqueta correcta
+  const nx=document.getElementById('classNext'); if(!nx)return;
+  const cf=nx.querySelector('.cnfull'); if(cf)cf.textContent = (classPhase==='own') ? ' a la clase narrada' : ' al modo historia';
+  nx.style.display='';
 }
 function exitClass(){                                 // el usuario cierra: NO avanza el flujo
   vpStop(); stopOwnLesson();
   document.getElementById('classOverlay').classList.remove('on'); document.body.style.overflow='';
   portalPlayerTo('playerHost');
 }
-function classFlowNext(){ classToCine(flowN); }       // clase → modo cine (nuevo orden)
+function classFlowNext(){ classAdvance(flowN); }       // "Continuar" → siguiente paso (clase narrada o modo historia)
+function classAdvance(n){
+  if(classPhase==='own' && OWNLESSON[n]){ classToNarrated(n); }   // lección audiovisual → CLASE NARRADA
+  else { classToCine(n); }                                       // clase narrada → modo historia
+}
+function classToNarrated(n){                           // paso OBLIGATORIO: la clase narrada, tras la lección audiovisual (para que no se saltee)
+  if(classPhase!=='own')return; classPhase='ia';
+  stopOwnLesson();
+  const nx=document.getElementById('classNext'); if(nx)nx.style.display='none';
+  const m=COURSE.find(x=>x.n===n)||{n:n,title:''};
+  vpMode(n,'ia');
+  if(!vp.slides||!vp.slides.length)vpInit(m);
+  vp.i=0;
+  if(!vp.playing)vpToggle();
+}
 function classProfundizar(){                          // abre panel IN-APP; no expulsa a YouTube
   const n=flowN||1;
   pauseClassPlayback();                               // pausa lo que se esté reproduciendo, para dar lugar a lo nuevo
@@ -2101,7 +2117,7 @@ window.addEventListener('message',function(e){
   if(e.data.type==='hf-next'){ closeGame(); setTimeout(goQuiz,380); }      // terminó el juego → al reto para desbloquear
   else if(e.data.type==='hf-close'){ closeGame(); }                        // solo volver al curso
   else if(e.data.type==='hf-lesson-ended'){ classDone(); }                 // terminó la lección audiovisual → resalta "Continuar"
-  else if(e.data.type==='hf-lesson-next'){ classToCine(flowN); }     // botón "Siguiente" del end card → modo historia (nuevo orden)
+  else if(e.data.type==='hf-lesson-next'){ if(classPhase==='own')classToNarrated(flowN); else classToCine(flowN); }     // fin lección audiovisual → clase narrada (paso obligatorio)
   else if(e.data.type==='hf-cine-ended'){ cineFlowNext(); }          // terminó el modo historia → avanzar al interactivo ("la historia es tuya")
   else if(e.data.type==='hf-lesson-fs'){ const f=document.querySelector('.ownframe'); if(f){ f.classList.toggle('frame-fs',!!e.data.on); document.documentElement.classList.toggle('lesson-fs',!!e.data.on); } }  // respaldo iPhone: expandir el iframe de la lección a toda la pantalla
   else if(e.data.type==='hf-lesson-menu'){ const f=document.querySelector('.ownframe'); if(f)f.classList.remove('frame-fs'); document.documentElement.classList.remove('lesson-fs'); openNavMenu(); }  // menú desde dentro de la lección (también en pantalla completa)
