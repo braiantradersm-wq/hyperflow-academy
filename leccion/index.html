@@ -114,6 +114,12 @@
   .endnext:hover{transform:translateY(-1px)}
   .endreplay{cursor:pointer;width:auto;height:auto;padding:12px 18px;font-family:var(--sans);font-weight:600;font-size:14px;color:var(--muted);background:rgba(15,17,32,.7);border:1px solid var(--line-2);border-radius:11px}
   .endreplay:hover{color:var(--text);border-color:var(--indigo)}
+  /* autoplay del siguiente (estilo YouTube): barra de cuenta regresiva */
+  .autonext{margin-top:18px;display:none;flex-direction:column;align-items:center;gap:9px;width:min(320px,82%)}
+  .endcard.auto .autonext{display:flex}
+  .autobar{width:100%;height:6px;border-radius:99px;background:var(--ink-4);overflow:hidden}
+  .autobar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--indigo),var(--cyan))}
+  .autonext span{font-family:var(--sans);font-size:12.5px;color:var(--muted)}
   body:not(.embed) #lessonNextBtn{display:none}   /* "Siguiente" solo tiene sentido dentro del curso */
 
   /* barra flotante estilo YouTube: sobre el video, se auto-oculta al reproducir */
@@ -196,6 +202,7 @@
           <button class="endnext" id="lessonNextBtn" onclick="lessonNext()">Siguiente →</button>
           <button class="endreplay" onclick="replay()">↺ Ver de nuevo</button>
         </div>
+        <div class="autonext" id="autoNext"><div class="autobar"><i id="autoFill"></i></div><span id="autoTxt">Continúa en 6 s · toca para cancelar</span></div>
       </div>
     </div>
     <div class="controls">
@@ -463,10 +470,10 @@ requestAnimationFrame(tick);
 /* ¿el audio de la escena actual quedó pausado a mitad? → reanudar ahí, no reiniciar */
 function canResume(){ return voiceOn && hasLoc() && lecA && !lecA.ended && lecA.currentTime>0
   && idx>=0 && idx<SCENES.length && lecA.src && lecA.src.indexOf(locSrc(idx))!==-1; }
-function play(){ document.getElementById('end').classList.remove('show'); document.getElementById('ov').classList.add('hide'); playing=true; setPP(); startBed(); showBars(false);
+function play(){ cancelAutoNext(); document.getElementById('end').classList.remove('show'); document.getElementById('ov').classList.add('hide'); playing=true; setPP(); startBed(); showBars(false);
   if(canResume()){ const p=lecA.play(); if(p&&p.catch)p.catch(()=>goScene(idx)); }   // continúa donde se pausó
   else goScene((idx<0||idx>=SCENES.length)?0:idx); }
-function pause(){ playing=false; setPP(); clearTimers(); stopSpeak(); stopBed(); showBars(true); }
+function pause(){ playing=false; setPP(); clearTimers(); stopSpeak(); stopBed(); showBars(true); cancelAutoNext(); }
 
 /* AUTO-OCULTAR LA BARRA (estilo YouTube): al reproducir se esconde tras ~2.6s de
    inactividad; reaparece al mover el mouse (PC) o tocar la pantalla (móvil). Mientras
@@ -509,9 +516,27 @@ function toggle(){ playing?pause():play(); }
 let seekAt=0;   // segundos dentro de la escena a la que se salta (seek fino)
 function seekFrac(frac){ let target=frac*SUMDUR,acc=0,i=0; for(;i<SCENES.length;i++){ if(target<acc+SCENES[i].dur)break; acc+=SCENES[i].dur; } if(i>=SCENES.length)i=SCENES.length-1; seekAt=Math.max(0,target-acc); document.getElementById('ov').classList.add('hide'); document.getElementById('end').classList.remove('show'); if(!playing){ playing=true; setPP(); startBed(); } goScene(i); }
 function setPP(){ const p=document.querySelector('#ppi path'); if(p)p.setAttribute('d', playing?'M6 5h4v14H6zM14 5h4v14h-4z':'M8 5v14l11-7z'); }  // el id va en el <svg>: hay que tocar el <path> interno
-function showEnd(){ document.getElementById('end').classList.add('show'); clearTimers(); stopSpeak(); stopBed(); showBars(true); try{ if(window.parent!==window)window.parent.postMessage({type:'hf-lesson-ended'},'*'); }catch(_){} }
+function showEnd(){ document.getElementById('end').classList.add('show'); clearTimers(); stopSpeak(); stopBed(); showBars(true); try{ if(window.parent!==window)window.parent.postMessage({type:'hf-lesson-ended'},'*'); }catch(_){} startAutoNext(); }
 function replay(){ idx=-1; document.getElementById('end').classList.remove('show'); play(); }
-function lessonNext(){ if(window.parent!==window){ try{ window.parent.postMessage({type:'hf-lesson-next'},'*'); }catch(_){} } }  // continuar al modo interactivo
+function lessonNext(){ cancelAutoNext(); if(window.parent!==window){ try{ window.parent.postMessage({type:'hf-lesson-next'},'*'); }catch(_){} } }  // continuar al modo interactivo
+
+/* AUTOPLAY del siguiente al terminar (como YouTube): ~6s con barra; se cancela al tocar */
+let autoRAF=null, autoT0=0, autoActive=false; const AUTO_MS=6000;
+function startAutoNext(){
+  if(!EMBED)return;                                              // solo dentro del curso hay "siguiente"
+  const nb=document.getElementById('lessonNextBtn'); if(!nb||getComputedStyle(nb).display==='none')return;
+  autoActive=true; document.getElementById('end').classList.add('auto'); autoT0=performance.now();
+  const fill=document.getElementById('autoFill'), txt=document.getElementById('autoTxt');
+  (function tick(){ if(!autoActive)return; const el=performance.now()-autoT0, f=Math.min(1,el/AUTO_MS);
+    if(fill)fill.style.width=(f*100)+'%';
+    if(txt)txt.textContent='Continúa en '+Math.max(0,Math.ceil((AUTO_MS-el)/1000))+' s · toca para cancelar';
+    if(f>=1){ autoActive=false; document.getElementById('end').classList.remove('auto'); lessonNext(); return; }
+    autoRAF=requestAnimationFrame(tick);
+  })();
+}
+function cancelAutoNext(){ if(!autoActive)return; autoActive=false; if(autoRAF)cancelAnimationFrame(autoRAF);
+  const e=document.getElementById('end'); if(e)e.classList.remove('auto'); const t=document.getElementById('autoTxt'); if(t)t.textContent='Elige una opción'; }
+(function(){ const e=document.getElementById('end'); if(e)e.addEventListener('pointerdown',cancelAutoNext); })();
 
 /* fondo constelación */
 (function(){ const cv=document.getElementById('bg'),x=cv.getContext('2d'); let W,H,pts; const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
