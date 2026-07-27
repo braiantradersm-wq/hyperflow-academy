@@ -3283,7 +3283,7 @@ function renderPlayer(m){
     ${firstPanel}
     <div id="vmIa" style="display:none">
       <audio id="vaudio" preload="none"></audio>
-      <div class="vstage" id="vstage">
+      <div class="vstage" id="vstage" onclick="vpStageTap(event)" style="cursor:pointer">
         <div class="vslide on"><div class="vposter">
           <div class="vwm">Hyperflow</div>
           <button class="vplay" onclick="vpToggle()" aria-label="Reproducir clase"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
@@ -3477,6 +3477,7 @@ function vpGo(i){
   vp.i=i;vpShow(i);
   if(vp.playing)vpSpeak(i);
 }
+function vpStageTap(e){ if(e&&e.target&&e.target.closest('button,a,select,input,.vplay,.vmain,.vprog,.ytfacade'))return; vpToggle(); }  // clic en el video de la clase narrada = pausar/reanudar
 function vpToggle(){
   if(!vp.slides.length&&vp.mod)vpInit(vp.mod);
   if(vp.playing){vp.playing=false;vpIcon(false);if(TTS)TTS.cancel();if(vp.timer)clearTimeout(vp.timer);
