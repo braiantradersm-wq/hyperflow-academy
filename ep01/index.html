@@ -219,7 +219,7 @@ function reward(b){}
 let AC=null;
 /* campana/marimba suave: fundamental + armónico de octava, ataque suave y decaída natural (sonido premium, no 8-bit) */
 function bell(freq,dur,vol){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();
-  const t=AC.currentTime, out=AC.createGain(); out.connect(AC.destination);
+  const t=AC.currentTime, out=AC.createGain(); out.connect((typeof hfMasterGain==='function'&&hfMasterGain())||AC.destination);
   out.gain.setValueAtTime(.0001,t); out.gain.linearRampToValueAtTime(vol||.13,t+.012); out.gain.exponentialRampToValueAtTime(.0004,t+(dur||.5));
   const lp=AC.createBiquadFilter(); lp.type='lowpass'; lp.frequency.setValueAtTime(3000,t); lp.frequency.exponentialRampToValueAtTime(1100,t+(dur||.5)); lp.connect(out);
   const o=AC.createOscillator(); o.type='sine'; o.frequency.value=freq; o.connect(lp);
@@ -230,7 +230,7 @@ function ding(f){ bell(f||880,.45,.07); }
 function tick(f){ bell(f||660,.34,.045); }
 /* "no" suave: tono sine que desciende, sin aspereza */
 function buzz(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();
-  const t=AC.currentTime, out=AC.createGain(); out.connect(AC.destination);
+  const t=AC.currentTime, out=AC.createGain(); out.connect((typeof hfMasterGain==='function'&&hfMasterGain())||AC.destination);
   out.gain.setValueAtTime(.0001,t); out.gain.linearRampToValueAtTime(.11,t+.015); out.gain.exponentialRampToValueAtTime(.0004,t+.38);
   const lp=AC.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=680; lp.connect(out);
   const o=AC.createOscillator(); o.type='sine'; o.frequency.setValueAtTime(207.65,t); o.frequency.exponentialRampToValueAtTime(155.56,t+.32); o.connect(lp);
@@ -478,6 +478,30 @@ addEventListener('resize',resize);resize();
   requestAnimationFrame(loop);})();
 
 nameGate();
+</script>
+<!-- control de volumen (comparte hf_vol con el resto del curso) -->
+<div class="hfvol" id="hfvol"><button id="hfvolBtn" onclick="hfVolToggle()" title="Volumen" aria-label="Volumen">🔊</button><div class="hfvolpop"><input type="range" id="hfvolRange" min="0" max="100" value="100" oninput="hfSetVol(this.value/100)" aria-label="Nivel de volumen"></div></div>
+<style>
+.hfvol{position:fixed;top:12px;right:12px;z-index:99999;display:flex;align-items:center;font-family:system-ui,-apple-system,sans-serif}
+.hfvol>button{width:38px;height:38px;border-radius:10px;background:rgba(10,12,26,.72);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:16px;cursor:pointer;display:grid;place-items:center;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.hfvolpop{position:absolute;top:46px;right:0;background:rgba(12,14,30,.96);border:1px solid rgba(255,255,255,.2);border-radius:11px;padding:12px;display:none;box-shadow:0 12px 30px rgba(0,0,0,.55)}
+.hfvol:hover .hfvolpop,.hfvol.open .hfvolpop{display:block}
+#hfvolRange{width:120px;height:5px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,.22);border-radius:99px;outline:none;cursor:pointer;display:block}
+#hfvolRange::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:15px;height:15px;border-radius:50%;background:#6C7BFF;cursor:pointer}
+#hfvolRange::-moz-range-thumb{width:15px;height:15px;border:0;border-radius:50%;background:#6C7BFF}
+</style>
+<script>
+(function(){
+var hfVol=1; try{var _v=localStorage.getItem('hf_vol'); if(_v!==null)hfVol=Math.max(0,Math.min(1,parseFloat(_v)));}catch(e){}
+window.hfMaster=null;
+window.hfMasterGain=function(){ if(typeof AC==='undefined'||!AC)return null; if(!window.hfMaster){ window.hfMaster=AC.createGain(); window.hfMaster.gain.value=hfVol; window.hfMaster.connect(AC.destination); } return window.hfMaster; };
+function applyVol(v){ if(window.hfMaster)window.hfMaster.gain.value=v; }
+function icon(){ var b=document.getElementById('hfvolBtn'); if(b)b.textContent=hfVol===0?'🔇':(hfVol<.34?'🔈':(hfVol<.67?'🔉':'🔊')); }
+window.hfSetVol=function(v){ hfVol=Math.max(0,Math.min(1,v)); try{localStorage.setItem('hf_vol',hfVol);}catch(e){} applyVol(hfVol); icon(); var r=document.getElementById('hfvolRange'); if(r&&Math.abs(r.value/100-hfVol)>.005)r.value=Math.round(hfVol*100); };
+window.hfVolToggle=function(){ document.getElementById('hfvol').classList.toggle('open'); };
+document.addEventListener('pointerdown',function(e){ var w=document.getElementById('hfvol'); if(w&&w.classList.contains('open')&&!w.contains(e.target))w.classList.remove('open'); });
+var r0=document.getElementById('hfvolRange'); if(r0)r0.value=Math.round(hfVol*100); icon();
+})();
 </script>
 </body>
 </html>

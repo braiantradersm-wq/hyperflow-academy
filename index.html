@@ -222,6 +222,11 @@
   .bump{display:flex;gap:11px;align-items:flex-start;padding:14px;border:1px dashed var(--amber);border-radius:12px;background:var(--amber-dim);margin:6px 0 16px;cursor:pointer}
   .bump input{margin-top:3px;accent-color:var(--amber);flex:none}
   .bump b{font-size:13.5px;color:var(--text)} .bump span{font-size:12.5px;color:var(--muted);display:block}
+  /* seleccionado → recuadro verde para distinguir */
+  .bump{transition:background .2s,border-color .2s}
+  .bump.on,.bump:has(input:checked){border-color:var(--green);border-style:solid;background:var(--green-dim)}
+  .bump.on input,.bump:has(input:checked) input{accent-color:var(--green)}
+  .bump.on b,.bump:has(input:checked) b{color:var(--green)}
 
   /* ---------- HOST / INSTRUCTOR ---------- */
   .host{display:grid;grid-template-columns:340px 1fr;gap:44px;align-items:center}
@@ -733,7 +738,7 @@
     <span class="class-step">▶ Clase</span>
     <span class="class-title" id="classTitle">La clase del episodio</span>
     <button class="class-deep" id="classDeep" onclick="classProfundizar()" title="Material opcional para ir más a fondo (se abre aquí mismo)">📚 <span class="cdtxt">Profundizar</span></button>
-    <button class="class-next" id="classNext" style="display:none" onclick="classFlowNext()">Continuar<span class="cnfull"> al modo cine</span> →</button>
+    <button class="class-next" id="classNext" style="display:none" onclick="classFlowNext()">Continuar<span class="cnfull"> al modo historia</span> →</button>
     <button class="class-x" onclick="exitClass()" aria-label="Salir de la clase">Salir ✕</button>
   </div>
   <div class="class-stage" id="classStage"></div>
@@ -765,8 +770,8 @@
 </div>
 <!-- Versión cine a pantalla completa (in-app) -->
 <div class="cine-ov" id="cineOv">
-  <div class="cine-top"><button class="bar-menu" onclick="openNavMenu()" aria-label="Menú principal"><span class="bm-ico">☰</span><span class="bm-txt">Menú</span></button><span style="font-size:16px">🎬</span><b>Modo cine · el episodio como historia</b><button class="class-next" id="cineNext" style="display:none;margin-left:auto" onclick="cineFlowNext()">Continuar<span class="cnfull"> al episodio</span> →</button><button class="cine-back" id="cineBack" onclick="closeCine()">← Volver</button></div>
-  <iframe id="cineFrame" title="La versión cine" allow="autoplay; fullscreen"></iframe>
+  <div class="cine-top"><button class="bar-menu" onclick="openNavMenu()" aria-label="Menú principal"><span class="bm-ico">☰</span><span class="bm-txt">Menú</span></button><span style="font-size:16px">🎬</span><b>Modo historia · vive el episodio</b><button class="class-next" id="cineNext" style="display:none;margin-left:auto" onclick="cineFlowNext()">Continuar<span class="cnfull"> al episodio</span> →</button><button class="cine-back" id="cineBack" onclick="closeCine()">← Volver</button></div>
+  <iframe id="cineFrame" title="Modo historia" allow="autoplay; fullscreen"></iframe>
 </div>
 
 <!-- ============ ANNOUNCEMENT BAR ============ -->
@@ -2033,7 +2038,7 @@ function classProfundizar(){                          // abre panel IN-APP; no e
   const dt=document.getElementById('deepTitle'); if(dt)dt.textContent='Profundizar · EP'+pad2(n);
   const id=(typeof YTMAP!=='undefined')?YTMAP[n]:null;
   let html='';
-  html+='<p class="deep-note" style="margin:0 0 10px;color:var(--muted);font-size:13px">El <b>modo cine</b> ahora es un paso del episodio (va justo después de la clase). Aquí queda solo el material externo de apoyo.</p>';
+  html+='<p class="deep-note" style="margin:0 0 10px;color:var(--muted);font-size:13px">El <b>modo historia</b> ahora es un paso del episodio (va justo después de la clase). Aquí queda solo el material externo de apoyo.</p>';
   if(id){
     html+='<button class="rescard yt" id="deepYtCard" onclick="toggleDeepYt(\''+id+'\')"><span class="ri">▶</span><span class="rt"><b>Ver contenido de YT</b><span>Video de apoyo · externo (YouTube), se abre aquí</span></span><span class="rd">VIDEO</span></button>';
     html+='<div class="deep-vid" id="deepVid" style="display:none"></div>';
@@ -2104,7 +2109,7 @@ function goReto(){ switchTab('reto'); const p=document.getElementById('panel-ret
 function renderGuide(n){
   const game=GAME[n];
   const claseStep = {ic:'▶',k:'Paso 1 · empieza aquí',t:'Clase',d:'La lección audiovisual del episodio: aquí se explica el tema. Primero se ve y se aprende.',btn:'▶ Ver la clase ↓',act:'openClass('+n+')',big:true};
-  const cineStep  = {ic:'🎬',k:'Paso 2',t:'Modo cine',d:'El episodio contado como una historia, con voz y música. Va seguido de la clase para meterte en situación.',btn:'🎬 Ver el modo cine',act:'openCine('+n+',true)'};
+  const cineStep  = {ic:'🎬',k:'Paso 2',t:'Modo historia',d:'El episodio contado como una historia, con voz y música. Va seguido de la clase para meterte en situación.',btn:'🎬 Ver el modo historia',act:'openCine('+n+',true)'};
   const steps = game ? [
     claseStep, cineStep,
     {ic:'🕹️',k:'Paso 3',t:`Episodio ${n}`,d:(n===1?'Entra a la historia y tú tomas las decisiones. Ahora aplicas lo aprendido.':'Construye tu primer bot arrastrando y conectando piezas. Aplicas lo que viste en la clase.'),btn:`▶ Empezar el episodio ${n}`,act:`openGame(${n})`},
@@ -3669,6 +3674,7 @@ function toggleBump(){
   price.textContent = (cb&&cb.checked) ? ('$'+(base+27).toFixed(2)+' ') : PLANS[currentPlan].p;
   const plan=document.getElementById('coPlan');
   if(plan) plan.textContent = (cb&&cb.checked) ? (PLANS[currentPlan].n+' + Pack Acelerador') : PLANS[currentPlan].n;
+  const box=cb&&cb.closest('.bump'); if(box) box.classList.toggle('on', !!(cb&&cb.checked));   // recuadro verde al seleccionar
 }
 function closeCheckout(){document.getElementById('checkoutModal').classList.remove('show');}
 function fakeCheckout(){
