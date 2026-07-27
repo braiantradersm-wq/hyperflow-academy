@@ -489,6 +489,8 @@ function drawGrain(){gf++;if(gf%2)return;const id=gx.createImageData(W,H),d=id.d
 let dt=0;const sw=$('#stageWrap');
 (function drift(){dt+=.006;sw.style.transform=`translate(${Math.sin(dt)*5}px,${Math.cos(dt*.8)*4}px) scale(${1+Math.sin(dt*.7)*.006})`;requestAnimationFrame(drift);})();
 addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();togglePlay();}if(e.key==='r')restart();});
+/* clic en la pantalla = pausar / reanudar (ignora botones, cartas de decisión y el control de volumen) */
+sw.addEventListener('click',e=>{ if(e.target.closest('button,a,select,input,.dc,.hfvol'))return; togglePlay(); });
 </script>
 <!-- control de volumen (comparte hf_vol con el resto del curso) -->
 <div class="hfvol" id="hfvol"><button id="hfvolBtn" onclick="hfVolToggle()" title="Volumen" aria-label="Volumen">🔊</button><div class="hfvolpop"><input type="range" id="hfvolRange" min="0" max="100" value="100" oninput="hfSetVol(this.value/100)" aria-label="Nivel de volumen"></div></div>
